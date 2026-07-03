@@ -1,8 +1,3 @@
-// app/(public)/page.tsx
-//
-// Landing Page for Scheda scheduling platform.
-// Showcases high-end typography, glassmorphism, and a direct "Book Now" CTA.
-
 import * as React from "react";
 import Typography from "@mui/material/Typography";
 import GlassCard from "@/components/ui/glass-card";
@@ -16,12 +11,10 @@ export const metadata = {
 export default function LandingPage() {
     return (
         <div className="relative flex-1 flex flex-col items-center justify-center overflow-hidden py-20 px-4">
-            {/* Ambient Background Glows */}
             <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-blue-500/20 blur-3xl pointer-events-none dark:bg-blue-600/10" />
             <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-indigo-500/20 blur-3xl pointer-events-none dark:bg-indigo-600/10" />
 
             <div className="w-full max-w-4xl z-10 flex flex-col items-center">
-                {/* Hero section inside an effect GlassCard */}
                 <GlassCard
                     glassVariant="effect"
                     className="w-full flex flex-col items-center text-center p-8 sm:p-16 border border-zinc-200/20 dark:border-zinc-800/20"

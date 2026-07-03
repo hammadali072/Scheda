@@ -1,9 +1,3 @@
-// src/types/index.ts
-//
-// Core domain types for Appointment Manager.
-// All date/time fields are ISO strings stored/compared in UTC.
-// Convert to local time only at the display layer (see lib/date.ts, once created).
-
 export type UserRole = "admin" | "member" | "client";
 
 export type AppointmentStatus =
