@@ -212,6 +212,13 @@
   box-shadow: 0 8px 32px #0a0a0a0d;
 }
 
+@utility glass-card-light {
+  background-color: color-mix(in srgb, var(--color-white, #ffffff) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-black) 8%, transparent);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--color-black) 6%, transparent);
+}
+
 @utility text-stroke-outlined {
   -webkit-text-stroke: 1px color-mix(in srgb, var(--color-black) 30%, transparent);
   color: transparent;

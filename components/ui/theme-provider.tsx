@@ -13,7 +13,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [dark, setDark] = useState(false);
 
     useEffect(() => {
-        const saved = localStorage.getItem("stride-theme");
+        const saved = localStorage.getItem("scheda-theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const initial = saved === "dark" || (!saved && prefersDark);
         setDark(initial);
@@ -21,7 +21,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("stride-theme", dark ? "dark" : "light");
+        localStorage.setItem("scheda-theme", dark ? "dark" : "light");
         document.documentElement.classList.toggle("dark", dark);
     }, [dark]);
 
