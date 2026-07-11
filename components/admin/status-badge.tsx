@@ -1,4 +1,6 @@
 // components/admin/status-badge.tsx
+
+"use client";
 //
 // Reusable status chip/badge for admin dashboards.
 // Applies style classes dynamically based on active status or appointment states.

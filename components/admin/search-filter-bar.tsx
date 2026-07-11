@@ -1,4 +1,6 @@
 // components/admin/search-filter-bar.tsx
+
+"use client";
 //
 // Shared Search & Filters row component.
 // Houses a responsive text search box and permits custom dropdown select items as children.
