@@ -1,0 +1,251 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
+
+@import "tailwindcss";
+
+@theme {
+  --font-geist: Geist;
+
+  --color-primary: #1d4ed8;
+  --color-tint-gray: #f8f8f8;
+  --color-black: #0a0a0a;
+
+  --color-primary-start: #8aa6f2;
+  --color-primary-end: #1d4ed8;
+  --color-secondary-start: #666666;
+  --color-secondary-end: #0a0a0a;
+  /* --color-primary-start: #9973ff;
+  --color-primary-end: #5635ad; */
+
+  --color-tint-black: #2f2f2f;
+  --color-grey: #4e4e4e;
+
+  --shadow-shadow1: inset 0px 0px 25px #e5e7eb1a;
+  --shadow-shadow2: inset 0px 0px 16px #0a0a0a33;
+  --shadow-shadow2-effect: inset 0px 0px 16px #1d4ed833;
+  --shadow-inset: inset 0px 1px 0px #0a0a0a4d, inset 0px -1px 0px #0a0a0a4d;
+
+  /* Font Size Variables */
+  --font-size-h1: clamp(36px, 5vw, 64px);
+  --font-size-h2: clamp(28px, 4vw, 48px);
+  --font-size-h3: clamp(24px, 3.5vw, 36px);
+  --font-size-h4: clamp(20px, 3vw, 32px);
+  --font-size-h5: clamp(18px, 2.5vw, 28px);
+  --font-size-h6: clamp(16px, 2vw, 24px);
+  --font-size-l: 20px;
+  --font-size-m: 18px;
+  --font-size-s: 16px;
+  --font-size-xs: 14px;
+  --font-size-xss: 12px;
+}
+
+@keyframes marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@layer base {
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-geist);
+    background-color: var(--color-tint-gray);
+  }
+
+  body::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--color-white);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: color-mix(in srgb, var(--color-black) 65%, transparent);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul,
+  li {
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  input,
+  select,
+  textarea {
+    outline: none;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+  }
+
+  .heading-h1 {
+    font-weight: 800;
+    line-height: 110%;
+    letter-spacing: -0.03em;
+    font-size: var(--font-size-h1);
+  }
+
+  .heading-h2 {
+    font-weight: 700;
+    line-height: 115%;
+    letter-spacing: -0.02em;
+    font-size: var(--font-size-h2);
+  }
+
+  .heading-h3 {
+    font-weight: 700;
+    line-height: 120%;
+    letter-spacing: -0.02em;
+    font-size: var(--font-size-h3);
+  }
+
+  .heading-h4 {
+    font-weight: 700;
+    line-height: 125%;
+    letter-spacing: -0.01em;
+    font-size: var(--font-size-h4);
+  }
+
+  .heading-h5 {
+    font-weight: 600;
+    line-height: 130%;
+    letter-spacing: -0.01em;
+    font-size: var(--font-size-h5);
+  }
+
+  .heading-h6 {
+    font-weight: 600;
+    line-height: 135%;
+    letter-spacing: -0.01em;
+    font-size: var(--font-size-h6);
+  }
+}
+
+@utility container {
+  max-width: 1320px;
+  padding-inline: 20px;
+  margin-inline: auto;
+}
+
+@utility container-fluid {
+  width: 100%;
+  padding-inline: 20px;
+  margin-inline: auto;
+}
+
+@utility glass-card-inset {
+  background-color: #e5e7eb0a;
+  border-top: 1px solid color-mix(in srgb, var(--color-white) 33%, transparent);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-shadow1);
+}
+
+@utility glass-card-inset-2 {
+  background-color: color-mix(in srgb, var(--color-black) 10%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--color-black) 33%, transparent);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-shadow2);
+}
+
+@utility glass-card-effect {
+  background-color: color-mix(in srgb, var(--color-black) 75%, transparent);
+  backdrop-filter: blur(40px);
+  border: 1px solid color-mix(in srgb, var(--color-white) 50%, transparent);
+  box-shadow: 0 8px 32px #0a0a0a0d;
+}
+
+@utility glass-card-light {
+  background-color: color-mix(in srgb, var(--color-white, #ffffff) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-black) 8%, transparent);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--color-black) 6%, transparent);
+}
+
+@utility text-stroke-outlined {
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--color-black) 30%, transparent);
+  color: transparent;
+
+  &:hover {
+    color: var(--color-black);
+    -webkit-text-stroke-color: var(--color-black);
+  }
+}
+
+@utility text-stroke-outlined-hover {
+  color: var(--color-primary);
+  -webkit-text-stroke-color: var(--color-primary);
+}
+
+@utility primary-after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: -translate(-50%, -50%) scale(0);
+  background-color: var(--color-black);
+  z-index: -1;
+  transition: all 0.3s;
+
+  &:hover {
+    transform: -translate(-50%, -50%) scale(1);
+  }
+}
