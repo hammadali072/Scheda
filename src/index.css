@@ -1,30 +1,56 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Geist:wght@100..900&display=swap");
 
 @import "tailwindcss";
 
 @theme {
-  --font-geist: Geist;
+  /* ── Fonts ────────────────────────────────────────────── */
+  --font-geist: Geist, system-ui, sans-serif;
+  --font-inter: Inter, system-ui, sans-serif;
+  --font-instrument: "Instrument Serif", Georgia, serif;
 
-  --color-primary: #1d4ed8;
+  /* ── Brand palette (existing — do not remove) ─────────── */
+  --color-primary: #2563eb;
   --color-tint-gray: #f8f8f8;
   --color-black: #0a0a0a;
 
   --color-primary-start: #8aa6f2;
-  --color-primary-end: #1d4ed8;
-  --color-secondary-start: #666666;
-  --color-secondary-end: #0a0a0a;
-  /* --color-primary-start: #9973ff;
-  --color-primary-end: #5635ad; */
+  --color-primary-end: #2563eb;
+  --color-secondary-start: #374151;
+  --color-secondary-end: #111827;
 
   --color-tint-black: #2f2f2f;
   --color-grey: #4e4e4e;
 
+  /* ── New design system tokens ─────────────────────────── */
+  /* Page backgrounds */
+  --color-ink: #1a1a2e;        /* dark mode page bg / primary text dark */
+  --color-parchment: #f5f3ef;  /* light mode page bg — warm off-white   */
+
+  /* UI surfaces */
+  --color-surface: #ffffff;    /* card / input bg in light mode          */
+  --color-card-dark: #111827;  /* card bg in dark mode — solid, not glass*/
+
+  /* Secondary text / borders */
+  --color-muted: #6b7280;
+
+  /* UI gray — used for secondary text, borders, dimmed icons */
+  --color-slate: #6b7280;
+
+  /* Amber — pending / warning states */
+  --color-amber: #f59e0b;
+
+  /* Signature accent — availability "selected" state only */
+  --color-accent: #f59e0b;
+
+  /* ── Shadows ──────────────────────────────────────────── */
   --shadow-shadow1: inset 0px 0px 25px #e5e7eb1a;
   --shadow-shadow2: inset 0px 0px 16px #0a0a0a33;
-  --shadow-shadow2-effect: inset 0px 0px 16px #1d4ed833;
+  --shadow-shadow2-effect: inset 0px 0px 16px #2563eb33;
   --shadow-inset: inset 0px 1px 0px #0a0a0a4d, inset 0px -1px 0px #0a0a0a4d;
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-card-hover: 0 4px 16px 0 rgb(0 0 0 / 0.10), 0 2px 6px -1px rgb(0 0 0 / 0.06);
 
-  /* Font Size Variables */
+  /* ── Font Size Variables ──────────────────────────────── */
   --font-size-h1: clamp(36px, 5vw, 64px);
   --font-size-h2: clamp(28px, 4vw, 48px);
   --font-size-h3: clamp(24px, 3.5vw, 36px);
@@ -70,8 +96,15 @@
   }
 
   body {
-    font-family: var(--font-geist);
-    background-color: var(--color-tint-gray);
+    font-family: var(--font-inter);
+    background-color: var(--color-parchment);
+    color: var(--color-ink);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html.dark body {
+    background-color: var(--color-ink);
+    color: var(--color-parchment);
   }
 
   body::-webkit-scrollbar {

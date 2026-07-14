@@ -53,10 +53,10 @@ export default function Login() {
 
     return (
         <AuthLayout title="Welcome back" subtitle="Log in to continue with your Scheda account.">
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            <form className="space-y-5" onSubmit={handleSubmit}>
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-black/80" htmlFor="email">
-                        Email
+                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40" htmlFor="email">
+                        Email Address
                     </label>
                     <input
                         id="email"
@@ -64,56 +64,64 @@ export default function Login() {
                         value={form.email}
                         onChange={(event) => handleChange("email", event.target.value)}
                         className={clsx(
-                            "w-full rounded-2xl border px-4 py-3 text-sm outline-none transition",
-                            errors.email ? "border-red-500" : "border-black/10 bg-white/80"
+                            "w-full rounded-xl border px-4 py-3 text-sm transition outline-none",
+                            "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                            errors.email
+                                ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                                : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
                         )}
                         placeholder="you@example.com"
                     />
-                    {errors.email ? <p className="mt-1 text-sm text-red-600">{errors.email}</p> : null}
+                    {errors.email ? <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.email}</p> : null}
                 </div>
 
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-black/80" htmlFor="password">
-                        Password
-                    </label>
+                    <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40" htmlFor="password">
+                            Password
+                        </label>
+                        <Link to="/forgot-password" className="text-xs font-semibold text-primary hover:underline">
+                            Forgot?
+                        </Link>
+                    </div>
                     <input
                         id="password"
                         type="password"
                         value={form.password}
                         onChange={(event) => handleChange("password", event.target.value)}
                         className={clsx(
-                            "w-full rounded-2xl border px-4 py-3 text-sm outline-none transition",
-                            errors.password ? "border-red-500" : "border-black/10 bg-white/80"
+                            "w-full rounded-xl border px-4 py-3 text-sm transition outline-none",
+                            "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                            errors.password
+                                ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                                : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
                         )}
-                        placeholder="Enter your password"
+                        placeholder="••••••••"
                     />
-                    {errors.password ? <p className="mt-1 text-sm text-red-600">{errors.password}</p> : null}
-                </div>
-
-                <div className="flex items-center justify-between text-sm">
-                    <Link to="/forgot-password" className="font-medium text-primary transition hover:text-primary/80">
-                        Forgot password?
-                    </Link>
+                    {errors.password ? <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.password}</p> : null}
                 </div>
 
                 <button
                     type="submit"
                     disabled={loading}
-                    className="flex w-full items-center justify-center rounded-full bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="flex w-full items-center justify-center rounded-xl bg-primary hover:bg-primary/90 px-4 py-3.5 text-sm font-semibold text-white transition focus:ring-2 focus:ring-primary/30 outline-none disabled:cursor-not-allowed disabled:opacity-75 shadow-md shadow-primary/10"
                 >
                     {loading ? (
                         <span className="flex items-center gap-2">
                             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            Submitting...
+                            Signing In...
                         </span>
                     ) : (
-                        "Log in"
+                        "Sign In"
                     )}
                 </button>
             </form>
 
-            <p className="mt-4 text-center text-sm text-black/70">
-                Don&apos;t have an account? <Link to="/signup" className="font-semibold text-primary">Sign up</Link>
+            <p className="mt-6 text-center text-xs text-black dark:text-black/50">
+                Don&apos;t have an account?{" "}
+                <Link to="/signup" className="font-semibold text-primary hover:underline">
+                    Sign up
+                </Link>
             </p>
         </AuthLayout>
     );

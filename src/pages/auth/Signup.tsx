@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import AuthLayout from "@/pages/auth/AuthLayout";
+import { User, Briefcase } from "@phosphor-icons/react";
 
 interface SignupFormState {
     name: string;
@@ -80,11 +81,68 @@ export default function Signup() {
     };
 
     return (
-        <AuthLayout title="Create your account" subtitle="Sign up as a client or member to get started.">
+        <AuthLayout title="Create your account" subtitle="Sign up to start scheduling or hosting consultations.">
             <form className="space-y-4" onSubmit={handleSubmit}>
+
+                {/* Role Selection Cards */}
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-black/80" htmlFor="name">
-                        Full name
+                    <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40">
+                        I am joining as
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* Client Role Option */}
+                        <button
+                            type="button"
+                            onClick={() => handleChange("role", "client")}
+                            className={clsx(
+                                "flex flex-col items-start text-left p-4 rounded-xl border transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                                form.role === "client"
+                                    ? "border-primary bg-primary/[0.03] dark:bg-primary/[0.02] shadow-sm"
+                                    : "border-black/10 dark:border-white/5 bg-transparent hover:bg-black/5 dark:hover:bg-white/5"
+                            )}
+                        >
+                            <span className={clsx(
+                                "p-1.5 rounded-lg mb-2 inline-flex",
+                                form.role === "client" ? "bg-primary/10 text-primary" : "bg-black/10 text-black"
+                            )}>
+                                <User size={18} weight="bold" />
+                            </span>
+                            <span className="text-sm font-semibold text-ink dark:text-parchment">Client</span>
+                            <span className="text-[10px] text-black dark:text-black/50 mt-0.5 leading-normal">
+                                Book consultation calls with our specialized team members.
+                            </span>
+                        </button>
+
+                        {/* Member Role Option */}
+                        <button
+                            type="button"
+                            onClick={() => handleChange("role", "member")}
+                            className={clsx(
+                                "flex flex-col items-start text-left p-4 rounded-xl border transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                                form.role === "member"
+                                    ? "border-primary bg-primary/[0.03] dark:bg-primary/[0.02] shadow-sm"
+                                    : "border-black/10 dark:border-white/5 bg-transparent hover:bg-black/5 dark:hover:bg-white/5"
+                            )}
+                        >
+                            <span className={clsx(
+                                "p-1.5 rounded-lg mb-2 inline-flex",
+                                form.role === "member" ? "bg-primary/10 text-primary" : "bg-black/10 text-black"
+                            )}>
+                                <Briefcase size={18} weight="bold" />
+                            </span>
+                            <span className="text-sm font-semibold text-ink dark:text-parchment">Team Member</span>
+                            <span className="text-[10px] text-black dark:text-black/50 mt-0.5 leading-normal">
+                                Host paid advisory calls and manage availability.
+                            </span>
+                        </button>
+                    </div>
+                    {errors.role ? <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.role}</p> : null}
+                </div>
+
+                {/* Full Name */}
+                <div>
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40" htmlFor="name">
+                        Full Name
                     </label>
                     <input
                         id="name"
@@ -92,17 +150,21 @@ export default function Signup() {
                         value={form.name}
                         onChange={(event) => handleChange("name", event.target.value)}
                         className={clsx(
-                            "w-full rounded-2xl border px-4 py-3 text-sm outline-none transition",
-                            errors.name ? "border-red-500" : "border-black/10 bg-white/80"
+                            "w-full rounded-xl border px-4 py-2.5 text-sm transition outline-none",
+                            "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                            errors.name
+                                ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                                : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
                         )}
                         placeholder="Your name"
                     />
-                    {errors.name ? <p className="mt-1 text-sm text-red-600">{errors.name}</p> : null}
+                    {errors.name ? <p className="mt-1 text-xs text-red-500 font-medium">{errors.name}</p> : null}
                 </div>
 
+                {/* Email Address */}
                 <div>
-                    <label className="mb-1 block text-sm font-medium text-black/80" htmlFor="email">
-                        Email
+                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40" htmlFor="email">
+                        Email Address
                     </label>
                     <input
                         id="email"
@@ -110,88 +172,88 @@ export default function Signup() {
                         value={form.email}
                         onChange={(event) => handleChange("email", event.target.value)}
                         className={clsx(
-                            "w-full rounded-2xl border px-4 py-3 text-sm outline-none transition",
-                            errors.email ? "border-red-500" : "border-black/10 bg-white/80"
+                            "w-full rounded-xl border px-4 py-2.5 text-sm transition outline-none",
+                            "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                            errors.email
+                                ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                                : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
                         )}
                         placeholder="you@example.com"
                     />
-                    {errors.email ? <p className="mt-1 text-sm text-red-600">{errors.email}</p> : null}
+                    {errors.email ? <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.email}</p> : null}
                 </div>
 
-                <div>
-                    <label className="mb-1 block text-sm font-medium text-black/80" htmlFor="password">
-                        Password
-                    </label>
-                    <input
-                        id="password"
-                        type="password"
-                        value={form.password}
-                        onChange={(event) => handleChange("password", event.target.value)}
-                        className={clsx(
-                            "w-full rounded-2xl border px-4 py-3 text-sm outline-none transition",
-                            errors.password ? "border-red-500" : "border-black/10 bg-white/80"
-                        )}
-                        placeholder="At least 8 characters"
-                    />
-                    {errors.password ? <p className="mt-1 text-sm text-red-600">{errors.password}</p> : null}
-                </div>
-
-                <div>
-                    <label className="mb-1 block text-sm font-medium text-black/80" htmlFor="confirmPassword">
-                        Confirm password
-                    </label>
-                    <input
-                        id="confirmPassword"
-                        type="password"
-                        value={form.confirmPassword}
-                        onChange={(event) => handleChange("confirmPassword", event.target.value)}
-                        className={clsx(
-                            "w-full rounded-2xl border px-4 py-3 text-sm outline-none transition",
-                            errors.confirmPassword ? "border-red-500" : "border-black/10 bg-white/80"
-                        )}
-                        placeholder="Re-enter password"
-                    />
-                    {errors.confirmPassword ? <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p> : null}
-                </div>
-
-                <div>
-                    <span className="mb-2 block text-sm font-medium text-black/80">I am joining as</span>
-                    <div className="flex gap-3">
-                        {(["client", "member"] as const).map((option) => (
-                            <label key={option} className="flex flex-1 items-center gap-2 rounded-2xl border border-black/10 bg-white/80 px-3 py-3 text-sm text-black/80">
-                                <input
-                                    type="radio"
-                                    name="role"
-                                    value={option}
-                                    checked={form.role === option}
-                                    onChange={() => handleChange("role", option)}
-                                    className="accent-primary"
-                                />
-                                {option === "client" ? "Client" : "Member"}
-                            </label>
-                        ))}
+                {/* Password Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40" htmlFor="password">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={form.password}
+                            onChange={(event) => handleChange("password", event.target.value)}
+                            className={clsx(
+                                "w-full rounded-xl border px-4 py-2.5 text-sm transition outline-none",
+                                "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                                errors.password
+                                    ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                                    : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                            )}
+                            placeholder="At least 8 chars"
+                        />
                     </div>
-                    {errors.role ? <p className="mt-1 text-sm text-red-600">{errors.role}</p> : null}
-                </div>
 
+                    <div>
+                        <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40" htmlFor="confirmPassword">
+                            Confirm Password
+                        </label>
+                        <input
+                            id="confirmPassword"
+                            type="password"
+                            value={form.confirmPassword}
+                            onChange={(event) => handleChange("confirmPassword", event.target.value)}
+                            className={clsx(
+                                "w-full rounded-xl border px-4 py-2.5 text-sm transition outline-none",
+                                "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                                errors.confirmPassword
+                                    ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                                    : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
+                            )}
+                            placeholder="Re-enter password"
+                        />
+                    </div>
+                </div>
+                {(errors.password || errors.confirmPassword) && (
+                    <div className="space-y-1 mt-1">
+                        {errors.password && <p className="text-xs text-red-500 font-medium">{errors.password}</p>}
+                        {errors.confirmPassword && <p className="text-xs text-red-500 font-medium">{errors.confirmPassword}</p>}
+                    </div>
+                )}
+
+                {/* Submit button */}
                 <button
                     type="submit"
                     disabled={loading}
-                    className="flex w-full items-center justify-center rounded-full bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="flex w-full items-center justify-center rounded-xl bg-primary hover:bg-primary/90 px-4 py-3 text-sm font-semibold text-white transition focus:ring-2 focus:ring-primary/30 outline-none disabled:cursor-not-allowed disabled:opacity-75 shadow-md shadow-primary/10 mt-2"
                 >
                     {loading ? (
                         <span className="flex items-center gap-2">
                             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            Creating account...
+                            Creating Account...
                         </span>
                     ) : (
-                        "Create account"
+                        "Create Account"
                     )}
                 </button>
             </form>
 
-            <p className="mt-4 text-center text-sm text-black/70">
-                Already have an account? <Link to="/login" className="font-semibold text-primary">Log in</Link>
+            <p className="mt-5 text-center text-xs text-black dark:text-black/50">
+                Already have an account?{" "}
+                <Link to="/login" className="font-semibold text-primary hover:underline">
+                    Log in
+                </Link>
             </p>
         </AuthLayout>
     );
