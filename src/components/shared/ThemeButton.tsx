@@ -43,7 +43,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
         'relative inline-flex items-center justify-center group/button',
         className,
         defaultTextSize,
-        variant === 'underline' ? 'py-1 px-0' : primary2 ? 'px-6 py-2 m:py-6' : 'py-3 xl:py-4 px-8 xl:px-10',
+        variant === 'underline' ? 'py-1 px-0' : primary2 ? 'px-6 py-2 m:py-6' : 'py-2.5 xl:py-3 px-8 xl:px-10',
         primary2 ? 'rounded-md' : (variant !== 'underline') ? 'rounded-full' : 'rounded-none',
         VARIANT_CLASSES[variant],
         'overflow-hidden duration-700 ease-in-out',
@@ -64,7 +64,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = ({
             {
                 (variant !== 'underline')
                     ?
-                    (<span className={clsx('absolute top-1/2 left-1/2 size-[150px] transform -translate-x-1/2 -translate-y-1/2 rounded-full scale-0 bg-gradient-to-b pointer-events-none', afterStyles, 'transition-transform duration-700 ease-out group-hover/button:scale-[2]')} />)
+                    (<span className={clsx('absolute top-1/2 left-1/2 size-[150px] transform -translate-x-1/2 -translate-y-1/2 rounded-full scale-0 bg-gradient-to-b pointer-events-none', afterStyles, 'transition-transform duration-700 ease-out group-hover/button:scale-[3]')} />)
                     :
                     (<span className="absolute bottom-0 left-0 w-full h-[2px] bg-current duration-500 opacity-80 group-hover/button:opacity-100" />)
 

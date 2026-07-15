@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import AuthLayout from "@/pages/auth/AuthLayout";
+import TitleComponent from "@/components/shared/TitleComponent";
 
 interface LoginFormState {
     email: string;
@@ -55,7 +56,7 @@ export default function Login() {
         <AuthLayout title="Welcome back" subtitle="Log in to continue with your Scheda account.">
             <form className="space-y-5" onSubmit={handleSubmit}>
                 <div>
-                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40" htmlFor="email">
+                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-black dark:text-white/40" htmlFor="email">
                         Email Address
                     </label>
                     <input
@@ -77,7 +78,7 @@ export default function Login() {
 
                 <div>
                     <div className="flex items-center justify-between mb-1.5">
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-black dark:text-black/40" htmlFor="password">
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-black dark:text-white/40" htmlFor="password">
                             Password
                         </label>
                         <Link to="/forgot-password" className="text-xs font-semibold text-primary hover:underline">
@@ -117,12 +118,12 @@ export default function Login() {
                 </button>
             </form>
 
-            <p className="mt-6 text-center text-xs text-black dark:text-black/50">
+            <TitleComponent size="small" className="mt-6 text-center text-black dark:text-white/50">
                 Don&apos;t have an account?{" "}
                 <Link to="/signup" className="font-semibold text-primary hover:underline">
                     Sign up
                 </Link>
-            </p>
+            </TitleComponent>
         </AuthLayout>
     );
 }

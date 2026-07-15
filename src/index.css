@@ -1,17 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Geist:wght@100..900&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Geist:wght@100..900&display=swap"); */
 
 @import "tailwindcss";
 
-/* Enable class-based dark mode for Tailwind v4 */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* ── Fonts ────────────────────────────────────────────── */
-  --font-geist: Geist, system-ui, sans-serif;
-  --font-inter: Inter, system-ui, sans-serif;
-  --font-instrument: "Instrument Serif", Georgia, serif;
+  --font-geist: Geist;
 
-  /* ── Brand palette (existing — do not remove) ─────────── */
   --color-primary: #2563eb;
   --color-tint-gray: #f8f8f8;
   --color-black: #0a0a0a;
@@ -26,12 +21,16 @@
 
   /* ── New design system tokens ─────────────────────────── */
   /* Page backgrounds */
-  --color-ink: #1a1a2e;        /* dark mode page bg / primary text dark */
-  --color-parchment: #f5f3ef;  /* light mode page bg — warm off-white   */
+  --color-ink: #1a1a2e;
+  /* dark mode page bg / primary text dark */
+  --color-parchment: #f5f3ef;
+  /* light mode page bg — warm off-white   */
 
   /* UI surfaces */
-  --color-surface: #ffffff;    /* card / input bg in light mode          */
-  --color-card-dark: #111827;  /* card bg in dark mode — solid, not glass*/
+  --color-surface: #ffffff;
+  /* card / input bg in light mode          */
+  --color-card-dark: #111827;
+  /* card bg in dark mode — solid, not glass*/
 
   /* Secondary text / borders */
   --color-muted: #6b7280;
@@ -99,7 +98,7 @@
   }
 
   body {
-    font-family: var(--font-inter);
+    font-family: var(--font-geist);
     background-color: var(--color-parchment);
     color: var(--color-ink);
     transition: background-color 0.3s ease, color 0.3s ease;
