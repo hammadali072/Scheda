@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { INITIAL_CLIENTS, Client } from "@/mock/adminMockData";
+import { useState } from "react";
+import { INITIAL_CLIENTS } from "@/mock/adminMockData";
+import type { Client } from "@/mock/adminMockData";
 import { MagnifyingGlass as MagnifyingGlassIcon, DotsThreeVertical as DotsThreeVerticalIcon } from "@phosphor-icons/react";
 
 export default function Clients() {

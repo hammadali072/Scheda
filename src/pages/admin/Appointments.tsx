@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { INITIAL_APPOINTMENTS, INITIAL_MEMBERS, Appointment, Member } from "@/mock/adminMockData";
+import { useState } from "react";
+import { INITIAL_APPOINTMENTS, INITIAL_MEMBERS } from "@/mock/adminMockData";
+import type { Appointment } from "@/mock/adminMockData";
 import {
     MagnifyingGlass as MagnifyingGlassIcon,
-    Funnel as FunnelIcon,
     X as XIcon,
     CalendarBlank as CalendarBlankIcon,
-    Clock as ClockIcon,
     User as UserIcon,
     Briefcase as BriefcaseIcon,
     CreditCard as CreditCardIcon,

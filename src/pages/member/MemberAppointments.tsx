@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import {
-    X as XIcon,
-    User as UserIcon,
-    CalendarBlank as CalendarBlankIcon,
-    CreditCard as CreditCardIcon,
-    ChatCenteredText as ChatCenteredTextIcon,
-    CheckCircle as CheckCircleIcon,
-    Clock as ClockIcon,
+    XIcon,
+    UserIcon,
+    CalendarBlankIcon,
+    CreditCardIcon,
+    ChatCenteredTextIcon,
+    CheckCircleIcon,
+    ClockIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { MEMBER_APPOINTMENTS, MemberAppointment } from "@/mock/memberMockData";
+import { MEMBER_APPOINTMENTS, type MemberAppointment } from "@/mock/memberMockData";
 
 type Tab = "upcoming" | "past" | "cancelled" | "all";
 
@@ -150,10 +150,10 @@ export default function MemberAppointments() {
                                 {activeTab === "upcoming"
                                     ? "No upcoming sessions."
                                     : activeTab === "past"
-                                    ? "No completed sessions yet."
-                                    : activeTab === "cancelled"
-                                    ? "No cancelled sessions."
-                                    : "No appointments found."}
+                                        ? "No completed sessions yet."
+                                        : activeTab === "cancelled"
+                                            ? "No cancelled sessions."
+                                            : "No appointments found."}
                             </p>
                         </div>
                     ) : (

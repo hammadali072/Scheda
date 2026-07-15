@@ -19,6 +19,14 @@ import MemberAvailability from "@/pages/member/MemberAvailability";
 import MemberAppointments from "@/pages/member/MemberAppointments";
 import MemberSettings from "@/pages/member/MemberSettings";
 
+// Client dashboard
+import ClientLayout from "@/layouts/ClientLayout";
+import ClientOverview from "@/pages/client/ClientOverview";
+import ClientFindMember from "@/pages/client/ClientFindMember";
+import ClientBookAppointment from "@/pages/client/ClientBookAppointment";
+import ClientAppointments from "@/pages/client/ClientAppointments";
+import ClientSettings from "@/pages/client/ClientSettings";
+
 import NotFoundPage from "@/pages/404";
 
 export default function AppRoutes() {
@@ -46,8 +54,18 @@ export default function AppRoutes() {
                 <Route path="settings" element={<MemberSettings />} />
             </Route>
 
+            {/* Client dashboard */}
+            <Route path="/client" element={<ClientLayout />}>
+                <Route index element={<ClientOverview />} />
+                <Route path="find" element={<ClientFindMember />} />
+                <Route path="book/:memberId" element={<ClientBookAppointment />} />
+                <Route path="appointments" element={<ClientAppointments />} />
+                <Route path="settings" element={<ClientSettings />} />
+            </Route>
+
             <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );
 }
+
 

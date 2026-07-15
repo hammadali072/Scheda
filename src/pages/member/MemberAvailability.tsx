@@ -1,25 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {
-    Plus as PlusIcon,
-    X as XIcon,
-    Check as CheckIcon,
-    FloppyDisk as FloppyDiskIcon,
-    Warning as WarningIcon,
-    CalendarBlank as CalendarBlankIcon,
-    Lock as LockIcon,
-    Clock as ClockIcon,
+    PlusIcon,
+    XIcon,
+    CheckIcon,
+    FloppyDiskIcon,
+    WarningIcon,
+    CalendarBlankIcon,
+    LockIcon,
+    ClockIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import {
+    type DaySchedule,
+    type DateOverride,
+    type TimeRange,
     MEMBER_WEEKLY_AVAILABILITY,
     MEMBER_DATE_OVERRIDES,
-    DaySchedule,
-    DateOverride,
-    TimeRange,
 } from "@/mock/memberMockData";
 
 // ─── Toggle Switch ─────────────────────────────────────────────────────────────
-
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
     return (
         <button

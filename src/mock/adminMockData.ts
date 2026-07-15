@@ -393,3 +393,164 @@ export const Appointment = [
         amount: 180,
     },
 ];
+
+export const DateOverride = [
+    {
+        id: "m1",
+        name: "Dr. Adrian Thorne",
+        email: "adrian.thorne@scheda.com",
+        availability: [
+            {
+                id: "a1",
+                day: "Monday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a2",
+                day: "Tuesday",
+                time: "02:00 PM - 05:00 PM",
+                status: "active",
+            },
+            {
+                id: "a3",
+                day: "Wednesday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a4",
+                day: "Thursday",
+                time: "02:00 PM - 05:00 PM",
+                status: "active",
+            },
+            {
+                id: "a5",
+                day: "Friday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a6",
+                day: "Saturday",
+                time: "09:00 AM - 12:00 PM",
+                status: "inactive",
+            },
+            {
+                id: "a7",
+                day: "Sunday",
+                time: "09:00 AM - 12:00 PM",
+                status: "inactive",
+            },
+        ],
+    },
+];
+
+export const DateSchedule = [
+    {
+        id: "m1",
+        name: "Dr. Adrian Thorne",
+        email: "adrian.thorne@scheda.com",
+        availability: [
+            {
+                id: "a1",
+                date: "Monday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a2",
+                date: "Tuesday",
+                time: "02:00 PM - 05:00 PM",
+                status: "active",
+            },
+            {
+                id: "a3",
+                date: "Wednesday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a4",
+                date: "Thursday",
+                time: "02:00 PM - 05:00 PM",
+                status: "active",
+            },
+            {
+                id: "a5",
+                date: "Friday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a6",
+                date: "Saturday",
+                time: "09:00 AM - 12:00 PM",
+                status: "inactive",
+            },
+            {
+                id: "a7",
+                date: "Sunday",
+                time: "09:00 AM - 12:00 PM",
+                status: "inactive",
+            },
+        ],
+    },
+];
+
+export type TimeRange = {
+    start: string;
+    end: string;
+};
+
+export const MemberAvailability = [
+    {
+        id: "m1",
+        name: "Dr. Adrian Thorne",
+        email: "adrian.thorne@scheda.com",
+        availability: [
+            {
+                id: "a1",
+                day: "Monday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a2",
+                day: "Tuesday",
+                time: "02:00 PM - 05:00 PM",
+                status: "active",
+            },
+            {
+                id: "a3",
+                day: "Wednesday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a4",
+                day: "Thursday",
+                time: "02:00 PM - 05:00 PM",
+                status: "active",
+            },
+            {
+                id: "a5",
+                day: "Friday",
+                time: "09:00 AM - 12:00 PM",
+                status: "active",
+            },
+            {
+                id: "a6",
+                day: "Saturday",
+                time: "09:00 AM - 12:00 PM",
+                status: "inactive",
+            },
+            {
+                id: "a7",
+                day: "Sunday",
+                time: "09:00 AM - 12:00 PM",
+                status: "inactive",
+            },
+        ],
+    },
+];

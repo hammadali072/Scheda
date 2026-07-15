@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useTheme } from "@/context/theme-provider";
 import logoDark from "@/assets/logo-dark.svg";
