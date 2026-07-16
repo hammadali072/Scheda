@@ -127,7 +127,7 @@ export default function AdminLayout() {
                     <div className="size-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
                         {adminUser.avatar}
                     </div>
-                    <div className={clsx("flex-1 min-w-0 overflow-hidden transition-all duration-300", collapsed ? "max-w-0 opacity-0" : "max-w-[180px] opacity-100") }>
+                    <div className={clsx("flex-1 min-w-0 overflow-hidden transition-all duration-300", collapsed ? "max-w-0 opacity-0" : "max-w-[180px] opacity-100")}>
                         <div className="text-sm font-bold text-ink dark:text-parchment truncate">
                             {adminUser.name}
                         </div>

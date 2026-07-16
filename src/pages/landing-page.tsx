@@ -13,7 +13,7 @@ export default function LandingPage() {
     const logoSrc = dark ? logoLight : logoDark;
 
     return (
-        <div className="min-h-screen flex flex-col bg-parchment dark:bg-ink transition-colors duration-300">
+        <div className="relative min-h-screen flex flex-col bg-parchment dark:bg-black transition-colors duration-300">
             {/* Header */}
             <header className="w-full p-6 flex items-center justify-between z-20">
                 <div className="container">
@@ -35,7 +35,7 @@ export default function LandingPage() {
             </header>
 
             {/* Hero Section */}
-            <main className="flex flex-col justify-center flex-1 py-12 lg:py-20">
+            <main className="flex flex-col justify-center flex-1 py-12 lg:py-20 z-20">
                 <div className="container">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
                         {/* Left Column */}
@@ -75,7 +75,7 @@ export default function LandingPage() {
                 </div>
             </main>
 
-            <footer className="border-t border-slate/10 dark:border-white/5 py-8 bg-surface/50 dark:bg-card-dark/20 transition-colors duration-300">
+            <footer className="relative border-t border-slate/10 dark:border-white/5 py-8 bg-surface/50 dark:bg-[#1f1f1f] transition-colors duration-300 z-20">
                 <div className="container">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="flex items-center gap-3">
@@ -110,6 +110,7 @@ export default function LandingPage() {
                     </div>
                 </div>
             </footer>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary/20 dark:bg-[#2f2f2f]/50 w-[500px] h-[500px] rounded-full blur-[150px] z-[1]" />
         </div>
     );
 }
