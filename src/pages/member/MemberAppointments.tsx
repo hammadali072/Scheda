@@ -3,13 +3,12 @@ import {
     XIcon,
     UserIcon,
     CalendarBlankIcon,
-    CreditCardIcon,
     ChatCenteredTextIcon,
-    CheckCircleIcon,
     ClockIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { MEMBER_APPOINTMENTS, type MemberAppointment } from "@/mock/memberMockData";
+import TitleComponent from "@/components/shared/TitleComponent";
 
 type Tab = "upcoming" | "past" | "cancelled" | "all";
 
@@ -60,7 +59,6 @@ export default function MemberAppointments() {
         );
     };
 
-    // Member-appropriate actions only â€” no reassign
     const availableActions = (appt: MemberAppointment) => {
         const actions: { label: string; action: () => void; danger?: boolean }[] = [];
         if (appt.status === "pending") {
@@ -82,12 +80,6 @@ export default function MemberAppointments() {
                 danger: true,
             });
         }
-        if (!appt.paid && appt.status !== "cancelled") {
-            actions.push({
-                label: "Mark Paid",
-                action: () => updateAppt(appt.id, { paid: true }),
-            });
-        }
         return actions;
     };
 
@@ -100,28 +92,23 @@ export default function MemberAppointments() {
 
     return (
         <div className="relative pb-6 space-y-8">
-            {/* Header */}
             <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
-                    My Appointments
-                </h1>
-                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
-                    Track and manage your client consultation sessions.
-                </p>
+                <h2 className="heading-h2 text-black dark:text-white/90">My Appointments</h2>
+                <TitleComponent size='small' className="text-black/50 dark:text-white/90 nd:text-base mt-1">Track and manage your client consultation sessions.</TitleComponent>
             </div>
 
             {/* Tab bar */}
-            <div className="flex items-center gap-1 bg-surface dark:bg-tint-black/60 border border-black/10 dark:border-white/5 rounded-2xl p-1.5 shadow-shadow2-effect dark:shadow-shadow1 w-fit">
+            <div className="flex items-center gap-1 bg-white dark:bg-tint-black/60 border border-black/10 dark:border-white/5 rounded-xl p-1.5 shadow-shadow2-effect dark:shadow-shadow1 w-fit">
                 {TABS.map(({ key, label }) => (
                     <button
                         key={key}
                         type="button"
                         onClick={() => setActiveTab(key)}
                         className={clsx(
-                            "px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200",
+                            "px-4 py-2 rounded-lg text-xs font-bold transition-all duration-200",
                             "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                             activeTab === key
-                                ? "bg-primary text-white shadow-sm"
+                                ? "bg-gradient-to-b from-primary-start to-primary-end text-white shadow-sm"
                                 : "text-black/50 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5"
                         )}
                     >
@@ -139,14 +126,14 @@ export default function MemberAppointments() {
             </div>
 
             {/* Table */}
-            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
+            <div className="bg-white dark:bg-tint-black/60 rounded-xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 <div className="overflow-x-auto">
                     {filtered.length === 0 ? (
                         <div className="py-16 text-center px-6">
                             <div className="text-2xl mb-2">
-                                {activeTab === "upcoming" ? "ðŸ“…" : activeTab === "past" ? "âœ…" : "ðŸš«"}
+                                {activeTab === "upcoming" ? "•" : activeTab === "past" ? "•" : "•"}
                             </div>
-                            <p className="text-sm font-semibold text-black/50 dark:text-white/90">
+                            <TitleComponent size="small-semibold" className="text-black/50 dark:text-white/90">
                                 {activeTab === "upcoming"
                                     ? "No upcoming sessions."
                                     : activeTab === "past"
@@ -154,7 +141,7 @@ export default function MemberAppointments() {
                                         : activeTab === "cancelled"
                                             ? "No cancelled sessions."
                                             : "No appointments found."}
-                            </p>
+                            </TitleComponent>
                         </div>
                     ) : (
                         <table className="w-full text-left border-collapse min-w-[640px]">
@@ -163,8 +150,6 @@ export default function MemberAppointments() {
                                     <th className="px-6 py-4">Client</th>
                                     <th className="px-6 py-4">Date & Time</th>
                                     <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4">Payment</th>
-                                    <th className="px-6 py-4 text-right">Fee</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-black/5 dark:divide-white/5 text-sm">
@@ -200,20 +185,6 @@ export default function MemberAppointments() {
                                                 {appt.status}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            {appt.paid ? (
-                                                <span className="inline-flex px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-                                                    Paid
-                                                </span>
-                                            ) : (
-                                                <span className="inline-flex px-2 py-0.5 rounded bg-red-500/10 text-red-500 text-xs font-semibold">
-                                                    Unpaid
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className="px-6 py-4 text-right font-bold text-black dark:text-white/90">
-                                            ${appt.amount}
-                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -222,113 +193,89 @@ export default function MemberAppointments() {
                 </div>
             </div>
 
-            {/* â”€â”€ Appointment Detail Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {selectedAppt && (
-                <div className="fixed inset-0 z-50 overflow-hidden">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div
-                        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                         onClick={() => setSelectedAppt(null)}
                         aria-hidden="true"
                     />
 
-                    <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
-                        <div className="w-screen max-w-md bg-surface dark:bg-tint-black/60 border-l border-black/10 dark:border-white/10 shadow-2xl flex flex-col">
-                            {/* Drawer header */}
-                            <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
-                                <h2 className="text-lg font-bold text-black dark:text-white/90">
-                                    Session Details
-                                </h2>
-                                <button
-                                    onClick={() => setSelectedAppt(null)}
-                                    aria-label="Close details"
-                                    className="p-1 rounded-lg text-black/40 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
-                                >
-                                    <XIcon size={20} />
-                                </button>
+                    <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-3xl border border-black/10 bg-white shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black dark:shadow-shadow1">
+                        <div className="flex items-start justify-between border-b border-black/10 bg-black/[0.02] px-6 py-5 dark:border-white/5 dark:bg-white/[0.02]">
+                            <div>
+                                <h6 className="heading-h6 text-black dark:text-white/90">Session Details</h6>
+                                <TitleComponent size="small" className="mt-1 text-black/50 dark:text-white/90">Review the consultation details and update its progress cleanly.</TitleComponent>
                             </div>
+                            <button
+                                onClick={() => setSelectedAppt(null)}
+                                className="rounded-full p-2 text-black/40 transition hover:bg-black/5 hover:text-black dark:text-white/90 dark:hover:bg-white/5"
+                                aria-label="Close details"
+                            >
+                                <XIcon size={20} />
+                            </button>
+                        </div>
 
-                            {/* Drawer body */}
-                            <div className="flex-1 overflow-y-auto p-6 space-y-6 text-sm">
-                                {/* Client info */}
-                                <div className="flex items-start gap-3">
-                                    <span className="p-2 rounded-xl bg-primary/10 text-primary mt-0.5 flex-shrink-0">
-                                        <UserIcon size={18} weight="bold" />
-                                    </span>
-                                    <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
-                                            Client
+                        <div className="max-h-[75vh] overflow-y-auto p-6 text-sm">
+                            <div className="grid gap-4">
+                                <div className="grid gap-4 rounded-2xl border border-black/10 bg-white/80 p-4 dark:border-white/5 dark:bg-black/30 sm:grid-cols-2">
+                                    <div className="flex items-start gap-3">
+                                        <span className="mt-1 flex-shrink-0 rounded-lg bg-primary/10 p-2 text-primary">
+                                            <UserIcon size={18} weight="bold" />
+                                        </span>
+                                        <div>
+                                            <span className="text-[10px] font-semibold uppercase tracking-wider text-black/40 dark:text-white/90">Client Info</span>
+                                            <div className="mt-0.5 font-bold text-black dark:text-white/90">
+                                                {selectedAppt.clientName}
+                                            </div>
+                                            <TitleComponent size="extra-small" className="text-black/50 dark:text-white/90">
+                                                {selectedAppt.clientEmail}
+                                            </TitleComponent>
                                         </div>
-                                        <div className="font-bold text-black dark:text-white/90 mt-0.5">
-                                            {selectedAppt.clientName}
-                                        </div>
-                                        <div className="text-xs text-black/50 dark:text-white/90">
-                                            {selectedAppt.clientEmail}
+                                    </div>
+
+                                    <div className="flex items-start gap-3">
+                                        <span className="mt-1 flex-shrink-0 rounded-lg bg-primary/10 p-2 text-primary">
+                                            <CalendarBlankIcon size={18} weight="bold" />
+                                        </span>
+                                        <div>
+                                            <span className="text-[10px] font-semibold uppercase tracking-wider text-black/40 dark:text-white/90">Date & Time</span>
+                                            <div className="mt-0.5 font-bold text-black dark:text-white/90">
+                                                {selectedAppt.date}
+                                            </div>
+                                            <div className="mt-1 flex items-center gap-1 text-xs text-black/50 dark:text-white/90">
+                                                <ClockIcon size={11} />
+                                                {selectedAppt.time}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Date / time */}
-                                <div className="flex items-start gap-3">
-                                    <span className="p-2 rounded-xl bg-primary/10 text-primary mt-0.5 flex-shrink-0">
-                                        <CalendarBlankIcon size={18} weight="bold" />
-                                    </span>
-                                    <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
-                                            Date & Time
-                                        </div>
-                                        <div className="font-bold text-black dark:text-white/90 mt-0.5">
-                                            {selectedAppt.date}
-                                        </div>
-                                        <div className="text-xs text-black/50 dark:text-white/90 flex items-center gap-1">
-                                            <ClockIcon size={11} />
-                                            {selectedAppt.time}
-                                        </div>
+                                <div className="rounded-2xl border border-black/10 bg-parchment/20 p-4 dark:border-white/5 dark:bg-black/30">
+                                    <div className="mb-2 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-black/40 dark:text-white/90">
+                                        <ChatCenteredTextIcon size={16} />
+                                        <span>Session Notes</span>
                                     </div>
-                                </div>
-
-                                {/* Fee */}
-                                <div className="flex items-start gap-3">
-                                    <span className="p-2 rounded-xl bg-primary/10 text-primary mt-0.5 flex-shrink-0">
-                                        <CreditCardIcon size={18} weight="bold" />
-                                    </span>
-                                    <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
-                                            Consultation Fee
-                                        </div>
-                                        <div className="font-bold text-black dark:text-white/90 mt-0.5">
-                                            ${selectedAppt.amount}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Notes */}
-                                <div className="border-t border-black/5 dark:border-white/5 pt-4">
-                                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-2">
-                                        <ChatCenteredTextIcon size={14} />
-                                        Session Notes
-                                    </div>
-                                    <p className="text-xs leading-relaxed text-black/70 dark:text-white/90 bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-xl p-3">
+                                    <p className="leading-relaxed text-black/70 dark:text-white/90">
                                         {selectedAppt.notes}
                                     </p>
                                 </div>
 
-                                {/* Status actions â€” member-appropriate only */}
-                                <div className="border-t border-black/5 dark:border-white/5 pt-4 space-y-3">
-                                    <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
+                                <div className="rounded-2xl border border-black/10 bg-white/70 p-4 dark:border-white/5 dark:bg-white/[0.03]">
+                                    <div className="text-[10px] font-semibold uppercase tracking-wider text-black/40 dark:text-white/90">
                                         Actions
                                     </div>
-                                    <div className="flex flex-wrap gap-2">
+                                    <div className="mt-3 flex flex-wrap gap-2">
                                         {availableActions(selectedAppt).map(({ label, action, danger }) => (
                                             <button
                                                 key={label}
                                                 type="button"
                                                 onClick={action}
                                                 className={clsx(
-                                                    "px-4 py-2 rounded-xl text-xs font-semibold border transition-colors",
-                                                    "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
+                                                    "rounded-full border px-3 py-2 text-center text-xs font-semibold uppercase tracking-wider transition-all",
                                                     danger
                                                         ? "border-red-500/20 text-red-500 hover:bg-red-500/5"
-                                                        : "border-primary/20 text-primary bg-primary/5 hover:bg-primary/10"
+                                                        : "border-primary/20 bg-primary/5 text-primary hover:bg-primary/10"
                                                 )}
                                             >
                                                 {label}
@@ -337,44 +284,15 @@ export default function MemberAppointments() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            {/* Drawer footer â€” payment toggle */}
-                            <div className="px-6 py-4 border-t border-black/10 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] flex items-center justify-between gap-4">
-                                <div>
-                                    <div className="text-[10px] uppercase font-bold text-black/40 dark:text-white/90">
-                                        Payment Status
-                                    </div>
-                                    <div className="mt-0.5">
-                                        {selectedAppt.paid ? (
-                                            <span className="inline-flex px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                                                Paid
-                                            </span>
-                                        ) : (
-                                            <span className="inline-flex px-2 py-0.5 rounded bg-red-500/10 text-red-500 text-xs font-bold uppercase tracking-wider">
-                                                Unpaid
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-                                {selectedAppt.status !== "cancelled" && (
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            updateAppt(selectedAppt.id, { paid: !selectedAppt.paid })
-                                        }
-                                        className={clsx(
-                                            "px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm",
-                                            "focus: focus-visible:ring-2 focus-visible:ring-offset-2",
-                                            selectedAppt.paid
-                                                ? "bg-red-500 hover:bg-red-600 text-white focus-visible:ring-red-500"
-                                                : "bg-emerald-500 hover:bg-emerald-600 text-white focus-visible:ring-emerald-500"
-                                        )}
-                                    >
-                                        <CheckCircleIcon size={14} weight="bold" />
-                                        {selectedAppt.paid ? "Mark Unpaid" : "Mark Paid"}
-                                    </button>
-                                )}
-                            </div>
+                        <div className="flex items-center justify-end border-t border-black/10 bg-black/[0.02] px-6 py-4 dark:border-white/5 dark:bg-white/[0.02]">
+                            <button
+                                onClick={() => setSelectedAppt(null)}
+                                className="rounded-full bg-gradient-to-b from-primary-start to-primary-end px-4 py-2.5 text-sm font-semibold text-white shadow-inset transition hover:from-secondary-start hover:to-secondary-end"
+                            >
+                                Close
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -21,7 +21,7 @@ export default function ClientSettings() {
     const handleProfileSave = (e: React.FormEvent) => {
         e.preventDefault();
         // Wire to Firestore: update client document
-        alert("Profile updated (mock â€” no persistence yet).");
+        alert("Profile updated (mock - no persistence yet).");
     };
 
     const handlePasswordSave = (e: React.FormEvent) => {
@@ -41,7 +41,7 @@ export default function ClientSettings() {
     };
 
     const inputClass =
-        "w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/30 dark:bg-black/30 px-4 py-2.5 text-sm  transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30";
+        "w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-2.5 text-sm transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30";
 
     const labelClass =
         "block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1.5";
@@ -63,7 +63,7 @@ export default function ClientSettings() {
             </div>
 
             {/* Identity strip */}
-            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-center gap-5">
+            <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-center gap-5">
                 <div className="h-16 w-16 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-xl flex-shrink-0">
                     {LOGGED_IN_CLIENT.avatar}
                 </div>
@@ -82,7 +82,7 @@ export default function ClientSettings() {
                 {/* Profile form */}
                 <form
                     onSubmit={handleProfileSave}
-                    className="lg:col-span-7 bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
+                    className="lg:col-span-7 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
                 >
                     <div className="flex items-center gap-2.5 pb-3 border-b border-black/5 dark:border-white/5">
                         <span className="p-1 rounded bg-primary/10 text-primary">
@@ -139,7 +139,7 @@ export default function ClientSettings() {
                 {/* Password form */}
                 <form
                     onSubmit={handlePasswordSave}
-                    className="lg:col-span-5 bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
+                    className="lg:col-span-5 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
                 >
                     <div className="flex items-center gap-2.5 pb-3 border-b border-black/5 dark:border-white/5">
                         <span className="p-1 rounded bg-primary/10 text-primary">
@@ -155,7 +155,7 @@ export default function ClientSettings() {
                             type="password"
                             value={currentPw}
                             onChange={(e) => setCurrentPw(e.target.value)}
-                            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                            placeholder="••••••••"
                             className={inputClass}
                         />
                     </div>

@@ -26,10 +26,8 @@ export default function Clients() {
     return (
         <div className="space-y-8">
             <div>
-                <h2 className="heading-h2 font-extrabold tracking-tight text-black dark:text-white/90">
-                    Registered Clients
-                </h2>
-                <TitleComponent size='small' className="text-black/50 dark:text-white/90 mt-1">View client portfolios, history logs, registration details, and actions.</TitleComponent>
+                <h2 className="heading-h2 font-extrabold tracking-tight text-black dark:text-white/90">Registered Clients</h2>
+                <TitleComponent size='small' className="text-black/50 dark:text-white/90 md:text-base mt-1">View client portfolios, history logs, registration details, and actions.</TitleComponent>
             </div>
 
             <div className="bg-white dark:bg-tint-black/60 rounded-2xl border border-black/10 dark:border-white/5 p-4 shadow-shadow2-effect dark:shadow-shadow1 flex items-center">

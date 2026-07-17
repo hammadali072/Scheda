@@ -21,10 +21,10 @@ import {
 import { useClientAppointments } from "@/context/client-appointments-context";
 import { type DaySchedule, type TimeRange } from "@/mock/memberMockData";
 
-// â”€â”€â”€ Mock today â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Mock today
 const MOCK_TODAY = "2026-07-15";
 
-// â”€â”€â”€ Utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Utilities
 
 /** Returns available YYYY-MM-DD dates for the next `daysAhead` days given a member schedule. */
 function getAvailableDates(schedule: DaySchedule[], daysAhead = 28): string[] {
@@ -42,7 +42,7 @@ function getAvailableDates(schedule: DaySchedule[], daysAhead = 28): string[] {
     return dates;
 }
 
-/** Generates 60-minute slot strings ("9:00 AM", "10:00 AM", â€¦) from TimeRanges. */
+/** Generates 60-minute slot strings ("9:00 AM", "10:00 AM", ...) from TimeRanges. */
 function generateSlots(ranges: TimeRange[]): string[] {
     const slots: string[] = [];
     for (const range of ranges) {
@@ -62,7 +62,7 @@ function generateSlots(ranges: TimeRange[]): string[] {
     return slots;
 }
 
-/** Pretty-prints YYYY-MM-DD â†’ e.g. "Thu, Jul 17" */
+/** Pretty-prints YYYY-MM-DD to e.g. "Thu, Jul 17" */
 function fmtDateShort(d: string) {
     return new Date(d + "T00:00:00").toLocaleDateString("en-US", {
         weekday: "short",
@@ -71,7 +71,7 @@ function fmtDateShort(d: string) {
     });
 }
 
-/** Pretty-prints YYYY-MM-DD â†’ e.g. "Thursday, July 17, 2026" */
+/** Pretty-prints YYYY-MM-DD to e.g. "Thursday, July 17, 2026" */
 function fmtDateLong(d: string) {
     return new Date(d + "T00:00:00").toLocaleDateString("en-US", {
         weekday: "long",
@@ -81,7 +81,7 @@ function fmtDateLong(d: string) {
     });
 }
 
-// â”€â”€â”€ Step indicator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Step indicator
 
 const STEPS = ["Select a time", "Your details", "Confirm"] as const;
 type Step = 0 | 1 | 2 | 3; // 3 = success
@@ -136,7 +136,7 @@ function StepBar({ current }: { current: Step }) {
     );
 }
 
-// â”€â”€â”€ Date chip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Date chip
 
 function DateChip({
     date,
@@ -161,7 +161,7 @@ function DateChip({
                 "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                 selected
                     ? "bg-primary border-primary text-white shadow-md shadow-primary/20"
-                    : "bg-surface dark:bg-tint-black/60 border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:border-primary/40 hover:bg-primary/5"
+                    : "bg-white dark:bg-tint-black/60 border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:border-primary/40 hover:bg-primary/5"
             )}
             aria-pressed={selected}
             aria-label={`Select ${fmtDateShort(date)}`}
@@ -177,7 +177,7 @@ function DateChip({
     );
 }
 
-// â”€â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Main component
 
 export default function ClientBookAppointment() {
     const { memberId } = useParams<{ memberId: string }>();
@@ -191,7 +191,7 @@ export default function ClientBookAppointment() {
     const member = BOOKABLE_MEMBERS.find((m) => m.id === memberId);
     const schedule = memberId ? MEMBER_AVAILABILITY_MAP[memberId] ?? [] : [];
 
-    // â”€â”€ Booking state â”€â”€
+    // Booking state
     const [step, setStep] = useState<Step>(0);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -205,7 +205,7 @@ export default function ClientBookAppointment() {
     );
     const [notes, setNotes] = useState(reschedule?.notes ?? "");
 
-    // â”€â”€ Computed â”€â”€
+    // Computed
     const availableDates = useMemo(() => getAvailableDates(schedule), [schedule]);
 
     const slotsForDate = useMemo(() => {
@@ -216,13 +216,13 @@ export default function ClientBookAppointment() {
         return day ? generateSlots(day.ranges) : [];
     }, [selectedDate, schedule]);
 
-    // Effective purpose string (resolves "Other" â†’ free text)
+    // Effective purpose string (resolves "Other" to free text)
     const effectivePurpose = purpose === "Other" ? purposeOther.trim() : purpose;
 
     const step0Valid = !!selectedDate && !!selectedSlot;
     const step1Valid = !!effectivePurpose;
 
-    // â”€â”€ Handlers â”€â”€
+    // Handlers
     const handleSubmit = () => {
         if (!member || !selectedDate || !selectedSlot || !effectivePurpose) return;
 
@@ -247,11 +247,11 @@ export default function ClientBookAppointment() {
         setStep(3);
     };
 
-    // â”€â”€ Guard: unknown member â”€â”€
+    // Guard: unknown member
     if (!member) {
         return (
             <div className="py-24 text-center space-y-4">
-                <div className="text-4xl">ðŸ”</div>
+                <div className="text-4xl">•</div>
                 <h1 className="text-xl font-bold text-black dark:text-white/90">Member not found</h1>
                 <p className="text-sm text-black/50 dark:text-white/90">
                     The member you're looking for doesn't exist or is no longer available.
@@ -267,9 +267,8 @@ export default function ClientBookAppointment() {
         );
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // Step 3 â€” Success
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Success state
+    // Step 3 - Success
     if (step === 3) {
         return (
             <div className="max-w-lg mx-auto py-12 space-y-6">
@@ -287,7 +286,7 @@ export default function ClientBookAppointment() {
                 </div>
 
                 {/* Summary card */}
-                <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
+                <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                     <div className="bg-primary/5 border-b border-primary/10 px-6 py-4 flex items-center gap-3">
                         <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black text-sm flex-shrink-0">
                             {member.avatar}
@@ -339,7 +338,7 @@ export default function ClientBookAppointment() {
                     </button>
                     <Link
                         to="/client/find"
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-surface dark:bg-tint-black/60 text-sm font-semibold text-black dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-tint-black/60 text-sm font-semibold text-black dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                     >
                         Book Another
                     </Link>
@@ -348,9 +347,8 @@ export default function ClientBookAppointment() {
         );
     }
 
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // Steps 0â€“2
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Main booking flow
+    // Steps 0-2
     return (
         <div className="space-y-8">
 
@@ -368,7 +366,7 @@ export default function ClientBookAppointment() {
             </div>
 
             {/* Member header card */}
-            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-start gap-5">
+            <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-start gap-5">
                 <div className="h-16 w-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">
                     {member.avatar}
                 </div>
@@ -385,19 +383,19 @@ export default function ClientBookAppointment() {
             </div>
 
             {/* Booking form card */}
-            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
+            <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
 
                 {/* Step bar */}
                 <div className="px-6 py-5 border-b border-black/5 dark:border-white/5">
                     {reschedule && (
                         <div className="mb-4 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                            Rescheduling: {reschedule.purpose} on {fmtDateShort(reschedule.date)} Â· {reschedule.time}
+                            Rescheduling: {reschedule.purpose} on {fmtDateShort(reschedule.date)} · {reschedule.time}
                         </div>
                     )}
                     <StepBar current={step} />
                 </div>
 
-                {/* â”€â”€ Step 0: Pick date & time â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                {/* Step 0: Pick date & time */}
                 {step === 0 && (
                     <div className="p-6 space-y-7">
 
@@ -445,7 +443,7 @@ export default function ClientBookAppointment() {
                                         Select a time
                                     </h2>
                                     <span className="text-xs text-black/40 dark:text-white/90">
-                                        â€” {fmtDateShort(selectedDate)}
+                                        - {fmtDateShort(selectedDate)}
                                     </span>
                                 </div>
 
@@ -466,7 +464,7 @@ export default function ClientBookAppointment() {
                                                     "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                                     selectedSlot === slot
                                                         ? "bg-primary border-primary text-white shadow-sm shadow-primary/20"
-                                                        : "bg-parchment/30 dark:bg-black/30 border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:border-primary/40 hover:bg-primary/5"
+                                                        : "bg-black/[0.02] dark:bg-white/[0.03] border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:border-primary/40 hover:bg-primary/5"
                                                 )}
                                             >
                                                 {slot}
@@ -498,7 +496,7 @@ export default function ClientBookAppointment() {
                     </div>
                 )}
 
-                {/* â”€â”€ Step 1: Purpose & notes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                {/* Step 1: Purpose & notes */}
                 {step === 1 && (
                     <div className="p-6 space-y-6">
 
@@ -527,7 +525,7 @@ export default function ClientBookAppointment() {
                                                 "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                                 purpose === p
                                                     ? "bg-primary/10 border-primary text-primary"
-                                                    : "bg-parchment/30 dark:bg-black/30 border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:border-primary/30 hover:bg-primary/5"
+                                                    : "bg-black/[0.02] dark:bg-white/[0.03] border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:border-primary/30 hover:bg-primary/5"
                                             )}
                                         >
                                             {p}
@@ -551,7 +549,7 @@ export default function ClientBookAppointment() {
                                             onChange={(e) => setPurposeOther(e.target.value)}
                                             placeholder="e.g. Estate planning for a family trust"
                                             maxLength={120}
-                                            className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/30 dark:bg-black/30 px-4 py-2.5 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 focus: focus-visible:ring-2 focus-visible:ring-primary/40 transition"
+                                            className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-2.5 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 focus-visible:ring-2 focus-visible:ring-primary/40 transition"
                                         />
                                     </div>
                                 )}
@@ -574,8 +572,8 @@ export default function ClientBookAppointment() {
                                 rows={4}
                                 value={notes}
                                 onChange={(e) => setNotes(e.target.value)}
-                                placeholder="Any context that would help the member prepare â€” documents to review, specific questions, background informationâ€¦"
-                                className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/30 dark:bg-black/30 px-4 py-3 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 focus: focus-visible:ring-2 focus-visible:ring-primary/40 transition resize-none"
+                                placeholder="Any context that would help the member prepare - documents to review, specific questions, background information..."
+                                className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-3 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 focus-visible:ring-2 focus-visible:ring-primary/40 transition resize-none"
                             />
                         </div>
 
@@ -608,7 +606,7 @@ export default function ClientBookAppointment() {
                     </div>
                 )}
 
-                {/* â”€â”€ Step 2: Confirm â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+                {/* Step 2: Confirm */}
                 {step === 2 && (
                     <div className="p-6 space-y-6">
                         <div>
@@ -645,7 +643,7 @@ export default function ClientBookAppointment() {
                                         <div className="font-semibold text-black dark:text-white/90">{fmtDateLong(selectedDate!)}</div>
                                         <div className="text-xs text-black/50 dark:text-white/90 flex items-center gap-1 mt-0.5">
                                             <ClockIcon size={11} />
-                                            {selectedSlot} Â· 60 minutes
+                                            {selectedSlot} · 60 minutes
                                         </div>
                                     </div>
                                 </div>

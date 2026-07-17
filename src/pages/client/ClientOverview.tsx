@@ -45,7 +45,7 @@ export default function ClientOverview() {
         },
     ];
 
-    // Format YYYY-MM-DD â†’ "Friday, July 18"
+    // Format YYYY-MM-DD to "Friday, July 18"
     const formatDate = (d: string) =>
         new Date(d + "T00:00:00").toLocaleDateString("en-US", {
             weekday: "long",
@@ -83,7 +83,7 @@ export default function ClientOverview() {
                 {stats.map((stat, idx) => (
                     <div
                         key={idx}
-                        className="bg-surface dark:bg-tint-black/60 p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1"
+                        className="bg-white dark:bg-tint-black/60 p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1"
                     >
                         <div className="flex items-center justify-between mb-3">
                             <span className={clsx("p-2 rounded-xl", stat.color)}>
@@ -100,7 +100,7 @@ export default function ClientOverview() {
                 ))}
             </div>
 
-            {/* â”€â”€ Next Appointment hero card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* Next Appointment hero card */}
             {nextAppt ? (
                 <div className="relative overflow-hidden rounded-3xl shadow-xl shadow-primary/15">
                     {/* Gradient background */}
@@ -187,9 +187,9 @@ export default function ClientOverview() {
                     </div>
                 </div>
             ) : (
-                /* â”€â”€ Empty state â”€â”€ */
-                <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-12 text-center">
-                    <div className="text-5xl mb-5">ðŸ“…</div>
+                /* Empty state */
+                <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-12 text-center">
+                    <div className="text-5xl mb-5">•</div>
                     <h2 className="text-lg font-bold text-black dark:text-white/90 mb-2">
                         No upcoming appointments
                     </h2>
@@ -206,9 +206,9 @@ export default function ClientOverview() {
                 </div>
             )}
 
-            {/* â”€â”€ Also coming up (2nd+ upcoming appt) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            {/* Also coming up (2nd+ upcoming appt) */}
             {upcoming.length > 1 && (
-                <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
+                <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                     <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
                             <span className="p-1.5 rounded-lg bg-primary/10 text-primary">

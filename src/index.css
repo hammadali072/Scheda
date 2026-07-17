@@ -41,7 +41,7 @@
   /* ── Shadows ──────────────────────────────────────────── */
   --shadow-shadow1: inset 0px 0px 25px #e5e7eb1a;
   --shadow-shadow2: inset 0px 0px 16px #0a0a0a33;
-  --shadow-shadow2-effect: inset 0px 0px 16px #2563eb33;
+  --shadow-shadow2-effect: inset 0px 0px 16px #0a0a0a1a;
   --shadow-inset: inset 1px 0px 0px #0a0a0a4d, inset -1px 0px 0px #0a0a0a4d;
   --shadow-card-hover: 0 16px 40px rgb(15 23 42 / 0.12);
 

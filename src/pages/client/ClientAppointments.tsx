@@ -12,6 +12,7 @@ import {
 import clsx from "clsx";
 import { type ClientAppointment } from "@/mock/clientMockData";
 import { useClientAppointments } from "@/context/client-appointments-context";
+import TitleComponent from "@/components/shared/TitleComponent";
 
 const TODAY = "2026-07-15"; // mock "today"
 
@@ -58,8 +59,6 @@ function MemberAvatar({ name, size = "md" }: { name: string; size?: "sm" | "md" 
     );
 }
 
-// â”€â”€â”€ Appointment detail drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
 function DetailDrawer({
     appt,
     onClose,
@@ -76,18 +75,15 @@ function DetailDrawer({
 
     return (
         <div className="fixed inset-0 z-50 overflow-hidden">
-            {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/40 backdrop-blur-sm"
                 onClick={onClose}
                 aria-hidden="true"
             />
 
-            {/* Drawer */}
             <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
-                <div className="w-screen max-w-md bg-surface dark:bg-tint-black/60 border-l border-black/10 dark:border-white/10 shadow-2xl flex flex-col">
+                <div className="w-screen max-w-md bg-white dark:bg-tint-black/60 border-l border-black/10 dark:border-white/10 shadow-2xl flex flex-col">
 
-                    {/* Header */}
                     <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                         <h2 className="text-lg font-bold text-black dark:text-white/90">
                             Appointment Details
@@ -212,7 +208,6 @@ function DetailDrawer({
     );
 }
 
-// â”€â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function ClientAppointments() {
     const navigate = useNavigate();
@@ -248,9 +243,9 @@ export default function ClientAppointments() {
     };
 
     const EMPTY_MSG: Record<Tab, { icon: string; title: string; sub: string }> = {
-        upcoming: { icon: "ðŸ“…", title: "No upcoming appointments", sub: "Browse available members and book a session." },
-        past: { icon: "âœ…", title: "No past appointments", sub: "Completed sessions will appear here." },
-        cancelled: { icon: "ðŸš«", title: "No cancelled appointments", sub: "Good news â€” nothing cancelled." },
+        upcoming: { icon: "•", title: "No upcoming appointments", sub: "Browse available members and book a session." },
+        past: { icon: "•", title: "No past appointments", sub: "Completed sessions will appear here." },
+        cancelled: { icon: "•", title: "No cancelled appointments", sub: "Good news - nothing cancelled." },
     };
 
     return (
@@ -259,12 +254,8 @@ export default function ClientAppointments() {
             {/* Header */}
             <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
-                        My Appointments
-                    </h1>
-                    <p className="text-sm text-black/50 dark:text-white/90 mt-1">
-                        Track your bookings and manage upcoming sessions.
-                    </p>
+                    <h2 className="heading-h2 text-black dark:text-white/90">My Appointments</h2>
+                    <TitleComponent size="small" className="text-black/50 dark:text-white/90 md:text-base mt-1">Track your bookings and manage upcoming sessions.</TitleComponent>
                 </div>
                 <Link
                     to="/client/find"
@@ -276,7 +267,7 @@ export default function ClientAppointments() {
             </div>
 
             {/* Tab bar */}
-            <div className="flex items-center gap-1 bg-surface dark:bg-tint-black/60 border border-black/10 dark:border-white/5 rounded-2xl p-1.5 shadow-shadow2-effect dark:shadow-shadow1 w-fit">
+            <div className="flex items-center gap-1 bg-white dark:bg-tint-black/60 border border-black/10 dark:border-white/5 rounded-xl p-1.5 shadow-shadow2-effect dark:shadow-shadow1 w-fit">
                 {TABS.map(({ key, label }) => (
                     <button
                         key={key}
@@ -284,7 +275,7 @@ export default function ClientAppointments() {
                         id={`tab-${key}`}
                         onClick={() => setActiveTab(key)}
                         className={clsx(
-                            "px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200",
+                            "px-4 py-2 rounded-md text-xs font-bold transition-all duration-200",
                             "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                             activeTab === key
                                 ? "bg-primary text-white shadow-sm"
@@ -305,7 +296,7 @@ export default function ClientAppointments() {
             </div>
 
             {/* Table */}
-            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
+            <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 <div className="overflow-x-auto">
                     {filtered.length === 0 ? (
                         <div className="py-16 text-center px-6">

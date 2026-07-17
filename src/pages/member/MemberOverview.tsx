@@ -2,7 +2,6 @@
 import {
     CalendarBlankIcon,
     HourglassIcon,
-    CreditCardIcon,
     CheckCircleIcon,
     ArrowRightIcon,
     ClockIcon,
@@ -54,10 +53,10 @@ export default function MemberOverview() {
             color: "text-amber-500 bg-amber-500/10",
         },
         {
-            label: "Unpaid Sessions",
-            value: MEMBER_APPOINTMENTS.filter((a) => !a.paid && a.status !== "cancelled").length,
-            icon: CreditCardIcon,
-            color: "text-red-500 bg-red-500/10",
+            label: "Confirmed Sessions",
+            value: MEMBER_APPOINTMENTS.filter((a) => a.status === "confirmed").length,
+            icon: CheckCircleIcon,
+            color: "text-emerald-500 bg-emerald-500/10",
         },
     ];
 
@@ -81,7 +80,7 @@ export default function MemberOverview() {
                 {stats.map((stat, idx) => (
                     <div
                         key={idx}
-                        className="bg-surface dark:bg-tint-black/60 p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1"
+                        className="bg-white dark:bg-tint-black/60 p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1"
                     >
                         <div className="flex items-center justify-between mb-3">
                             <span className={clsx("p-2 rounded-xl", stat.color)}>
@@ -99,7 +98,7 @@ export default function MemberOverview() {
             </div>
 
             {/* Today's Schedule */}
-            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
+            <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                         <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
@@ -123,12 +122,12 @@ export default function MemberOverview() {
 
                 {todayAppts.length === 0 ? (
                     <div className="px-6 py-16 text-center">
-                        <div className="text-2xl mb-2">ðŸ—“ï¸</div>
+                        <div className="text-2xl mb-2">•</div>
                         <p className="text-sm font-semibold text-black/50 dark:text-white/90">
                             Nothing on your schedule today.
                         </p>
                         <p className="text-xs text-black/30 dark:text-white/90 mt-1 max-w-xs mx-auto">
-                            Enjoy the downtime â€” or check upcoming appointments for the rest of the week.
+                            Enjoy the downtime - or check upcoming appointments for the rest of the week.
                         </p>
                     </div>
                 ) : (
@@ -165,10 +164,6 @@ export default function MemberOverview() {
                                     {appt.status}
                                 </span>
 
-                                {/* Fee */}
-                                <span className="text-sm font-bold text-black dark:text-white/90 flex-shrink-0 hidden sm:block">
-                                    ${appt.amount}
-                                </span>
                             </li>
                         ))}
                     </ul>

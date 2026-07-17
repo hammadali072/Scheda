@@ -46,9 +46,9 @@ export default function ClientFindMember() {
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search by name or specialtyâ€¦"
+                    placeholder="Search by name or specialty..."
                     aria-label="Search members"
-                    className="w-full pl-11 pr-10 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-surface dark:bg-tint-black/60 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 shadow-shadow2-effect dark:shadow-shadow1 focus: focus-visible:ring-2 focus-visible:ring-primary/40 transition"
+                    className="w-full pl-11 pr-10 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-tint-black/60 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 shadow-shadow2-effect dark:shadow-shadow1 focus: focus-visible:ring-2 focus-visible:ring-primary/40 transition"
                 />
                 {query && (
                     <button
@@ -71,7 +71,7 @@ export default function ClientFindMember() {
             {/* Member grid */}
             {filtered.length === 0 ? (
                 <div className="py-20 text-center">
-                    <div className="text-4xl mb-4">ðŸ”</div>
+                    <div className="text-4xl mb-4">•</div>
                     <p className="text-sm font-semibold text-black/50 dark:text-white/90">
                         No members match "{query}"
                     </p>
@@ -84,7 +84,7 @@ export default function ClientFindMember() {
                     {filtered.map((member) => (
                         <div
                             key={member.id}
-                            className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 hover:shadow-shadow2-effect hover:-translate-y-0.5 transition-all duration-200 flex flex-col overflow-hidden"
+                            className="group bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 hover:shadow-shadow2-effect hover:-translate-y-1 transition-all duration-200 flex flex-col overflow-hidden"
                         >
                             {/* Card top */}
                             <div className="p-6 flex items-start gap-4">
@@ -110,7 +110,7 @@ export default function ClientFindMember() {
                             </div>
 
                             {/* Footer */}
-                            <div className="px-6 py-4 border-t border-black/5 dark:border-white/5 flex items-center justify-between gap-3">
+                            <div className="px-6 py-4 border-t border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.03] flex items-center justify-between gap-3">
                                 <div className="flex items-center gap-1.5 text-xs text-black/40 dark:text-white/90 min-w-0">
                                     <CalendarBlankIcon size={13} className="flex-shrink-0" />
                                     <span className="truncate">

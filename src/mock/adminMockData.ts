@@ -27,9 +27,7 @@ export interface Appointment {
     date: string; // YYYY-MM-DD
     time: string; // HH:MM AM/PM
     status: "pending" | "confirmed" | "completed" | "cancelled";
-    paid: boolean;
     notes: string;
-    amount: number;
 }
 
 export const INITIAL_MEMBERS: Member[] = [
@@ -190,9 +188,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
         date: "2026-07-14",
         time: "09:00 AM",
         status: "confirmed",
-        paid: true,
         notes: "Initial strategic advisory session for legal corporate restructuring.",
-        amount: 250,
     },
     {
         id: "a2",
@@ -205,9 +201,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
         date: "2026-07-14",
         time: "10:00 AM",
         status: "pending",
-        paid: false,
         notes: "Portfolio optimization review. Client has questions on real estate exposure.",
-        amount: 180,
     },
     {
         id: "a3",
@@ -220,9 +214,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
         date: "2026-07-14",
         time: "01:00 PM",
         status: "confirmed",
-        paid: true,
         notes: "Contract dispute review and drafting advisory.",
-        amount: 250,
     },
     {
         id: "a4",
@@ -235,9 +227,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
         date: "2026-07-15",
         time: "11:00 AM",
         status: "confirmed",
-        paid: true,
         notes: "Marketing expansion alignment call.",
-        amount: 200,
     },
     {
         id: "a5",
@@ -250,9 +240,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
         date: "2026-07-16",
         time: "02:00 PM",
         status: "pending",
-        paid: false,
         notes: "Review of Seed Term Sheet clauses.",
-        amount: 300,
     },
     {
         id: "a6",
@@ -265,9 +253,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
         date: "2026-07-17",
         time: "03:00 PM",
         status: "completed",
-        paid: true,
         notes: "Completed quarterly strategy execution check-in.",
-        amount: 200,
     },
     {
         id: "a7",
@@ -280,9 +266,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
         date: "2026-07-18",
         time: "10:00 AM",
         status: "cancelled",
-        paid: false,
         notes: "Cancelled by client due to scheduling conflict.",
-        amount: 180,
     },
 ];
 
@@ -298,9 +282,7 @@ export const Appointment = [
         date: "2026-07-14",
         time: "09:00 AM",
         status: "confirmed",
-        paid: true,
         notes: "Initial strategic advisory session for legal corporate restructuring.",
-        amount: 250,
     },
     {
         id: "a2",
@@ -313,9 +295,7 @@ export const Appointment = [
         date: "2026-07-14",
         time: "10:00 AM",
         status: "pending",
-        paid: false,
         notes: "Portfolio optimization review. Client has questions on real estate exposure.",
-        amount: 180,
     },
     {
         id: "a3",
@@ -328,9 +308,7 @@ export const Appointment = [
         date: "2026-07-14",
         time: "01:00 PM",
         status: "confirmed",
-        paid: true,
         notes: "Contract dispute review and drafting advisory.",
-        amount: 250,
     },
     {
         id: "a4",
@@ -343,9 +321,7 @@ export const Appointment = [
         date: "2026-07-15",
         time: "11:00 AM",
         status: "confirmed",
-        paid: true,
         notes: "Marketing expansion alignment call.",
-        amount: 200,
     },
     {
         id: "a5",
@@ -358,9 +334,7 @@ export const Appointment = [
         date: "2026-07-16",
         time: "02:00 PM",
         status: "pending",
-        paid: false,
         notes: "Review of Seed Term Sheet clauses.",
-        amount: 300,
     },
     {
         id: "a6",
@@ -373,9 +347,7 @@ export const Appointment = [
         date: "2026-07-17",
         time: "03:00 PM",
         status: "completed",
-        paid: true,
         notes: "Completed quarterly strategy execution check-in.",
-        amount: 200,
     },
     {
         id: "a7",
@@ -388,9 +360,7 @@ export const Appointment = [
         date: "2026-07-18",
         time: "10:00 AM",
         status: "cancelled",
-        paid: false,
         notes: "Cancelled by client due to scheduling conflict.",
-        amount: 180,
     },
 ];
 

@@ -40,9 +40,8 @@ function SidebarContent({
     };
 
     return (
-        <div className="flex flex-col h-full bg-surface dark:bg-tint-black/60 transition-colors duration-300">
+        <div className="flex flex-col h-full bg-white dark:bg-tint-black/60 transition-colors duration-300">
 
-            {/* Logo */}
             <div className="p-6 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                 <Link to="/">
                     <img src={logoSrc} alt="Scheda" className="max-w-32 h-full object-contain" />
@@ -58,46 +57,42 @@ function SidebarContent({
                 )}
             </div>
 
-            {/* Role badge */}
-            <div className="px-6 pt-4 pb-2">
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                    Client Portal
-                </span>
-            </div>
-
-            {/* Nav links */}
-            <nav className="flex-1 px-4 py-2 space-y-1 overflow-y-auto" aria-label="Client navigation">
-                {NAV_ITEMS.map((item) => {
-                    const active = isActive(item);
-                    return (
-                        <NavLink
-                            key={item.name}
-                            to={item.path}
-                            end={item.exact}
-                            onClick={() => isMobile && onClose?.()}
-                            className={clsx(
-                                "flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group",
-                                "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
-                                active
-                                    ? "bg-primary text-white shadow-sm shadow-primary/10"
-                                    : "text-black/60 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5"
-                            )}
-                            aria-current={active ? "page" : undefined}
-                        >
-                            <item.icon
-                                size={20}
-                                weight={active ? "bold" : "regular"}
-                                className={clsx(
-                                    "transition-colors flex-shrink-0",
-                                    active
-                                        ? "text-white"
-                                        : "text-black/40 dark:text-white/90 group-hover:text-black dark:group-hover:text-white/90"
-                                )}
-                            />
-                            <span>{item.name}</span>
-                        </NavLink>
-                    );
-                })}
+            <nav className="flex-1 px-4 py-2 overflow-y-auto" aria-label="Client navigation">
+                <ul className="space-y-1">
+                    {NAV_ITEMS.map((item) => {
+                        const active = isActive(item);
+                        return (
+                            <li>
+                                <NavLink
+                                    key={item.name}
+                                    to={item.path}
+                                    end={item.exact}
+                                    onClick={() => isMobile && onClose?.()}
+                                    className={clsx(
+                                        "flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group",
+                                        "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
+                                        active
+                                            ? "bg-primary text-white shadow-sm shadow-primary/10"
+                                            : "text-black/60 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5"
+                                    )}
+                                    aria-current={active ? "page" : undefined}
+                                >
+                                    <item.icon
+                                        size={20}
+                                        weight={active ? "bold" : "regular"}
+                                        className={clsx(
+                                            "transition-colors flex-shrink-0",
+                                            active
+                                                ? "text-white"
+                                                : "text-black/40 dark:text-white/90 group-hover:text-black dark:group-hover:text-white/90"
+                                        )}
+                                    />
+                                    <span>{item.name}</span>
+                                </NavLink>
+                            </li>
+                        );
+                    })}
+                </ul>
             </nav>
 
             {/* Profile footer */}
@@ -136,7 +131,7 @@ export default function ClientLayout() {
         <ClientAppointmentsProvider>
             <div className="min-h-screen flex bg-parchment dark:bg-black transition-colors duration-300 text-black dark:text-white/90">
 
-                {/* Desktop sidebar â€” fixed, sticky */}
+                {/* Desktop sidebar - fixed, sticky */}
                 <aside className="hidden lg:block w-64 border-r border-black/10 dark:border-white/5 flex-shrink-0 h-screen sticky top-0">
                     <SidebarContent logoSrc={logoSrc} />
                 </aside>
@@ -145,7 +140,7 @@ export default function ClientLayout() {
                 <div className="flex-1 flex flex-col min-w-0">
 
                     {/* Mobile topbar */}
-                    <header className="lg:hidden h-16 border-b border-black/10 dark:border-white/5 px-6 flex items-center justify-between bg-surface dark:bg-tint-black/60 z-20">
+                    <header className="lg:hidden h-16 border-b border-black/10 dark:border-white/5 px-6 flex items-center justify-between bg-white dark:bg-tint-black/60 z-20">
                         <Link to="/">
                             <img src={logoSrc} alt="Scheda" className="max-w-28 h-full object-contain" />
                         </Link>

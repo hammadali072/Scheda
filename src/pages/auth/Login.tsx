@@ -97,7 +97,7 @@ export default function Login() {
                                 ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                                 : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
                         )}
-                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                        placeholder="••••••••"
                     />
                     {errors.password ? <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.password}</p> : null}
                 </div>

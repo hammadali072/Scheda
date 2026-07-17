@@ -4,6 +4,7 @@ import {
     LockIcon,
     CheckIcon
 } from "@phosphor-icons/react";
+import TitleComponent from "@/components/shared/TitleComponent";
 
 export default function Settings() {
     const [name, setName] = useState("Devon Lane");
@@ -31,17 +32,12 @@ export default function Settings() {
         <div className="space-y-8">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
-                    Admin Settings
-                </h1>
-                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
-                    Manage your personal account profile, contact credentials, and security parameters.
-                </p>
+                <h2 className="heading-h2 text-black dark:text-white/90">Admin Settings</h2>
+                <TitleComponent size='small' className="text-black/50 dark:text-white/90 md:text-base mt-1">Manage your personal account profile, contact credentials, and security parameters.</TitleComponent>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-                {/* Left Form: Profile Details */}
                 <form
                     onSubmit={handleProfileSubmit}
                     className="lg:col-span-6 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 p-6 shadow-shadow2-effect dark:shadow-shadow1 space-y-4"
@@ -50,9 +46,7 @@ export default function Settings() {
                         <span className="p-1 rounded bg-primary/10 text-primary">
                             <UserIcon size={18} weight="bold" />
                         </span>
-                        <h2 className="text-base font-bold text-black dark:text-white/90">
-                            Profile Parameters
-                        </h2>
+                        <h2 className="text-base font-bold text-black dark:text-white/90">Profile Parameters</h2>
                     </div>
 
                     <div>

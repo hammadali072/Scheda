@@ -77,7 +77,7 @@ export default function Appointments() {
             <div className="space-y-8">
                 <div>
                     <h2 className="heading-h2 font-extrabold tracking-tight text-black dark:text-white/90">Appointment Log</h2>
-                    <TitleComponent className="text-sm text-black/50 dark:text-white/90 mt-1">Track, approve, reassign, or cancel consult calls across company members.</TitleComponent>
+                    <TitleComponent className="text-sm text-black/50 dark:text-white/90 md:text-base mt-1">Track, approve, reassign, or cancel consult calls across company members.</TitleComponent>
                 </div>
 
                 <div className="bg-white dark:bg-tint-black/60 rounded-2xl border border-black/10 dark:border-white/5 p-5 shadow-shadow2-effect dark:shadow-shadow1 space-y-4">

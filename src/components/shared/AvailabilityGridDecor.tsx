@@ -73,7 +73,7 @@ export default function AvailabilityGridDecor() {
     return (
         <div
             aria-hidden="true"
-            className="w-full select-none rounded-3xl border border-slate/10 bg-surface p-5 shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60"
+            className="w-full select-none rounded-3xl border border-slate/10 bg-white p-5 shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60"
         >
             <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">

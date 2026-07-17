@@ -3,8 +3,6 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useTheme } from "@/context/theme-provider";
 import logoDark from "@/assets/logo-dark.svg";
 import logoLight from "@/assets/logo-light.svg";
-import faviconDark from "@/assets/fav-icon-dark.svg";
-import faviconLight from "@/assets/fav-icon-light.svg";
 import {
     GridFourIcon,
     UsersIcon,
@@ -23,7 +21,6 @@ import TitleComponent from "@/components/shared/TitleComponent";
 export default function AdminLayout() {
     const { dark } = useTheme();
     const logoSrc = dark ? logoLight : logoDark;
-    const faviconSrc = dark ? faviconLight : faviconDark;
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
     const notificationRef = useRef<HTMLDivElement | null>(null);
@@ -55,8 +52,8 @@ export default function AdminLayout() {
             time: "1h ago"
         },
         {
-            title: "Payment confirmed",
-            description: "The latest session payment has been recorded successfully.",
+            title: "Session updated",
+            description: "The latest advisory schedule change was recorded successfully.",
             time: "3h ago"
         }
     ];
@@ -92,11 +89,10 @@ export default function AdminLayout() {
     }, []);
 
     const SidebarContent = ({ isMobile = false }: { isMobile?: boolean }) => (
-        <div className="flex w-full h-full flex-col bg-surface/95 dark:bg-tint-black backdrop-blur-xl transition-colors duration-300">
+        <div className="flex w-full h-full flex-col bg-white/95 dark:bg-tint-black backdrop-blur-xl transition-colors duration-300">
             <div className="flex items-center justify-between border-b border-black/10 px-4 py-4 dark:border-white/5 lg:px-6">
                 <Link to="/" className="flex items-center gap-3">
-                    <img src={faviconSrc} alt="Scheda" className="h-10 w-10 object-contain lg:hidden" />
-                    <img src={logoSrc} alt="Scheda" className="hidden h-full max-w-32 object-contain lg:block" />
+                    <img src={logoSrc} alt="Scheda" className="h-9 w-auto max-w-32 object-contain" />
                 </Link>
                 {isMobile && (
                     <button
@@ -108,34 +104,38 @@ export default function AdminLayout() {
                 )}
             </div>
 
-            <nav className="flex-1 space-y-1.5 overflow-y-auto px-3 py-6">
-                {navigationItems.map((item) => {
-                    const active = isActive(item);
-                    return (
-                        <NavLink
-                            key={item.name}
-                            to={item.path}
-                            end={item.exact}
-                            onClick={() => isMobile && setMobileMenuOpen(false)}
-                            className={clsx(
-                                "group relative flex items-center overflow-hidden rounded-full px-4 py-3 text-base font-medium transition-all duration-300",
-                                active
-                                    ? "bg-gradient-to-b from-primary-start to-primary-end text-white shadow-inset"
-                                    : "text-black/60 hover:bg-black/5 hover:text-black dark:text-white/60 dark:hover:bg-white/5 dark:hover:text-white/90"
-                            )}
-                        >
-                            <item.icon
-                                size={22}
-                                weight={active ? "bold" : "regular"}
-                                className={clsx(
-                                    "mr-3 shrink-0 transition-colors",
-                                    active ? "text-white" : "text-black/40 group-hover:text-black dark:text-white/90 dark:group-hover:text-white/90"
-                                )}
-                            />
-                            <span>{item.name}</span>
-                        </NavLink>
-                    );
-                })}
+            <nav className="flex-1 overflow-y-auto px-3 py-6">
+                <ul className="space-y-1.5">
+                    {navigationItems.map((item) => {
+                        const active = isActive(item);
+                        return (
+                            <li>
+                                <NavLink
+                                    key={item.name}
+                                    to={item.path}
+                                    end={item.exact}
+                                    onClick={() => isMobile && setMobileMenuOpen(false)}
+                                    className={clsx(
+                                        "group relative flex items-center overflow-hidden rounded-full px-4 py-3 text-base font-medium transition-all duration-300",
+                                        active
+                                            ? "bg-gradient-to-b from-primary-start to-primary-end text-white shadow-inset"
+                                            : "text-black/60 hover:bg-black/5 hover:text-black dark:text-white/60 dark:hover:bg-white/5 dark:hover:text-white/90"
+                                    )}
+                                >
+                                    <item.icon
+                                        size={22}
+                                        weight={active ? "bold" : "regular"}
+                                        className={clsx(
+                                            "mr-3 shrink-0 transition-colors",
+                                            active ? "text-white" : "text-black/40 group-hover:text-black dark:text-white/90 dark:group-hover:text-white/90"
+                                        )}
+                                    />
+                                    <span>{item.name}</span>
+                                </NavLink>
+                            </li>
+                        );
+                    })}
+                </ul>
             </nav>
 
             <div className="border-t border-black/10 p-4 dark:border-white/5">
@@ -170,7 +170,7 @@ export default function AdminLayout() {
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-                <header className="sticky top-0 z-50 border-b border-black/10 bg-surface/80 px-4 py-4 backdrop-blur-xl dark:border-white/5 dark:bg-tint-black/80 sm:px-6 lg:px-8">
+                <header className="sticky top-0 z-50 border-b border-black/10 bg-white/80 px-4 py-4 backdrop-blur-xl dark:border-white/5 dark:bg-tint-black/80 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between gap-3">
                         <div className="flex min-w-0 items-center gap-3">
                             <button
@@ -188,7 +188,7 @@ export default function AdminLayout() {
                         <div className="relative" ref={notificationRef}>
                             <button
                                 onClick={() => setNotificationsOpen((prev) => !prev)}
-                                className="relative rounded-full border border-black/10 bg-black/[0.03] p-2.5 text-black transition-colors hover:bg-black/5 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/90 dark:hover:bg-white/10"
+                                className="relative rounded-full border border-black/10 bg-black/[0.03] shadow-inset p-2.5 text-black transition-colors hover:bg-black/5 dark:border-white/10 dark:bg-white/[0.05] dark:text-white/90 dark:hover:bg-white/10"
                                 aria-label="Open notifications"
                             >
                                 <BellSimpleIcon size={22} />
@@ -196,7 +196,7 @@ export default function AdminLayout() {
                             </button>
 
                             {notificationsOpen && (
-                                <div className="absolute right-0 z-[60] mt-3 w-80 rounded-3xl border border-black/10 bg-white p-3 shadow-shadow1 dark:border-white/10 dark:bg-tint-black/60">
+                                <div className="absolute right-0 z-[60] mt-3 w-80 rounded-xl border border-black/10 bg-white p-3 shadow-shadow2-effect dark:shadow-shadow2 dark:border-white/10 dark:bg-tint-black">
                                     <div className="flex items-center justify-between px-2 py-1">
                                         <TitleComponent size='small-semibold' className="text-black dark:text-white/90">Notifications</TitleComponent>
                                         <button className="text-xs font-medium text-primary">Mark all read</button>
@@ -218,27 +218,34 @@ export default function AdminLayout() {
                                             </li>
                                         ))}
                                     </ul>
-                                    <button className="mt-3 w-full rounded-full bg-gradient-to-b from-primary-start to-primary-end px-3 py-2 text-sm font-semibold text-white shadow-inset">
-                                        View all activity
-                                    </button>
+                                    <button className="mt-3 w-full rounded-full bg-gradient-to-b from-primary-start to-primary-end px-3 py-2 text-sm font-semibold text-white shadow-inset transition-all duration-300 hover:from-secondary-start hover:to-secondary-end">View all activity</button>
                                 </div>
                             )}
                         </div>
                     </div>
                 </header>
 
-                {mobileMenuOpen && (
-                    <div className="fixed inset-0 z-50 flex lg:hidden">
-                        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-                        <aside className="relative z-10 h-full w-72 max-w-[85vw] shadow-2xl">
-                            <SidebarContent isMobile />
-                        </aside>
-                    </div>
-                )}
+                <div className={clsx("fixed inset-0 z-50 flex lg:hidden", mobileMenuOpen ? "pointer-events-auto" : "pointer-events-none")}>
+                    <div
+                        className={clsx(
+                            "absolute inset-0 bg-black/40 backdrop-blur-sm transition-all duration-300 ease-out",
+                            mobileMenuOpen ? "opacity-100" : "opacity-0"
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                    />
+                    <aside
+                        className={clsx(
+                            "relative z-10 h-full w-72 max-w-[85vw] shadow-2xl transition-transform duration-300 ease-out",
+                            mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+                        )}
+                    >
+                        <SidebarContent isMobile />
+                    </aside>
+                </div>
 
                 <main className="relative flex-1 overflow-y-auto p-6 md:p-8 lg:p-10">
-                    <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[150px] duration-300 dark:bg-[#2f2f2f]/50" />
-                    <div className="relative z-10 mx-auto w-full max-w-7xl">
+                    <div className="absolute left-1/2 top-1/2 w-[clamp(200px,50%,500px)] h-[clamp(200px,50%,500px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-[150px] duration-300 dark:bg-[#2f2f2f]/50" />
+                    <div className="relative mx-auto w-full max-w-7xl">
                         <Outlet />
                     </div>
                 </main>

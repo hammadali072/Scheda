@@ -4,11 +4,12 @@ import { INITIAL_APPOINTMENTS, INITIAL_MEMBERS, INITIAL_CLIENTS } from "@/mock/a
 import {
     CalendarIcon,
     HourglassIcon,
-    CreditCardIcon,
+    CheckCircleIcon,
     UsersIcon,
     ArrowRightIcon,
     ClockIcon
 } from "@phosphor-icons/react";
+import TitleComponent from "@/components/shared/TitleComponent";
 
 export default function Overview() {
     // Current simulated date is 2026-07-14
@@ -32,10 +33,10 @@ export default function Overview() {
             color: "text-amber bg-amber/10",
         },
         {
-            label: "Unpaid Appointments",
-            value: INITIAL_APPOINTMENTS.filter((a) => !a.paid).length,
-            icon: CreditCardIcon,
-            color: "text-red-500 bg-red-500/10",
+            label: "Confirmed Sessions",
+            value: INITIAL_APPOINTMENTS.filter((a) => a.status === "confirmed").length,
+            icon: CheckCircleIcon,
+            color: "text-emerald-500 bg-emerald-500/10",
         },
         {
             label: "Active Team Members",
@@ -66,48 +67,35 @@ export default function Overview() {
 
     return (
         <div className="space-y-8 animate-fade-in">
-            {/* Header */}
             <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
-                    Operations Overview
-                </h1>
-                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
-                    Live platform operations, scheduling rates, and active advisory records.
-                </p>
+                <h2 className="heading-h2 text-black dark:text-white/90">Operations Overview</h2>
+                <TitleComponent size="small" className="text-black/50 dark:text-white/90 md:text-base mt-1">Live platform operations, scheduling rates, and active advisory records.</TitleComponent>
             </div>
 
-            {/* Statistics Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
                 {stats.map((stat, idx) => (
                     <div
                         key={idx}
-                        className="rounded-2xl border border-black/10 bg-surface p-6 shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60"
+                        className="rounded-2xl border border-black/10 bg-white p-6 shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60"
                     >
                         <div className="flex items-center justify-between">
-                            <span className="text-2xl font-black text-black dark:text-white/90">
-                                {stat.value}
-                            </span>
-                            <span className={`p-2 rounded-xl ${stat.color}`}>
-                                <stat.icon size={20} weight="bold" />
+                            <span className="text-2xl font-black text-black dark:text-white/90">{stat.value}</span>
+                            <span className={`p-2 rounded-lg ${stat.color}`}>
+                                <stat.icon size={22} weight="regular" />
                             </span>
                         </div>
-                        <div className="text-xs font-semibold text-black/50 dark:text-white/90 mt-3 leading-tight">
-                            {stat.label}
-                        </div>
+                        <TitleComponent size='extra-small-semibold' className="text-black/50 dark:text-white/90 mt-3 leading-tight">{stat.label}</TitleComponent>
                     </div>
                 ))}
             </div>
 
-            {/* Main Area: Today's appointments schedule list */}
-            <div className="overflow-hidden rounded-3xl border border-black/10 bg-surface shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60">
+            <div className="overflow-hidden rounded-3xl border border-black/10 bg-white shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60">
                 <div className="p-6 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                             <ClockIcon size={18} weight="bold" />
                         </span>
-                        <h2 className="text-lg font-bold text-black dark:text-white/90">
-                            Today's Schedule
-                        </h2>
+                        <h6 className="heading-h6 text-black dark:text-white/90">Today's Schedule</h6>
                     </div>
                     <Link
                         to="/admin/appointments"
@@ -124,9 +112,7 @@ export default function Overview() {
                             <div className="text-sm font-semibold text-black/40 dark:text-white/90">
                                 No appointments today.
                             </div>
-                            <p className="text-xs text-black/30 dark:text-white/90 mt-1">
-                                Check other dates or view all appointments on the log page.
-                            </p>
+                            <TitleComponent size='extra-small' className="text-black/30 dark:text-white/90 mt-1">Check other dates or view all appointments on the log page.</TitleComponent>
                         </div>
                     ) : (
                         <table className="w-full text-left border-collapse min-w-[600px]">
@@ -136,7 +122,6 @@ export default function Overview() {
                                     <th className="px-6 py-4">Client</th>
                                     <th className="px-6 py-4">Advisory Member</th>
                                     <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4 text-right">Payment</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-black/5 dark:divide-white/5 text-sm">
@@ -163,17 +148,6 @@ export default function Overview() {
                                             <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${getStatusStyles(app.status)}`}>
                                                 {app.status}
                                             </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            {app.paid ? (
-                                                <span className="inline-flex px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-semibold">
-                                                    Paid
-                                                </span>
-                                            ) : (
-                                                <span className="inline-flex px-2 py-0.5 rounded bg-red-500/10 text-red-500 text-xs font-semibold">
-                                                    Unpaid
-                                                </span>
-                                            )}
                                         </td>
                                     </tr>
                                 ))}

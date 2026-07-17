@@ -28,9 +28,7 @@ export interface MemberAppointment {
     date: string;  // YYYY-MM-DD
     time: string;  // "09:00 AM"
     status: "pending" | "confirmed" | "completed" | "cancelled";
-    paid: boolean;
     notes: string;
-    amount: number;
 }
 
 export interface LoggedInMember {
@@ -147,9 +145,7 @@ export const MEMBER_APPOINTMENTS: MemberAppointment[] = [
         date: "2026-07-14",
         time: "09:00 AM",
         status: "confirmed",
-        paid: true,
         notes: "Initial strategic advisory session for legal corporate restructuring.",
-        amount: 250,
     },
     {
         id: "a3",
@@ -159,9 +155,7 @@ export const MEMBER_APPOINTMENTS: MemberAppointment[] = [
         date: "2026-07-14",
         time: "01:00 PM",
         status: "confirmed",
-        paid: true,
         notes: "Contract dispute review and drafting advisory.",
-        amount: 250,
     },
     {
         id: "a5",
@@ -171,9 +165,7 @@ export const MEMBER_APPOINTMENTS: MemberAppointment[] = [
         date: "2026-07-16",
         time: "02:00 PM",
         status: "pending",
-        paid: false,
         notes: "Review of Seed Term Sheet clauses — three specific sections flagged for discussion.",
-        amount: 300,
     },
     {
         id: "a10",
@@ -183,9 +175,7 @@ export const MEMBER_APPOINTMENTS: MemberAppointment[] = [
         date: "2026-07-18",
         time: "11:00 AM",
         status: "pending",
-        paid: false,
         notes: "Follow-up on restructuring options after last session.",
-        amount: 250,
     },
     {
         id: "a8",
@@ -195,9 +185,7 @@ export const MEMBER_APPOINTMENTS: MemberAppointment[] = [
         date: "2026-07-10",
         time: "11:00 AM",
         status: "completed",
-        paid: true,
         notes: "Reviewed partnership agreement draft. Flagged three liability clauses for revision.",
-        amount: 250,
     },
     {
         id: "a9",
@@ -207,8 +195,6 @@ export const MEMBER_APPOINTMENTS: MemberAppointment[] = [
         date: "2026-07-08",
         time: "10:00 AM",
         status: "cancelled",
-        paid: false,
         notes: "Client cancelled 24 hours before — rescheduling pending.",
-        amount: 250,
     },
 ];
