@@ -1,16 +1,16 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useTheme } from "@/context/theme-provider";
 import logoDark from "@/assets/logo-dark.svg";
 import logoLight from "@/assets/logo-light.svg";
 import {
-    GridFour as GridFourIcon,
-    CalendarBlank as CalendarBlankIcon,
-    Clock as ClockIcon,
-    Gear as GearIcon,
-    List as ListIcon,
-    X as XIcon,
-    SignOut as SignOutIcon,
+    GridFourIcon,
+    CalendarBlankIcon,
+    ClockIcon,
+    GearIcon,
+    ListIcon,
+    XIcon,
+    SignOutIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { LOGGED_IN_MEMBER } from "@/mock/memberMockData";
@@ -39,7 +39,7 @@ function SidebarContent({
     };
 
     return (
-        <div className="flex flex-col h-full bg-surface dark:bg-card-dark transition-colors duration-300">
+        <div className="flex flex-col h-full bg-surface dark:bg-tint-black/60 transition-colors duration-300">
             {/* Logo */}
             <div className="p-6 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                 <Link to="/">
@@ -48,7 +48,7 @@ function SidebarContent({
                 {isMobile && (
                     <button
                         onClick={onClose}
-                        className="p-1 rounded-lg text-black dark:text-parchment hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                        className="p-1 rounded-lg text-black dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                         aria-label="Close navigation menu"
                     >
                         <XIcon size={20} />
@@ -75,10 +75,10 @@ function SidebarContent({
                             onClick={() => isMobile && onClose?.()}
                             className={clsx(
                                 "flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group",
-                                "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                                "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                 active
                                     ? "bg-primary text-white shadow-sm shadow-primary/10"
-                                    : "text-black/60 dark:text-parchment/60 hover:text-ink dark:hover:text-parchment hover:bg-black/5 dark:hover:bg-white/5"
+                                    : "text-black/60 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5"
                             )}
                             aria-current={active ? "page" : undefined}
                         >
@@ -89,7 +89,7 @@ function SidebarContent({
                                     "transition-colors flex-shrink-0",
                                     active
                                         ? "text-white"
-                                        : "text-black/40 dark:text-parchment/40 group-hover:text-ink dark:group-hover:text-parchment"
+                                        : "text-black/40 dark:text-white/90 group-hover:text-black dark:group-hover:text-white/90"
                                 )}
                             />
                             <span>{item.name}</span>
@@ -105,17 +105,17 @@ function SidebarContent({
                         {LOGGED_IN_MEMBER.avatar}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-ink dark:text-parchment truncate">
+                        <div className="text-sm font-bold text-black dark:text-white/90 truncate">
                             {LOGGED_IN_MEMBER.name}
                         </div>
-                        <div className="text-[10px] text-black/40 dark:text-parchment/40 truncate">
+                        <div className="text-[10px] text-black/40 dark:text-white/90 truncate">
                             {LOGGED_IN_MEMBER.specialty}
                         </div>
                     </div>
                 </div>
                 <Link
                     to="/login"
-                    className="mt-2 flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-500 hover:bg-red-500/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
+                    className="mt-2 flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold text-red-500 hover:bg-red-500/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-red-500/30"
                 >
                     <SignOutIcon size={16} />
                     <span>Sign Out</span>
@@ -131,9 +131,9 @@ export default function MemberLayout() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
-        <div className="min-h-screen flex bg-parchment dark:bg-ink transition-colors duration-300 text-ink dark:text-parchment">
+        <div className="min-h-screen flex bg-parchment dark:bg-black transition-colors duration-300 text-black dark:text-white/90">
 
-            {/* Desktop sidebar — fixed, sticky */}
+            {/* Desktop sidebar â€” fixed, sticky */}
             <aside className="hidden lg:block w-64 border-r border-black/10 dark:border-white/5 flex-shrink-0 h-screen sticky top-0">
                 <SidebarContent logoSrc={logoSrc} />
             </aside>
@@ -142,13 +142,13 @@ export default function MemberLayout() {
             <div className="flex-1 flex flex-col min-w-0">
 
                 {/* Mobile topbar */}
-                <header className="lg:hidden h-16 border-b border-black/10 dark:border-white/5 px-6 flex items-center justify-between bg-surface dark:bg-card-dark z-20">
+                <header className="lg:hidden h-16 border-b border-black/10 dark:border-white/5 px-6 flex items-center justify-between bg-surface dark:bg-tint-black/60 z-20">
                     <Link to="/">
                         <img src={logoSrc} alt="Scheda" className="max-w-28 h-full object-contain" />
                     </Link>
                     <button
                         onClick={() => setMobileMenuOpen(true)}
-                        className="p-2 rounded-xl border border-black/10 dark:border-white/10 text-black dark:text-parchment focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                        className="p-2 rounded-xl border border-black/10 dark:border-white/10 text-black dark:text-white/90 focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                         aria-label="Open navigation menu"
                     >
                         <ListIcon size={20} />
@@ -177,3 +177,6 @@ export default function MemberLayout() {
         </div>
     );
 }
+
+
+

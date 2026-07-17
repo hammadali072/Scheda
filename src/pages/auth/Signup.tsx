@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import AuthLayout from "@/pages/auth/AuthLayout";
@@ -95,7 +95,7 @@ export default function Signup() {
                             type="button"
                             onClick={() => handleChange("role", "client")}
                             className={clsx(
-                                "flex flex-col items-start text-left p-4 rounded-xl border transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                                "flex flex-col items-start text-left p-4 rounded-xl border transition-all duration-200  focus-visible:ring-2 focus-visible:ring-primary/40",
                                 form.role === "client"
                                     ? "border-primary bg-primary/[0.03] dark:bg-primary/[0.02] shadow-sm"
                                     : "border-black/10 dark:border-white/5 bg-transparent hover:bg-black/5 dark:hover:bg-white/5"
@@ -107,7 +107,7 @@ export default function Signup() {
                             )}>
                                 <UserIcon size={24} weight="bold" />
                             </span>
-                            <span className="text-sm font-semibold text-ink dark:text-parchment">Client</span>
+                            <span className="text-sm font-semibold text-black dark:text-white/90">Client</span>
                             <span className="text-xs text-black dark:text-white/50 mt-0.5 leading-normal">
                                 Book consultation calls with our specialized team members.
                             </span>
@@ -117,7 +117,7 @@ export default function Signup() {
                             type="button"
                             onClick={() => handleChange("role", "member")}
                             className={clsx(
-                                "flex flex-col items-start text-left p-4 rounded-xl border transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                                "flex flex-col items-start text-left p-4 rounded-xl border transition-all duration-200  focus-visible:ring-2 focus-visible:ring-primary/40",
                                 form.role === "member"
                                     ? "border-primary bg-primary/[0.03] dark:bg-primary/[0.02] shadow-sm"
                                     : "border-black/10 dark:border-white/5 bg-transparent hover:bg-black/5 dark:hover:bg-white/5"
@@ -129,7 +129,7 @@ export default function Signup() {
                             )}>
                                 <BriefcaseIcon size={24} weight="bold" />
                             </span>
-                            <span className="text-sm font-semibold text-ink dark:text-parchment">Team Member</span>
+                            <span className="text-sm font-semibold text-black dark:text-white/90">Team Member</span>
                             <span className="text-xs text-black dark:text-white/50 mt-0.5 leading-normal">
                                 Host paid advisory calls and manage availability.
                             </span>
@@ -147,8 +147,8 @@ export default function Signup() {
                         value={form.name}
                         onChange={(event) => handleChange("name", event.target.value)}
                         className={clsx(
-                            "w-full rounded-lg border px-4 py-2.5 text-sm transition outline-none",
-                            "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                            "w-full rounded-lg border px-4 py-2.5 text-sm transition ",
+                            "bg-parchment/30 dark:bg-black/30 text-black dark:text-white/90",
                             errors.name
                                 ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                                 : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -169,8 +169,8 @@ export default function Signup() {
                         value={form.email}
                         onChange={(event) => handleChange("email", event.target.value)}
                         className={clsx(
-                            "w-full rounded-lg border px-4 py-2.5 text-sm transition outline-none",
-                            "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                            "w-full rounded-lg border px-4 py-2.5 text-sm transition ",
+                            "bg-parchment/30 dark:bg-black/30 text-black dark:text-white/90",
                             errors.email
                                 ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                                 : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -192,8 +192,8 @@ export default function Signup() {
                             value={form.password}
                             onChange={(event) => handleChange("password", event.target.value)}
                             className={clsx(
-                                "w-full rounded-lg border px-4 py-2.5 text-sm transition outline-none",
-                                "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                                "w-full rounded-lg border px-4 py-2.5 text-sm transition ",
+                                "bg-parchment/30 dark:bg-black/30 text-black dark:text-white/90",
                                 errors.password
                                     ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                                     : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -212,8 +212,8 @@ export default function Signup() {
                             value={form.confirmPassword}
                             onChange={(event) => handleChange("confirmPassword", event.target.value)}
                             className={clsx(
-                                "w-full rounded-lg border px-4 py-2.5 text-sm transition outline-none",
-                                "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                                "w-full rounded-lg border px-4 py-2.5 text-sm transition ",
+                                "bg-parchment/30 dark:bg-black/30 text-black dark:text-white/90",
                                 errors.confirmPassword
                                     ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                                     : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -250,3 +250,5 @@ export default function Signup() {
         </AuthLayout>
     );
 }
+
+

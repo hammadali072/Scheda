@@ -1,4 +1,4 @@
-import * as React from "react";
+﻿import * as React from "react";
 import { Link } from "react-router-dom";
 import TitleComponent from "@/components/shared/TitleComponent";
 import { useTheme } from "@/context/theme-provider";
@@ -17,7 +17,7 @@ export default function AuthLayout({ title, subtitle, children }: AuthLayoutProp
     const logoSrc = dark ? logoLight : logoDark;
 
     return (
-        <main className="bg-parchment dark:bg-ink transition-colors duration-300">
+        <main className="bg-parchment dark:bg-black transition-colors duration-300">
             <div className="container">
                 <div className="min-h-screen grid grid-cols-1 lg:grid-cols-12">
                     <div className="lg:col-span-6 flex flex-col justify-between p-6 sm:p-12 lg:p-16">
@@ -30,7 +30,7 @@ export default function AuthLayout({ title, subtitle, children }: AuthLayoutProp
                         <div>
                             <div className="bg-black/5 dark:bg-white/5 rounded-3xl border border-black/20 dark:border-white/5 p-8 shadow-shadow1">
                                 <div className="mb-6">
-                                    <h2 className="heading-h2 text-ink dark:text-parchment">
+                                    <h2 className="heading-h2 text-black dark:text-white/90">
                                         {title}
                                     </h2>
                                     <TitleComponent size='small' className="mt-2 text-black dark:text-white/50">
@@ -55,7 +55,7 @@ export default function AuthLayout({ title, subtitle, children }: AuthLayoutProp
                                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
                                     Professional Bookings
                                 </span>
-                                <h3 className="text-2xl font-bold text-ink dark:text-parchment font-instrument italic">
+                                <h3 className="text-2xl font-bold text-black dark:text-white/90 font-instrument italic">
                                     Enterprise-Grade Scheduling
                                 </h3>
                                 <p className="text-sm text-black dark:text-black/40 max-w-sm mx-auto leading-relaxed">
@@ -73,3 +73,4 @@ export default function AuthLayout({ title, subtitle, children }: AuthLayoutProp
         </main>
     );
 }
+

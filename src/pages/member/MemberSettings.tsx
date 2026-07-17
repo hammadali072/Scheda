@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+﻿import { useState } from "react";
 import {
-    User as UserIcon,
-    LockKey as LockKeyIcon,
-    Check as CheckIcon,
-    IdentificationCard as IdentificationCardIcon,
+    UserIcon,
+    LockKeyIcon,
+    CheckIcon,
+    IdentificationCardIcon,
 } from "@phosphor-icons/react";
 import { LOGGED_IN_MEMBER } from "@/mock/memberMockData";
 
@@ -25,7 +25,7 @@ export default function MemberSettings() {
     const handleProfileSave = (e: React.FormEvent) => {
         e.preventDefault();
         // Wire to Firestore: update member document
-        alert("Profile updated (mock — no persistence yet).");
+        alert("Profile updated (mock â€” no persistence yet).");
     };
 
     const handlePasswordSave = (e: React.FormEvent) => {
@@ -41,36 +41,36 @@ export default function MemberSettings() {
     };
 
     const inputClass =
-        "w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/30 dark:bg-ink/30 px-4 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 text-ink dark:text-parchment placeholder:text-black/30 dark:placeholder:text-parchment/30";
+        "w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/30 dark:bg-black/30 px-4 py-2.5 text-sm  transition focus:border-primary focus:ring-2 focus:ring-primary/20 text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30";
 
     const labelClass =
-        "block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-parchment/40 mb-1.5";
+        "block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1.5";
 
     const saveButtonClass =
-        "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-xs font-semibold text-white shadow-sm shadow-primary/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40";
+        "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-xs font-semibold text-white shadow-sm shadow-primary/10 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40";
 
     return (
         <div className="space-y-8">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-ink dark:text-parchment">
+                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
                     Account Settings
                 </h1>
-                <p className="text-sm text-black/50 dark:text-parchment/50 mt-1">
+                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
                     Update your personal profile, contact details, and security credentials.
                 </p>
             </div>
 
             {/* Avatar / identity strip */}
-            <div className="bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card p-6 flex items-center gap-5">
+            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-center gap-5">
                 <div className="h-16 w-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">
                     {LOGGED_IN_MEMBER.avatar}
                 </div>
                 <div>
-                    <div className="text-lg font-extrabold text-ink dark:text-parchment">
+                    <div className="text-lg font-extrabold text-black dark:text-white/90">
                         {LOGGED_IN_MEMBER.name}
                     </div>
-                    <div className="text-xs text-black/50 dark:text-parchment/40 mt-0.5">
+                    <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">
                         {LOGGED_IN_MEMBER.role}
                     </div>
                     <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">
@@ -85,13 +85,13 @@ export default function MemberSettings() {
                 {/* Left: Profile form */}
                 <form
                     onSubmit={handleProfileSave}
-                    className="lg:col-span-7 bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card p-6 space-y-5"
+                    className="lg:col-span-7 bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
                 >
                     <div className="flex items-center gap-2.5 pb-3 border-b border-black/5 dark:border-white/5">
                         <span className="p-1 rounded bg-primary/10 text-primary">
                             <UserIcon size={16} weight="bold" />
                         </span>
-                        <h2 className="text-base font-bold text-ink dark:text-parchment">
+                        <h2 className="text-base font-bold text-black dark:text-white/90">
                             Profile Details
                         </h2>
                     </div>
@@ -144,7 +144,7 @@ export default function MemberSettings() {
                     {/* Specialty */}
                     <div>
                         <label className={labelClass} htmlFor="member-specialty">
-                            Specialty <span className="normal-case font-normal text-black/30 dark:text-parchment/30">(shown to clients)</span>
+                            Specialty <span className="normal-case font-normal text-black/30 dark:text-white/90">(shown to clients)</span>
                         </label>
                         <input
                             id="member-specialty"
@@ -160,12 +160,11 @@ export default function MemberSettings() {
                     <div>
                         <div className="flex items-center justify-between mb-1.5">
                             <label className={labelClass} htmlFor="member-bio">
-                                Bio <span className="normal-case font-normal text-black/30 dark:text-parchment/30">(client-facing)</span>
+                                Bio <span className="normal-case font-normal text-black/30 dark:text-white/90">(client-facing)</span>
                             </label>
                             <span
-                                className={`text-[10px] font-mono ${
-                                    bio.length > MAX_BIO ? "text-red-500" : "text-black/30 dark:text-parchment/30"
-                                }`}
+                                className={`text-[10px] font-mono ${bio.length > MAX_BIO ? "text-red-500" : "text-black/30 dark:text-white/90"
+                                    }`}
                             >
                                 {bio.length}/{MAX_BIO}
                             </span>
@@ -179,7 +178,7 @@ export default function MemberSettings() {
                             placeholder="A brief description of your background and expertise..."
                             className={`${inputClass} resize-none`}
                         />
-                        <p className="mt-1 text-[10px] text-black/30 dark:text-parchment/30">
+                        <p className="mt-1 text-[10px] text-black/30 dark:text-white/90">
                             Displayed on your public booking page. Keep it concise and client-focused.
                         </p>
                     </div>
@@ -193,13 +192,13 @@ export default function MemberSettings() {
                 {/* Right: Security form */}
                 <form
                     onSubmit={handlePasswordSave}
-                    className="lg:col-span-5 bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card p-6 space-y-5"
+                    className="lg:col-span-5 bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
                 >
                     <div className="flex items-center gap-2.5 pb-3 border-b border-black/5 dark:border-white/5">
                         <span className="p-1 rounded bg-primary/10 text-primary">
                             <LockKeyIcon size={16} weight="bold" />
                         </span>
-                        <h2 className="text-base font-bold text-ink dark:text-parchment">
+                        <h2 className="text-base font-bold text-black dark:text-white/90">
                             Change Password
                         </h2>
                     </div>
@@ -213,7 +212,7 @@ export default function MemberSettings() {
                             type="password"
                             value={currentPw}
                             onChange={(e) => setCurrentPw(e.target.value)}
-                            placeholder="••••••••"
+                            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                             className={inputClass}
                         />
                     </div>
@@ -255,3 +254,6 @@ export default function MemberSettings() {
         </div>
     );
 }
+
+
+

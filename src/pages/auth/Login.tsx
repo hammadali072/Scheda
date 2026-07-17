@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import AuthLayout from "@/pages/auth/AuthLayout";
@@ -65,8 +65,8 @@ export default function Login() {
                         value={form.email}
                         onChange={(event) => handleChange("email", event.target.value)}
                         className={clsx(
-                            "w-full rounded-xl border px-4 py-3 text-sm transition outline-none",
-                            "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                            "w-full rounded-xl border px-4 py-3 text-sm transition ",
+                            "bg-parchment/30 dark:bg-black/30 text-black dark:text-white/90",
                             errors.email
                                 ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                                 : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -91,13 +91,13 @@ export default function Login() {
                         value={form.password}
                         onChange={(event) => handleChange("password", event.target.value)}
                         className={clsx(
-                            "w-full rounded-xl border px-4 py-3 text-sm transition outline-none",
-                            "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                            "w-full rounded-xl border px-4 py-3 text-sm transition ",
+                            "bg-parchment/30 dark:bg-black/30 text-black dark:text-white/90",
                             errors.password
                                 ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                                 : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
                         )}
-                        placeholder="••••••••"
+                        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     />
                     {errors.password ? <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.password}</p> : null}
                 </div>
@@ -105,7 +105,7 @@ export default function Login() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="flex w-full items-center justify-center rounded-xl bg-primary hover:bg-primary/90 px-4 py-3.5 text-sm font-semibold text-white transition focus:ring-2 focus:ring-primary/30 outline-none disabled:cursor-not-allowed disabled:opacity-75 shadow-md shadow-primary/10"
+                    className="flex w-full items-center justify-center rounded-xl bg-primary hover:bg-primary/90 px-4 py-3.5 text-sm font-semibold text-white transition focus:ring-2 focus:ring-primary/30  disabled:cursor-not-allowed disabled:opacity-75 shadow-md shadow-primary/10"
                 >
                     {loading ? (
                         <span className="flex items-center gap-2">
@@ -127,3 +127,5 @@ export default function Login() {
         </AuthLayout>
     );
 }
+
+

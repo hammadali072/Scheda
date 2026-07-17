@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+﻿import { useState, useEffect, useCallback } from "react";
 import {
     PlusIcon,
     XIcon,
@@ -18,7 +18,7 @@ import {
     MEMBER_DATE_OVERRIDES,
 } from "@/mock/memberMockData";
 
-// ─── Toggle Switch ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Toggle Switch â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
     return (
         <button
@@ -29,7 +29,7 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () =
             onClick={onChange}
             className={clsx(
                 "relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-200",
-                "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:focus-visible:ring-offset-card-dark",
+                "focus: focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-surface dark:focus-visible:ring-offset-card-dark",
                 checked ? "bg-primary" : "bg-black/15 dark:bg-white/15"
             )}
         >
@@ -44,7 +44,7 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () =
     );
 }
 
-// ─── Time chip (displays one range with a remove button) ───────────────────────
+// â”€â”€â”€ Time chip (displays one range with a remove button) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function TimeChip({
     range,
@@ -60,20 +60,20 @@ function TimeChip({
             className={clsx(
                 "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-colors",
                 disabled
-                    ? "border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5 text-black/30 dark:text-parchment/30"
+                    ? "border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5 text-black/30 dark:text-white/90"
                     : "border-primary/20 bg-primary/5 text-primary"
             )}
         >
             <ClockIcon size={11} weight="bold" />
             <span>
-                {range.start} – {range.end}
+                {range.start} â€“ {range.end}
             </span>
             {!disabled && (
                 <button
                     type="button"
                     onClick={onRemove}
-                    aria-label={`Remove ${range.start}–${range.end} slot`}
-                    className="text-primary/50 hover:text-red-500 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-red-500 rounded"
+                    aria-label={`Remove ${range.start}â€“${range.end} slot`}
+                    className="text-primary/50 hover:text-red-500 transition-colors focus: focus-visible:ring-1 focus-visible:ring-red-500 rounded"
                 >
                     <XIcon size={11} weight="bold" />
                 </button>
@@ -82,7 +82,7 @@ function TimeChip({
     );
 }
 
-// ─── Inline add-slot form ──────────────────────────────────────────────────────
+// â”€â”€â”€ Inline add-slot form â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function AddSlotForm({
     onConfirm,
@@ -101,21 +101,21 @@ function AddSlotForm({
     };
 
     return (
-        <div className="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-parchment dark:bg-ink">
+        <div className="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-parchment dark:bg-black">
             <input
                 type="time"
                 value={start}
                 onChange={(e) => setStart(e.target.value)}
                 aria-label="Start time"
-                className="text-xs font-mono text-ink dark:text-parchment bg-transparent border-none outline-none focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
+                className="text-xs font-mono text-black dark:text-white/90 bg-transparent   focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
             />
-            <span className="text-[10px] text-black/40 dark:text-parchment/40 font-bold">–</span>
+            <span className="text-[10px] text-black/40 dark:text-white/90 font-bold">â€“</span>
             <input
                 type="time"
                 value={end}
                 onChange={(e) => setEnd(e.target.value)}
                 aria-label="End time"
-                className="text-xs font-mono text-ink dark:text-parchment bg-transparent border-none outline-none focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
+                className="text-xs font-mono text-black dark:text-white/90 bg-transparent   focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
             />
             <div className="flex items-center gap-1">
                 <button
@@ -123,7 +123,7 @@ function AddSlotForm({
                     onClick={handleConfirm}
                     disabled={!start || !end || start >= end}
                     aria-label="Confirm add slot"
-                    className="p-1 rounded text-emerald-500 hover:bg-emerald-500/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500"
+                    className="p-1 rounded text-emerald-500 hover:bg-emerald-500/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors focus: focus-visible:ring-1 focus-visible:ring-emerald-500"
                 >
                     <CheckIcon size={13} weight="bold" />
                 </button>
@@ -131,7 +131,7 @@ function AddSlotForm({
                     type="button"
                     onClick={onCancel}
                     aria-label="Cancel"
-                    className="p-1 rounded text-black/40 dark:text-parchment/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-black/20"
+                    className="p-1 rounded text-black/40 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-1 focus-visible:ring-black/20"
                 >
                     <XIcon size={13} weight="bold" />
                 </button>
@@ -140,7 +140,7 @@ function AddSlotForm({
     );
 }
 
-// ─── Main component ────────────────────────────────────────────────────────────
+// â”€â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function MemberAvailability() {
     const [schedule, setSchedule] = useState<DaySchedule[]>(() =>
@@ -257,28 +257,28 @@ export default function MemberAvailability() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-ink dark:text-parchment">
+                    <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
                         My Availability
                     </h1>
-                    <p className="text-sm text-black/50 dark:text-parchment/50 mt-1">
+                    <p className="text-sm text-black/50 dark:text-white/90 mt-1">
                         Configure recurring weekly hours and block specific dates.
                     </p>
                 </div>
             </div>
 
-            {/* ── Section 1: Weekly Recurring Schedule ─────────────────────────────── */}
-            <div className="bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card overflow-hidden">
+            {/* â”€â”€ Section 1: Weekly Recurring Schedule â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 {/* Section header */}
                 <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center gap-2.5">
                     <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                         <ClockIcon size={18} weight="bold" />
                     </span>
                     <div>
-                        <h2 className="text-base font-bold text-ink dark:text-parchment">
+                        <h2 className="text-base font-bold text-black dark:text-white/90">
                             Weekly Recurring Hours
                         </h2>
-                        <p className="text-xs text-black/40 dark:text-parchment/40 mt-0.5">
-                            Your default availability — applied to every week unless overridden below.
+                        <p className="text-xs text-black/40 dark:text-white/90 mt-0.5">
+                            Your default availability â€” applied to every week unless overridden below.
                         </p>
                     </div>
                 </div>
@@ -304,8 +304,8 @@ export default function MemberAvailability() {
                                     className={clsx(
                                         "text-sm font-bold transition-colors",
                                         day.enabled
-                                            ? "text-ink dark:text-parchment"
-                                            : "text-black/40 dark:text-parchment/40"
+                                            ? "text-black dark:text-white/90"
+                                            : "text-black/40 dark:text-white/90"
                                     )}
                                 >
                                     {day.label}
@@ -338,9 +338,9 @@ export default function MemberAvailability() {
                                                 aria-label={`Add time slot for ${day.label}`}
                                                 className={clsx(
                                                     "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dashed text-xs font-semibold transition-colors",
-                                                    "border-black/15 dark:border-white/15 text-black/50 dark:text-parchment/50",
+                                                    "border-black/15 dark:border-white/15 text-black/50 dark:text-white/90",
                                                     "hover:border-primary/50 hover:text-primary",
-                                                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                                                    "focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                                                 )}
                                             >
                                                 <PlusIcon size={11} weight="bold" />
@@ -349,13 +349,13 @@ export default function MemberAvailability() {
                                         )}
 
                                         {day.ranges.length === 0 && addingSlotForDay !== day.day && (
-                                            <span className="text-xs text-black/30 dark:text-parchment/30 italic">
-                                                No slots — add one to accept bookings
+                                            <span className="text-xs text-black/30 dark:text-white/90 italic">
+                                                No slots â€” add one to accept bookings
                                             </span>
                                         )}
                                     </>
                                 ) : (
-                                    <span className="text-xs font-medium text-black/35 dark:text-parchment/35 italic">
+                                    <span className="text-xs font-medium text-black/35 dark:text-white/90 italic">
                                         Unavailable
                                     </span>
                                 )}
@@ -365,8 +365,8 @@ export default function MemberAvailability() {
                 </div>
             </div>
 
-            {/* ── Section 2: Date Overrides ─────────────────────────────────────────── */}
-            <div className="bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card overflow-hidden">
+            {/* â”€â”€ Section 2: Date Overrides â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 {/* Section header */}
                 <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
@@ -374,11 +374,11 @@ export default function MemberAvailability() {
                             <CalendarBlankIcon size={18} weight="bold" />
                         </span>
                         <div>
-                            <h2 className="text-base font-bold text-ink dark:text-parchment">
+                            <h2 className="text-base font-bold text-black dark:text-white/90">
                                 Date Overrides
                             </h2>
-                            <p className="text-xs text-black/40 dark:text-parchment/40 mt-0.5">
-                                Block a specific date or set custom hours — overrides your weekly pattern.
+                            <p className="text-xs text-black/40 dark:text-white/90 mt-0.5">
+                                Block a specific date or set custom hours â€” overrides your weekly pattern.
                             </p>
                         </div>
                     </div>
@@ -389,7 +389,7 @@ export default function MemberAvailability() {
                             className={clsx(
                                 "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-colors",
                                 "bg-primary/10 text-primary hover:bg-primary/15",
-                                "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                                "focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                             )}
                         >
                             <PlusIcon size={13} weight="bold" />
@@ -402,10 +402,10 @@ export default function MemberAvailability() {
                     {/* Existing overrides list */}
                     {overrides.length === 0 && !addingOverride && (
                         <div className="px-6 py-10 text-center">
-                            <p className="text-sm font-semibold text-black/40 dark:text-parchment/40">
+                            <p className="text-sm font-semibold text-black/40 dark:text-white/90">
                                 No date overrides set.
                             </p>
-                            <p className="text-xs text-black/30 dark:text-parchment/30 mt-1">
+                            <p className="text-xs text-black/30 dark:text-white/90 mt-1">
                                 Use overrides for vacations, holidays, or one-off availability changes.
                             </p>
                         </div>
@@ -435,7 +435,7 @@ export default function MemberAvailability() {
                             {/* Date + type + note */}
                             <div className="flex-1 min-w-0">
                                 <div className="flex flex-wrap items-center gap-2">
-                                    <span className="text-sm font-bold text-ink dark:text-parchment">
+                                    <span className="text-sm font-bold text-black dark:text-white/90">
                                         {formatDate(override.date)}
                                     </span>
                                     <span
@@ -454,12 +454,12 @@ export default function MemberAvailability() {
                                                 key={i}
                                                 className="text-xs font-semibold text-primary bg-primary/5 border border-primary/15 px-2 py-0.5 rounded"
                                             >
-                                                {r.start} – {r.end}
+                                                {r.start} â€“ {r.end}
                                             </span>
                                         ))}
                                 </div>
                                 {override.note && (
-                                    <p className="text-xs text-black/40 dark:text-parchment/40 mt-0.5">
+                                    <p className="text-xs text-black/40 dark:text-white/90 mt-0.5">
                                         {override.note}
                                     </p>
                                 )}
@@ -470,7 +470,7 @@ export default function MemberAvailability() {
                                 type="button"
                                 onClick={() => removeOverride(override.id)}
                                 aria-label={`Remove override for ${override.date}`}
-                                className="p-1.5 rounded-lg text-black/30 dark:text-parchment/30 hover:text-red-500 hover:bg-red-500/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
+                                className="p-1.5 rounded-lg text-black/30 dark:text-white/90 hover:text-red-500 hover:bg-red-500/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-red-500/30"
                             >
                                 <XIcon size={15} weight="bold" />
                             </button>
@@ -480,27 +480,27 @@ export default function MemberAvailability() {
                     {/* Inline add override form */}
                     {addingOverride && (
                         <div className="px-6 py-5 bg-black/[0.01] dark:bg-white/[0.01] space-y-4">
-                            <p className="text-xs font-bold uppercase tracking-wider text-black/50 dark:text-parchment/40">
+                            <p className="text-xs font-bold uppercase tracking-wider text-black/50 dark:text-white/90">
                                 New Date Override
                             </p>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {/* Date picker */}
                                 <div>
-                                    <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40 mb-1.5">
+                                    <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">
                                         Date
                                     </label>
                                     <input
                                         type="date"
                                         value={newOverrideDate}
                                         onChange={(e) => setNewOverrideDate(e.target.value)}
-                                        className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/50 dark:bg-ink/50 px-4 py-2.5 text-sm outline-none transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-ink dark:text-parchment"
+                                        className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/50 dark:bg-black/50 px-4 py-2.5 text-sm  transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-black dark:text-white/90"
                                     />
                                 </div>
 
                                 {/* Type toggle */}
                                 <div>
-                                    <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40 mb-1.5">
+                                    <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">
                                         Override Type
                                     </label>
                                     <div className="flex gap-2">
@@ -510,13 +510,13 @@ export default function MemberAvailability() {
                                                 type="button"
                                                 onClick={() => setNewOverrideType(t)}
                                                 className={clsx(
-                                                    "flex-1 py-2.5 rounded-xl border text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                                                    "flex-1 py-2.5 rounded-xl border text-xs font-semibold transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                                     newOverrideType === t
                                                         ? "bg-primary border-primary text-white"
-                                                        : "border-black/10 dark:border-white/10 text-ink dark:text-parchment hover:bg-black/5 dark:hover:bg-white/5"
+                                                        : "border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5"
                                                 )}
                                             >
-                                                {t === "blocked" ? "🚫 Blocked" : "🕐 Custom Hours"}
+                                                {t === "blocked" ? "ðŸš« Blocked" : "ðŸ• Custom Hours"}
                                             </button>
                                         ))}
                                     </div>
@@ -526,13 +526,13 @@ export default function MemberAvailability() {
                             {/* Custom hours inputs */}
                             {newOverrideType === "custom" && (
                                 <div className="flex flex-wrap items-center gap-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40">
+                                    <label className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
                                         Hours:
                                     </label>
                                     {newOverrideRanges.map((r, i) => (
                                         <div
                                             key={i}
-                                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-parchment dark:bg-ink"
+                                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-parchment dark:bg-black"
                                         >
                                             <input
                                                 type="time"
@@ -544,9 +544,9 @@ export default function MemberAvailability() {
                                                         )
                                                     )
                                                 }
-                                                className="text-xs font-mono bg-transparent outline-none text-ink dark:text-parchment"
+                                                className="text-xs font-mono bg-transparent  text-black dark:text-white/90"
                                             />
-                                            <span className="text-[10px] text-black/40">–</span>
+                                            <span className="text-[10px] text-black/40">â€“</span>
                                             <input
                                                 type="time"
                                                 value={r.end}
@@ -557,7 +557,7 @@ export default function MemberAvailability() {
                                                         )
                                                     )
                                                 }
-                                                className="text-xs font-mono bg-transparent outline-none text-ink dark:text-parchment"
+                                                className="text-xs font-mono bg-transparent  text-black dark:text-white/90"
                                             />
                                         </div>
                                     ))}
@@ -566,7 +566,7 @@ export default function MemberAvailability() {
 
                             {/* Note */}
                             <div>
-                                <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40 mb-1.5">
+                                <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">
                                     Note (optional)
                                 </label>
                                 <input
@@ -574,7 +574,7 @@ export default function MemberAvailability() {
                                     value={newOverrideNote}
                                     onChange={(e) => setNewOverrideNote(e.target.value)}
                                     placeholder="e.g. Vacation, Conference, Public holiday..."
-                                    className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/50 dark:bg-ink/50 px-4 py-2.5 text-sm outline-none transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-ink dark:text-parchment placeholder:text-black/30 dark:placeholder:text-parchment/30"
+                                    className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-parchment/50 dark:bg-black/50 px-4 py-2.5 text-sm  transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30"
                                 />
                             </div>
 
@@ -584,7 +584,7 @@ export default function MemberAvailability() {
                                     type="button"
                                     onClick={addOverride}
                                     disabled={!newOverrideDate}
-                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-xs font-semibold text-white shadow-sm shadow-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-xs font-semibold text-white shadow-sm shadow-primary/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                                 >
                                     <CheckIcon size={13} weight="bold" />
                                     Add Override
@@ -592,7 +592,7 @@ export default function MemberAvailability() {
                                 <button
                                     type="button"
                                     onClick={() => setAddingOverride(false)}
-                                    className="px-4 py-2.5 rounded-xl text-xs font-semibold text-black/50 dark:text-parchment/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black/20"
+                                    className="px-4 py-2.5 rounded-xl text-xs font-semibold text-black/50 dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-black/20"
                                 >
                                     Cancel
                                 </button>
@@ -602,11 +602,11 @@ export default function MemberAvailability() {
                 </div>
             </div>
 
-            {/* ── Sticky unsaved / saved indicator ────────────────────────────────── */}
+            {/* â”€â”€ Sticky unsaved / saved indicator â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
 
             {/* Unsaved changes bar */}
             {hasUnsaved && (
-                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-5 py-3 rounded-2xl shadow-2xl motion-safe:animate-fade-in bg-ink dark:bg-surface border border-white/10 dark:border-black/10 text-parchment dark:text-ink">
+                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-5 py-3 rounded-2xl shadow-2xl motion-safe:animate-fade-in bg-black dark:bg-surface border border-white/10 dark:border-black/10 text-parchment dark:text-black">
                     <WarningIcon size={18} weight="bold" className="text-amber-400 flex-shrink-0" />
                     <span className="text-sm font-semibold whitespace-nowrap">
                         Unsaved changes
@@ -615,14 +615,14 @@ export default function MemberAvailability() {
                         <button
                             type="button"
                             onClick={handleDiscard}
-                            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-parchment/60 dark:text-ink/60 hover:bg-white/10 dark:hover:bg-black/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+                            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-parchment/60 dark:text-black/60 hover:bg-white/10 dark:hover:bg-black/10 transition-colors focus: focus-visible:ring-2 focus-visible:ring-white/30"
                         >
                             Discard
                         </button>
                         <button
                             type="button"
                             onClick={handleSave}
-                            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-primary text-white text-xs font-bold transition-colors hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+                            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-primary text-white text-xs font-bold transition-colors hover:bg-primary/90 focus: focus-visible:ring-2 focus-visible:ring-primary/50"
                         >
                             <FloppyDiskIcon size={13} weight="bold" />
                             Save changes
@@ -641,3 +641,6 @@ export default function MemberAvailability() {
         </div>
     );
 }
+
+
+

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import AuthLayout from "@/pages/auth/AuthLayout";
@@ -30,8 +30,8 @@ export default function ForgotPassword() {
     return (
         <AuthLayout title="Reset password" subtitle="Enter your email and we will help you get back in.">
             {submitted ? (
-                <div className="space-y-4 rounded-xl border border-black/10 dark:border-white/5 bg-parchment/30 dark:bg-ink/30 p-5 text-sm text-black dark:text-black/40">
-                    <p className="font-semibold text-ink dark:text-parchment">If an account exists for this email, a reset link has been sent.</p>
+                <div className="space-y-4 rounded-xl border border-black/10 dark:border-white/5 bg-parchment/30 dark:bg-black/30 p-5 text-sm text-black dark:text-black/40">
+                    <p className="font-semibold text-black dark:text-white/90">If an account exists for this email, a reset link has been sent.</p>
                     <Link to="/login" className="inline-flex font-semibold text-primary hover:underline">
                         Back to login
                     </Link>
@@ -48,8 +48,8 @@ export default function ForgotPassword() {
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
                             className={clsx(
-                                "w-full rounded-lg border px-4 py-3 text-sm transition outline-none",
-                                "bg-parchment/30 dark:bg-ink/30 text-ink dark:text-parchment",
+                                "w-full rounded-lg border px-4 py-3 text-sm transition ",
+                                "bg-parchment/30 dark:bg-black/30 text-black dark:text-white/90",
                                 error
                                     ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                                     : "border-black/20 dark:border-white/10 focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -71,3 +71,5 @@ export default function ForgotPassword() {
         </AuthLayout>
     );
 }
+
+

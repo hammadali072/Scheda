@@ -1,5 +1,6 @@
+﻿
 import React from "react";
-import { Clock } from "@phosphor-icons/react";
+import { ClockIcon } from "@phosphor-icons/react";
 
 interface Slot {
     dayIndex: number; // 0: Mon, 1: Tue, etc.
@@ -72,15 +73,15 @@ export default function AvailabilityGridDecor() {
     return (
         <div
             aria-hidden="true"
-            className="w-full select-none rounded-3xl border border-slate/10 bg-surface p-5 shadow-card dark:border-white/5 dark:bg-card-dark"
+            className="w-full select-none rounded-3xl border border-slate/10 bg-surface p-5 shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60"
         >
             <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Clock size={18} weight="bold" />
+                        <ClockIcon size={18} weight="bold" />
                     </span>
                     <div>
-                        <div className="text-xs font-semibold text-ink dark:text-parchment">
+                        <div className="text-xs font-semibold text-black dark:text-white/90">
                             Consultation Weekly Schedule
                         </div>
                         <div className="text-[10px] text-slate dark:text-slate/60">
@@ -160,7 +161,7 @@ export default function AvailabilityGridDecor() {
                     </React.Fragment>
                 ))}
             </div>
-            
+
             {/* Legend */}
             <div className="mt-4 pt-3 border-t border-slate/5 dark:border-white/5 flex items-center justify-between text-[9px] text-slate dark:text-slate/50">
                 <div className="flex items-center gap-1.5">
@@ -179,3 +180,5 @@ export default function AvailabilityGridDecor() {
         </div>
     );
 }
+
+

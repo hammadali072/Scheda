@@ -1,13 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import {
-    CalendarBlank as CalendarBlankIcon,
-    Hourglass as HourglassIcon,
-    ArrowRight as ArrowRightIcon,
-    Clock as ClockIcon,
-    PlusCircle as PlusCircleIcon,
-    CheckCircle as CheckCircleIcon,
-    Sparkle as SparkleIcon,
+    CalendarBlankIcon,
+    HourglassIcon,
+    ArrowRightIcon,
+    ClockIcon,
+    PlusCircleIcon,
+    SparkleIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { LOGGED_IN_CLIENT } from "@/mock/clientMockData";
@@ -17,7 +15,7 @@ const TODAY = "2026-07-15"; // mock "today"
 
 const STATUS_STYLES: Record<string, string> = {
     confirmed: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
-    pending:   "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+    pending: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
     completed: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
     cancelled: "bg-red-500/10 text-red-500",
 };
@@ -47,7 +45,7 @@ export default function ClientOverview() {
         },
     ];
 
-    // Format YYYY-MM-DD → "Friday, July 18"
+    // Format YYYY-MM-DD â†’ "Friday, July 18"
     const formatDate = (d: string) =>
         new Date(d + "T00:00:00").toLocaleDateString("en-US", {
             weekday: "long",
@@ -64,16 +62,16 @@ export default function ClientOverview() {
                     <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">
                         Client Portal
                     </p>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-ink dark:text-parchment">
+                    <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
                         Welcome back, {LOGGED_IN_CLIENT.name.split(" ")[0]}.
                     </h1>
-                    <p className="text-sm text-black/50 dark:text-parchment/50 mt-1">
+                    <p className="text-sm text-black/50 dark:text-white/90 mt-1">
                         Here's your appointment snapshot and quick actions.
                     </p>
                 </div>
                 <Link
                     to="/client/find"
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary hover:bg-primary/90 text-sm font-bold text-white shadow-sm shadow-primary/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary hover:bg-primary/90 text-sm font-bold text-white shadow-sm shadow-primary/20 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
                 >
                     <PlusCircleIcon size={17} weight="bold" />
                     Book Appointment
@@ -85,24 +83,24 @@ export default function ClientOverview() {
                 {stats.map((stat, idx) => (
                     <div
                         key={idx}
-                        className="bg-surface dark:bg-card-dark p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-card"
+                        className="bg-surface dark:bg-tint-black/60 p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1"
                     >
                         <div className="flex items-center justify-between mb-3">
                             <span className={clsx("p-2 rounded-xl", stat.color)}>
                                 <stat.icon size={18} weight="bold" />
                             </span>
-                            <span className="text-3xl font-black text-ink dark:text-parchment">
+                            <span className="text-3xl font-black text-black dark:text-white/90">
                                 {stat.value}
                             </span>
                         </div>
-                        <div className="text-xs font-semibold text-black/50 dark:text-parchment/40 leading-tight">
+                        <div className="text-xs font-semibold text-black/50 dark:text-white/90 leading-tight">
                             {stat.label}
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* ── Next Appointment hero card ─────────────────────────────────── */}
+            {/* â”€â”€ Next Appointment hero card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {nextAppt ? (
                 <div className="relative overflow-hidden rounded-3xl shadow-xl shadow-primary/15">
                     {/* Gradient background */}
@@ -173,14 +171,14 @@ export default function ClientOverview() {
                         <div className="flex flex-wrap items-center gap-3">
                             <Link
                                 to="/client/appointments"
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary text-sm font-bold hover:bg-white/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white text-primary text-sm font-bold hover:bg-white/90 transition-colors focus: focus-visible:ring-2 focus-visible:ring-white/50"
                             >
                                 View all appointments
                                 <ArrowRightIcon size={14} weight="bold" />
                             </Link>
                             <Link
                                 to="/client/find"
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/15 text-white text-sm font-semibold hover:bg-white/25 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 border border-white/20"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/15 text-white text-sm font-semibold hover:bg-white/25 transition-colors focus: focus-visible:ring-2 focus-visible:ring-white/40 border border-white/20"
                             >
                                 <PlusCircleIcon size={14} weight="bold" />
                                 Book another
@@ -189,18 +187,18 @@ export default function ClientOverview() {
                     </div>
                 </div>
             ) : (
-                /* ── Empty state ── */
-                <div className="bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card p-12 text-center">
-                    <div className="text-5xl mb-5">📅</div>
-                    <h2 className="text-lg font-bold text-ink dark:text-parchment mb-2">
+                /* â”€â”€ Empty state â”€â”€ */
+                <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-12 text-center">
+                    <div className="text-5xl mb-5">ðŸ“…</div>
+                    <h2 className="text-lg font-bold text-black dark:text-white/90 mb-2">
                         No upcoming appointments
                     </h2>
-                    <p className="text-sm text-black/50 dark:text-parchment/40 max-w-sm mx-auto mb-7 leading-relaxed">
+                    <p className="text-sm text-black/50 dark:text-white/90 max-w-sm mx-auto mb-7 leading-relaxed">
                         You don't have anything scheduled yet. Browse available members and book a session at a time that works for you.
                     </p>
                     <Link
                         to="/client/find"
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary hover:bg-primary/90 text-sm font-bold text-white shadow-sm shadow-primary/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-primary hover:bg-primary/90 text-sm font-bold text-white shadow-sm shadow-primary/20 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                     >
                         <PlusCircleIcon size={17} weight="bold" />
                         Book your first appointment
@@ -208,21 +206,21 @@ export default function ClientOverview() {
                 </div>
             )}
 
-            {/* ── Also coming up (2nd+ upcoming appt) ──────────────────────── */}
+            {/* â”€â”€ Also coming up (2nd+ upcoming appt) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {upcoming.length > 1 && (
-                <div className="bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card overflow-hidden">
+                <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                     <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
                             <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                                 <CalendarBlankIcon size={18} weight="bold" />
                             </span>
-                            <h2 className="text-base font-bold text-ink dark:text-parchment">
+                            <h2 className="text-base font-bold text-black dark:text-white/90">
                                 Also Coming Up
                             </h2>
                         </div>
                         <Link
                             to="/client/appointments"
-                            className="text-xs font-bold text-primary hover:underline flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
+                            className="text-xs font-bold text-primary hover:underline flex items-center gap-1 focus: focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
                         >
                             All appointments
                             <ArrowRightIcon size={13} weight="bold" />
@@ -240,12 +238,12 @@ export default function ClientOverview() {
                                     {appt.memberName.split(" ").filter((_, i) => i < 2).map(w => w[0]).join("")}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="font-semibold text-sm text-ink dark:text-parchment">{appt.memberName}</div>
-                                    <div className="text-xs text-black/40 dark:text-parchment/40 truncate">{appt.purpose}</div>
+                                    <div className="font-semibold text-sm text-black dark:text-white/90">{appt.memberName}</div>
+                                    <div className="text-xs text-black/40 dark:text-white/90 truncate">{appt.purpose}</div>
                                 </div>
                                 <div className="text-right flex-shrink-0 hidden sm:block mr-3">
-                                    <div className="text-xs font-semibold text-ink dark:text-parchment">{formatDate(appt.date)}</div>
-                                    <div className="text-[10px] text-black/40 dark:text-parchment/40">{appt.time}</div>
+                                    <div className="text-xs font-semibold text-black dark:text-white/90">{formatDate(appt.date)}</div>
+                                    <div className="text-[10px] text-black/40 dark:text-white/90">{appt.time}</div>
                                 </div>
                                 <span className={clsx(
                                     "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex-shrink-0",
@@ -261,3 +259,6 @@ export default function ClientOverview() {
         </div>
     );
 }
+
+
+

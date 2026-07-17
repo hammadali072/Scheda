@@ -1,5 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import { useTheme } from "@/context/theme-provider";
 import ThemeButton from "@/components/shared/ThemeButton";
 import AvailabilityGridDecor from "@/components/shared/AvailabilityGridDecor";
@@ -13,7 +12,7 @@ export default function LandingPage() {
     const logoSrc = dark ? logoLight : logoDark;
 
     return (
-        <div className="relative min-h-screen flex flex-col bg-parchment dark:bg-black transition-colors duration-300">
+        <div className="relative min-h-screen flex flex-col bg-tint-gray dark:bg-black transition-colors duration-300">
             {/* Header */}
             <header className="w-full p-6 flex items-center justify-between z-20">
                 <div className="container">
@@ -24,7 +23,7 @@ export default function LandingPage() {
                         <div className="flex items-center gap-4">
                             <Link
                                 to="/login"
-                                className="text-slate dark:text-white/50 duration-300 hover:text-ink dark:hover:text-parchment"
+                                className="text-slate dark:text-white/50 duration-300 hover:text-black dark:hover:text-white/90"
                             >
                                 Sign In
                             </Link>
@@ -45,7 +44,7 @@ export default function LandingPage() {
                                 Direct Advisory Booking
                             </span>
 
-                            <h1 className="heading-h1 text-ink dark:text-parchment mb-6">
+                            <h1 className="heading-h1 text-black dark:text-white/90 mb-6">
                                 Book dedicated consultation time, <span className="italic font-normal text-black dark:text-white/60">instantly.</span>
                             </h1>
 
@@ -75,7 +74,7 @@ export default function LandingPage() {
                 </div>
             </main>
 
-            <footer className="relative border-t border-slate/10 dark:border-white/5 py-8 bg-surface/50 dark:bg-[#1f1f1f] transition-colors duration-300 z-20">
+            <footer className="relative border-t border-slate/10 dark:border-white/5 py-8 bg-surface/50 dark:bg-tint-black transition-colors duration-300 z-20">
                 <div className="container">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="flex items-center gap-3">
@@ -83,7 +82,7 @@ export default function LandingPage() {
                                 <CalendarCheckIcon className="text-primary" size={24} />
                             </span>
                             <div>
-                                <h3 className="text-xs font-bold text-ink dark:text-parchment uppercase tracking-wider">Direct Access</h3>
+                                <h3 className="text-xs font-bold text-black dark:text-white/90 uppercase tracking-wider">Direct Access</h3>
                                 <TitleComponent size='small' className="text-black dark:text-white/50 mt-0.5">Book directly with our specialized team members.</TitleComponent>
                             </div>
                         </div>
@@ -93,7 +92,7 @@ export default function LandingPage() {
                                 <ShieldCheckIcon className="text-primary" size={24} />
                             </span>
                             <div>
-                                <h3 className="text-xs font-bold text-ink dark:text-parchment uppercase tracking-wider">Verified Time</h3>
+                                <h3 className="text-xs font-bold text-black dark:text-white/90 uppercase tracking-wider">Verified Time</h3>
                                 <TitleComponent size='small' className="text-black dark:text-white/50 mt-0.5">Zero double-bookings, conflict-free scheduling.</TitleComponent>
                             </div>
                         </div>
@@ -103,14 +102,15 @@ export default function LandingPage() {
                                 <CreditCardIcon className="text-primary" size={24} />
                             </span>
                             <div>
-                                <h3 className="text-xs font-bold text-ink dark:text-parchment uppercase tracking-wider">Secure Bookings</h3>
+                                <h3 className="text-xs font-bold text-black dark:text-white/90 uppercase tracking-wider">Secure Bookings</h3>
                                 <TitleComponent size='small' className="text-black dark:text-white/50 mt-0.5">Seamless confirmation with direct secure transactions.</TitleComponent>
                             </div>
                         </div>
                     </div>
                 </div>
             </footer>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary/20 dark:bg-[#2f2f2f]/50 w-[500px] h-[500px] rounded-full blur-[150px] z-[1]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary/20 dark:bg-[#2f2f2f]/50 w-[500px] h-[500px] rounded-full blur-[150px] z-[1] duration-300" />
         </div>
     );
 }
+

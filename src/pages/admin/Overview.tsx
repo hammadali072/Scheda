@@ -1,13 +1,13 @@
-
+﻿
 import { Link } from "react-router-dom";
 import { INITIAL_APPOINTMENTS, INITIAL_MEMBERS, INITIAL_CLIENTS } from "@/mock/adminMockData";
 import {
-    Calendar as CalendarIcon,
-    Hourglass as HourglassIcon,
-    CreditCard as CreditCardIcon,
-    Users as UsersIcon,
-    ArrowRight as ArrowRightIcon,
-    Clock as ClockIcon
+    CalendarIcon,
+    HourglassIcon,
+    CreditCardIcon,
+    UsersIcon,
+    ArrowRightIcon,
+    ClockIcon
 } from "@phosphor-icons/react";
 
 export default function Overview() {
@@ -68,10 +68,10 @@ export default function Overview() {
         <div className="space-y-8 animate-fade-in">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-ink dark:text-parchment">
+                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
                     Operations Overview
                 </h1>
-                <p className="text-sm text-black/50 dark:text-parchment/50 mt-1">
+                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
                     Live platform operations, scheduling rates, and active advisory records.
                 </p>
             </div>
@@ -81,17 +81,17 @@ export default function Overview() {
                 {stats.map((stat, idx) => (
                     <div
                         key={idx}
-                        className="bg-surface dark:bg-card-dark p-6 rounded-2xl border border-black/10 dark:border-white/5 shadow-card"
+                        className="rounded-2xl border border-black/10 bg-surface p-6 shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60"
                     >
                         <div className="flex items-center justify-between">
-                            <span className="text-2xl font-black text-ink dark:text-parchment">
+                            <span className="text-2xl font-black text-black dark:text-white/90">
                                 {stat.value}
                             </span>
                             <span className={`p-2 rounded-xl ${stat.color}`}>
                                 <stat.icon size={20} weight="bold" />
                             </span>
                         </div>
-                        <div className="text-xs font-semibold text-black/50 dark:text-parchment/40 mt-3 leading-tight">
+                        <div className="text-xs font-semibold text-black/50 dark:text-white/90 mt-3 leading-tight">
                             {stat.label}
                         </div>
                     </div>
@@ -99,13 +99,13 @@ export default function Overview() {
             </div>
 
             {/* Main Area: Today's appointments schedule list */}
-            <div className="bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card overflow-hidden">
+            <div className="overflow-hidden rounded-3xl border border-black/10 bg-surface shadow-shadow2-effect dark:shadow-shadow1 dark:border-white/5 dark:bg-tint-black/60">
                 <div className="p-6 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                             <ClockIcon size={18} weight="bold" />
                         </span>
-                        <h2 className="text-lg font-bold text-ink dark:text-parchment">
+                        <h2 className="text-lg font-bold text-black dark:text-white/90">
                             Today's Schedule
                         </h2>
                     </div>
@@ -121,17 +121,17 @@ export default function Overview() {
                 <div className="overflow-x-auto">
                     {todayAppointments.length === 0 ? (
                         <div className="p-12 text-center">
-                            <div className="text-sm font-semibold text-black/40 dark:text-parchment/40">
+                            <div className="text-sm font-semibold text-black/40 dark:text-white/90">
                                 No appointments today.
                             </div>
-                            <p className="text-xs text-black/30 dark:text-parchment/30 mt-1">
+                            <p className="text-xs text-black/30 dark:text-white/90 mt-1">
                                 Check other dates or view all appointments on the log page.
                             </p>
                         </div>
                     ) : (
                         <table className="w-full text-left border-collapse min-w-[600px]">
                             <thead>
-                                <tr className="border-b border-black/5 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] text-xs font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40">
+                                <tr className="border-b border-black/5 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] text-xs font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
                                     <th className="px-6 py-4">Time</th>
                                     <th className="px-6 py-4">Client</th>
                                     <th className="px-6 py-4">Advisory Member</th>
@@ -145,18 +145,18 @@ export default function Overview() {
                                         key={app.id}
                                         className="hover:bg-black/[0.01] dark:hover:bg-white/[0.01] transition-colors"
                                     >
-                                        <td className="px-6 py-4 font-bold text-ink dark:text-parchment">
+                                        <td className="px-6 py-4 font-bold text-black dark:text-white/90">
                                             {app.time}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="font-semibold text-ink dark:text-parchment">
+                                            <div className="font-semibold text-black dark:text-white/90">
                                                 {app.clientName}
                                             </div>
-                                            <div className="text-xs text-black/40 dark:text-parchment/40">
+                                            <div className="text-xs text-black/40 dark:text-white/90">
                                                 {app.clientEmail}
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 font-semibold text-ink dark:text-parchment">
+                                        <td className="px-6 py-4 font-semibold text-black dark:text-white/90">
                                             {app.memberName}
                                         </td>
                                         <td className="px-6 py-4">
@@ -185,3 +185,4 @@ export default function Overview() {
         </div>
     );
 }
+

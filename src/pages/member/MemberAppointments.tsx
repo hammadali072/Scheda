@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import { useState } from "react";
 import {
     XIcon,
     UserIcon,
@@ -60,7 +60,7 @@ export default function MemberAppointments() {
         );
     };
 
-    // Member-appropriate actions only — no reassign
+    // Member-appropriate actions only â€” no reassign
     const availableActions = (appt: MemberAppointment) => {
         const actions: { label: string; action: () => void; danger?: boolean }[] = [];
         if (appt.status === "pending") {
@@ -102,16 +102,16 @@ export default function MemberAppointments() {
         <div className="relative pb-6 space-y-8">
             {/* Header */}
             <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-ink dark:text-parchment">
+                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
                     My Appointments
                 </h1>
-                <p className="text-sm text-black/50 dark:text-parchment/50 mt-1">
+                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
                     Track and manage your client consultation sessions.
                 </p>
             </div>
 
             {/* Tab bar */}
-            <div className="flex items-center gap-1 bg-surface dark:bg-card-dark border border-black/10 dark:border-white/5 rounded-2xl p-1.5 shadow-card w-fit">
+            <div className="flex items-center gap-1 bg-surface dark:bg-tint-black/60 border border-black/10 dark:border-white/5 rounded-2xl p-1.5 shadow-shadow2-effect dark:shadow-shadow1 w-fit">
                 {TABS.map(({ key, label }) => (
                     <button
                         key={key}
@@ -119,17 +119,17 @@ export default function MemberAppointments() {
                         onClick={() => setActiveTab(key)}
                         className={clsx(
                             "px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200",
-                            "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                            "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                             activeTab === key
                                 ? "bg-primary text-white shadow-sm"
-                                : "text-black/50 dark:text-parchment/50 hover:text-ink dark:hover:text-parchment hover:bg-black/5 dark:hover:bg-white/5"
+                                : "text-black/50 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5"
                         )}
                     >
                         {label}
                         <span
                             className={clsx(
                                 "ml-1.5 text-[10px] font-bold",
-                                activeTab === key ? "text-white/70" : "text-black/30 dark:text-parchment/30"
+                                activeTab === key ? "text-white/70" : "text-black/30 dark:text-white/90"
                             )}
                         >
                             {tabCounts[key]}
@@ -139,14 +139,14 @@ export default function MemberAppointments() {
             </div>
 
             {/* Table */}
-            <div className="bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card overflow-hidden">
+            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 <div className="overflow-x-auto">
                     {filtered.length === 0 ? (
                         <div className="py-16 text-center px-6">
                             <div className="text-2xl mb-2">
-                                {activeTab === "upcoming" ? "📅" : activeTab === "past" ? "✅" : "🚫"}
+                                {activeTab === "upcoming" ? "ðŸ“…" : activeTab === "past" ? "âœ…" : "ðŸš«"}
                             </div>
-                            <p className="text-sm font-semibold text-black/50 dark:text-parchment/40">
+                            <p className="text-sm font-semibold text-black/50 dark:text-white/90">
                                 {activeTab === "upcoming"
                                     ? "No upcoming sessions."
                                     : activeTab === "past"
@@ -159,7 +159,7 @@ export default function MemberAppointments() {
                     ) : (
                         <table className="w-full text-left border-collapse min-w-[640px]">
                             <thead>
-                                <tr className="border-b border-black/5 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] text-xs font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40">
+                                <tr className="border-b border-black/5 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] text-xs font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
                                     <th className="px-6 py-4">Client</th>
                                     <th className="px-6 py-4">Date & Time</th>
                                     <th className="px-6 py-4">Status</th>
@@ -175,18 +175,18 @@ export default function MemberAppointments() {
                                         className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02] cursor-pointer transition-colors"
                                     >
                                         <td className="px-6 py-4">
-                                            <div className="font-semibold text-ink dark:text-parchment">
+                                            <div className="font-semibold text-black dark:text-white/90">
                                                 {appt.clientName}
                                             </div>
-                                            <div className="text-xs text-black/40 dark:text-parchment/40 truncate max-w-[180px]">
+                                            <div className="text-xs text-black/40 dark:text-white/90 truncate max-w-[180px]">
                                                 {appt.clientEmail}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <div className="font-semibold text-ink dark:text-parchment">
+                                            <div className="font-semibold text-black dark:text-white/90">
                                                 {appt.date}
                                             </div>
-                                            <div className="text-xs text-black/40 dark:text-parchment/40">
+                                            <div className="text-xs text-black/40 dark:text-white/90">
                                                 {appt.time}
                                             </div>
                                         </td>
@@ -211,7 +211,7 @@ export default function MemberAppointments() {
                                                 </span>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 text-right font-bold text-ink dark:text-parchment">
+                                        <td className="px-6 py-4 text-right font-bold text-black dark:text-white/90">
                                             ${appt.amount}
                                         </td>
                                     </tr>
@@ -222,7 +222,7 @@ export default function MemberAppointments() {
                 </div>
             </div>
 
-            {/* ── Appointment Detail Drawer ──────────────────────────────────────── */}
+            {/* â”€â”€ Appointment Detail Drawer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
             {selectedAppt && (
                 <div className="fixed inset-0 z-50 overflow-hidden">
                     <div
@@ -232,16 +232,16 @@ export default function MemberAppointments() {
                     />
 
                     <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
-                        <div className="w-screen max-w-md bg-surface dark:bg-card-dark border-l border-black/10 dark:border-white/10 shadow-2xl flex flex-col">
+                        <div className="w-screen max-w-md bg-surface dark:bg-tint-black/60 border-l border-black/10 dark:border-white/10 shadow-2xl flex flex-col">
                             {/* Drawer header */}
                             <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
-                                <h2 className="text-lg font-bold text-ink dark:text-parchment">
+                                <h2 className="text-lg font-bold text-black dark:text-white/90">
                                     Session Details
                                 </h2>
                                 <button
                                     onClick={() => setSelectedAppt(null)}
                                     aria-label="Close details"
-                                    className="p-1 rounded-lg text-black/40 dark:text-parchment/40 hover:text-ink dark:hover:text-parchment hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                                    className="p-1 rounded-lg text-black/40 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                                 >
                                     <XIcon size={20} />
                                 </button>
@@ -255,13 +255,13 @@ export default function MemberAppointments() {
                                         <UserIcon size={18} weight="bold" />
                                     </span>
                                     <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40">
+                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
                                             Client
                                         </div>
-                                        <div className="font-bold text-ink dark:text-parchment mt-0.5">
+                                        <div className="font-bold text-black dark:text-white/90 mt-0.5">
                                             {selectedAppt.clientName}
                                         </div>
-                                        <div className="text-xs text-black/50 dark:text-parchment/40">
+                                        <div className="text-xs text-black/50 dark:text-white/90">
                                             {selectedAppt.clientEmail}
                                         </div>
                                     </div>
@@ -273,13 +273,13 @@ export default function MemberAppointments() {
                                         <CalendarBlankIcon size={18} weight="bold" />
                                     </span>
                                     <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40">
+                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
                                             Date & Time
                                         </div>
-                                        <div className="font-bold text-ink dark:text-parchment mt-0.5">
+                                        <div className="font-bold text-black dark:text-white/90 mt-0.5">
                                             {selectedAppt.date}
                                         </div>
-                                        <div className="text-xs text-black/50 dark:text-parchment/40 flex items-center gap-1">
+                                        <div className="text-xs text-black/50 dark:text-white/90 flex items-center gap-1">
                                             <ClockIcon size={11} />
                                             {selectedAppt.time}
                                         </div>
@@ -292,10 +292,10 @@ export default function MemberAppointments() {
                                         <CreditCardIcon size={18} weight="bold" />
                                     </span>
                                     <div>
-                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40">
+                                        <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
                                             Consultation Fee
                                         </div>
-                                        <div className="font-bold text-ink dark:text-parchment mt-0.5">
+                                        <div className="font-bold text-black dark:text-white/90 mt-0.5">
                                             ${selectedAppt.amount}
                                         </div>
                                     </div>
@@ -303,18 +303,18 @@ export default function MemberAppointments() {
 
                                 {/* Notes */}
                                 <div className="border-t border-black/5 dark:border-white/5 pt-4">
-                                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40 mb-2">
+                                    <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-2">
                                         <ChatCenteredTextIcon size={14} />
                                         Session Notes
                                     </div>
-                                    <p className="text-xs leading-relaxed text-black/70 dark:text-parchment/60 bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-xl p-3">
+                                    <p className="text-xs leading-relaxed text-black/70 dark:text-white/90 bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 rounded-xl p-3">
                                         {selectedAppt.notes}
                                     </p>
                                 </div>
 
-                                {/* Status actions — member-appropriate only */}
+                                {/* Status actions â€” member-appropriate only */}
                                 <div className="border-t border-black/5 dark:border-white/5 pt-4 space-y-3">
-                                    <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-parchment/40">
+                                    <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
                                         Actions
                                     </div>
                                     <div className="flex flex-wrap gap-2">
@@ -325,7 +325,7 @@ export default function MemberAppointments() {
                                                 onClick={action}
                                                 className={clsx(
                                                     "px-4 py-2 rounded-xl text-xs font-semibold border transition-colors",
-                                                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
+                                                    "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                                     danger
                                                         ? "border-red-500/20 text-red-500 hover:bg-red-500/5"
                                                         : "border-primary/20 text-primary bg-primary/5 hover:bg-primary/10"
@@ -338,10 +338,10 @@ export default function MemberAppointments() {
                                 </div>
                             </div>
 
-                            {/* Drawer footer — payment toggle */}
+                            {/* Drawer footer â€” payment toggle */}
                             <div className="px-6 py-4 border-t border-black/10 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] flex items-center justify-between gap-4">
                                 <div>
-                                    <div className="text-[10px] uppercase font-bold text-black/40 dark:text-parchment/40">
+                                    <div className="text-[10px] uppercase font-bold text-black/40 dark:text-white/90">
                                         Payment Status
                                     </div>
                                     <div className="mt-0.5">
@@ -364,7 +364,7 @@ export default function MemberAppointments() {
                                         }
                                         className={clsx(
                                             "px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm",
-                                            "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+                                            "focus: focus-visible:ring-2 focus-visible:ring-offset-2",
                                             selectedAppt.paid
                                                 ? "bg-red-500 hover:bg-red-600 text-white focus-visible:ring-red-500"
                                                 : "bg-emerald-500 hover:bg-emerald-600 text-white focus-visible:ring-emerald-500"
@@ -382,3 +382,6 @@ export default function MemberAppointments() {
         </div>
     );
 }
+
+
+

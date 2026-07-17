@@ -4,7 +4,6 @@ import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 
-// Admin dashboard
 import AdminLayout from "@/layouts/AdminLayout";
 import Overview from "@/pages/admin/Overview";
 import Members from "@/pages/admin/Members";
@@ -12,14 +11,12 @@ import Clients from "@/pages/admin/Clients";
 import Appointments from "@/pages/admin/Appointments";
 import Settings from "@/pages/admin/Settings";
 
-// Member dashboard
 import MemberLayout from "@/layouts/MemberLayout";
 import MemberOverview from "@/pages/member/MemberOverview";
 import MemberAvailability from "@/pages/member/MemberAvailability";
 import MemberAppointments from "@/pages/member/MemberAppointments";
 import MemberSettings from "@/pages/member/MemberSettings";
 
-// Client dashboard
 import ClientLayout from "@/layouts/ClientLayout";
 import ClientOverview from "@/pages/client/ClientOverview";
 import ClientFindMember from "@/pages/client/ClientFindMember";

@@ -1,12 +1,11 @@
-import React from "react";
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import {
-    CalendarBlank as CalendarBlankIcon,
-    Hourglass as HourglassIcon,
-    CreditCard as CreditCardIcon,
-    CheckCircle as CheckCircleIcon,
-    ArrowRight as ArrowRightIcon,
-    Clock as ClockIcon,
+    CalendarBlankIcon,
+    HourglassIcon,
+    CreditCardIcon,
+    CheckCircleIcon,
+    ArrowRightIcon,
+    ClockIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { MEMBER_APPOINTMENTS, LOGGED_IN_MEMBER } from "@/mock/memberMockData";
@@ -69,10 +68,10 @@ export default function MemberOverview() {
                 <p className="text-xs font-bold uppercase tracking-widest text-primary mb-1">
                     Member Portal
                 </p>
-                <h1 className="text-3xl font-extrabold tracking-tight text-ink dark:text-parchment">
+                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
                     Good morning, {LOGGED_IN_MEMBER.name.split(" ")[1]}.
                 </h1>
-                <p className="text-sm text-black/50 dark:text-parchment/50 mt-1">
+                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
                     Here's your session snapshot and today's schedule.
                 </p>
             </div>
@@ -82,17 +81,17 @@ export default function MemberOverview() {
                 {stats.map((stat, idx) => (
                     <div
                         key={idx}
-                        className="bg-surface dark:bg-card-dark p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-card"
+                        className="bg-surface dark:bg-tint-black/60 p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1"
                     >
                         <div className="flex items-center justify-between mb-3">
                             <span className={clsx("p-2 rounded-xl", stat.color)}>
                                 <stat.icon size={18} weight="bold" />
                             </span>
-                            <span className="text-3xl font-black text-ink dark:text-parchment">
+                            <span className="text-3xl font-black text-black dark:text-white/90">
                                 {stat.value}
                             </span>
                         </div>
-                        <div className="text-xs font-semibold text-black/50 dark:text-parchment/40 leading-tight">
+                        <div className="text-xs font-semibold text-black/50 dark:text-white/90 leading-tight">
                             {stat.label}
                         </div>
                     </div>
@@ -100,16 +99,16 @@ export default function MemberOverview() {
             </div>
 
             {/* Today's Schedule */}
-            <div className="bg-surface dark:bg-card-dark rounded-3xl border border-black/10 dark:border-white/5 shadow-card overflow-hidden">
+            <div className="bg-surface dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                         <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                             <ClockIcon size={18} weight="bold" />
                         </span>
-                        <h2 className="text-base font-bold text-ink dark:text-parchment">
+                        <h2 className="text-base font-bold text-black dark:text-white/90">
                             Today's Schedule
                         </h2>
-                        <span className="text-xs text-black/40 dark:text-parchment/40 font-medium">
+                        <span className="text-xs text-black/40 dark:text-white/90 font-medium">
                             {TODAY}
                         </span>
                     </div>
@@ -124,12 +123,12 @@ export default function MemberOverview() {
 
                 {todayAppts.length === 0 ? (
                     <div className="px-6 py-16 text-center">
-                        <div className="text-2xl mb-2">🗓️</div>
-                        <p className="text-sm font-semibold text-black/50 dark:text-parchment/40">
+                        <div className="text-2xl mb-2">ðŸ—“ï¸</div>
+                        <p className="text-sm font-semibold text-black/50 dark:text-white/90">
                             Nothing on your schedule today.
                         </p>
-                        <p className="text-xs text-black/30 dark:text-parchment/30 mt-1 max-w-xs mx-auto">
-                            Enjoy the downtime — or check upcoming appointments for the rest of the week.
+                        <p className="text-xs text-black/30 dark:text-white/90 mt-1 max-w-xs mx-auto">
+                            Enjoy the downtime â€” or check upcoming appointments for the rest of the week.
                         </p>
                     </div>
                 ) : (
@@ -141,17 +140,17 @@ export default function MemberOverview() {
                             >
                                 {/* Time column */}
                                 <div className="w-24 flex-shrink-0">
-                                    <span className="text-sm font-bold text-ink dark:text-parchment">
+                                    <span className="text-sm font-bold text-black dark:text-white/90">
                                         {appt.time}
                                     </span>
                                 </div>
 
                                 {/* Client info */}
                                 <div className="flex-1 min-w-0">
-                                    <div className="font-semibold text-sm text-ink dark:text-parchment">
+                                    <div className="font-semibold text-sm text-black dark:text-white/90">
                                         {appt.clientName}
                                     </div>
-                                    <div className="text-xs text-black/40 dark:text-parchment/40 truncate">
+                                    <div className="text-xs text-black/40 dark:text-white/90 truncate">
                                         {appt.clientEmail}
                                     </div>
                                 </div>
@@ -167,7 +166,7 @@ export default function MemberOverview() {
                                 </span>
 
                                 {/* Fee */}
-                                <span className="text-sm font-bold text-ink dark:text-parchment flex-shrink-0 hidden sm:block">
+                                <span className="text-sm font-bold text-black dark:text-white/90 flex-shrink-0 hidden sm:block">
                                     ${appt.amount}
                                 </span>
                             </li>
@@ -178,3 +177,5 @@ export default function MemberOverview() {
         </div>
     );
 }
+
+
