@@ -94,10 +94,9 @@ export default function MemberAppointments() {
         <div className="relative pb-6 space-y-8">
             <div>
                 <h2 className="heading-h2 text-black dark:text-white/90">My Appointments</h2>
-                <TitleComponent size='small' className="text-black/50 dark:text-white/90 nd:text-base mt-1">Track and manage your client consultation sessions.</TitleComponent>
+                <TitleComponent size='small' className="text-black/50 dark:text-white/90 md:text-base mt-1">Track and manage your client consultation sessions.</TitleComponent>
             </div>
 
-            {/* Tab bar */}
             <div className="flex items-center gap-1 bg-white dark:bg-tint-black/60 border border-black/10 dark:border-white/5 rounded-xl p-1.5 shadow-shadow2-effect dark:shadow-shadow1 w-fit">
                 {TABS.map(({ key, label }) => (
                     <button

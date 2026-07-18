@@ -17,8 +17,8 @@ import {
     MEMBER_WEEKLY_AVAILABILITY,
     MEMBER_DATE_OVERRIDES,
 } from "@/mock/memberMockData";
+import TitleComponent from "@/components/shared/TitleComponent";
 
-// Toggle switch
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
     return (
         <button
@@ -30,7 +30,7 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () =
             className={clsx(
                 "relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-200",
                 "focus: focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-card-dark",
-                checked ? "bg-primary" : "bg-black/15 dark:bg-white/15"
+                checked ? "bg-gradient-to-b from-primary-start to-primary-end" : "bg-black/15 dark:bg-white/15"
             )}
         >
             <span
@@ -80,8 +80,6 @@ function TimeChip({
     );
 }
 
-// Inline add-slot form
-
 function AddSlotForm({
     onConfirm,
     onCancel,
@@ -106,7 +104,7 @@ function AddSlotForm({
                 onChange={(e) => setStart(e.target.value)}
                 aria-label="Start time"
                 placeholder="Start"
-                className="text-xs font-mono text-black dark:text-white/90 bg-transparent focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
+                className="text-xs   text-black dark:text-white/90 bg-transparent focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
             />
             <span className="text-[10px] text-black/40 dark:text-white/90 font-semibold">to</span>
             <input
@@ -115,7 +113,7 @@ function AddSlotForm({
                 onChange={(e) => setEnd(e.target.value)}
                 aria-label="End time"
                 placeholder="End"
-                className="text-xs font-mono text-black dark:text-white/90 bg-transparent focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
+                className="text-xs   text-black dark:text-white/90 bg-transparent focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
             />
             <div className="flex items-center gap-1">
                 <button
@@ -140,8 +138,6 @@ function AddSlotForm({
     );
 }
 
-// Toggle switch
-
 export default function MemberAvailability() {
     const [schedule, setSchedule] = useState<DaySchedule[]>(() =>
         MEMBER_WEEKLY_AVAILABILITY.map((d) => ({ ...d, ranges: d.ranges.map((r) => ({ ...r })) }))
@@ -150,14 +146,11 @@ export default function MemberAvailability() {
         MEMBER_DATE_OVERRIDES.map((o) => ({ ...o, ranges: o.ranges.map((r) => ({ ...r })) }))
     );
 
-    // Which day has the "+ Add slot" form open (only one at a time)
     const [addingSlotForDay, setAddingSlotForDay] = useState<string | null>(null);
 
-    // Unsaved / saved state
     const [hasUnsaved, setHasUnsaved] = useState(false);
     const [justSaved, setJustSaved] = useState(false);
 
-    // Override form state
     const [addingOverride, setAddingOverride] = useState(false);
     const [newOverrideDate, setNewOverrideDate] = useState("");
     const [newOverrideType, setNewOverrideType] = useState<"blocked" | "custom">("blocked");
@@ -169,7 +162,6 @@ export default function MemberAvailability() {
         setJustSaved(false);
     }, []);
 
-    // Weekly schedule mutations
     const toggleDay = (day: string) => {
         setSchedule((prev) =>
             prev.map((d) => (d.day === day ? { ...d, enabled: !d.enabled } : d))
@@ -194,7 +186,6 @@ export default function MemberAvailability() {
         markUnsaved();
     };
 
-    // Override mutations
     const addOverride = () => {
         if (!newOverrideDate) return;
         const id = `do_${Date.now()}`;
@@ -206,7 +197,6 @@ export default function MemberAvailability() {
             note: newOverrideNote,
         };
         setOverrides((prev) => [...prev, override].sort((a, b) => a.date.localeCompare(b.date)));
-        // Reset form
         setAddingOverride(false);
         setNewOverrideDate("");
         setNewOverrideType("blocked");
@@ -221,7 +211,6 @@ export default function MemberAvailability() {
     };
 
     const handleSave = () => {
-        // Wire to Firestore: update member doc availability + overrides subcollection
         setHasUnsaved(false);
         setJustSaved(true);
         setTimeout(() => setJustSaved(false), 2500);
@@ -238,7 +227,6 @@ export default function MemberAvailability() {
         setHasUnsaved(false);
     };
 
-    // Close add-slot form if user clicks away (handled by natural focus flow)
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
             if (e.key === "Escape") setAddingSlotForDay(null);
@@ -254,36 +242,24 @@ export default function MemberAvailability() {
 
     return (
         <div className="space-y-8 pb-24">
-            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
-                        My Availability
-                    </h1>
-                    <p className="text-sm text-black/50 dark:text-white/90 mt-1">
-                        Configure recurring weekly hours and block specific dates.
-                    </p>
+                    <h2 className="heading-h2 text-black dark:text-white/90">My Availability</h2>
+                    <TitleComponent size='small' className="text-black/50 dark:text-white/90 md:text-base mt-1">Configure recurring weekly hours and block specific dates.</TitleComponent>
                 </div>
             </div>
 
-            {/* Section 1: Weekly recurring schedule */}
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
-                {/* Section header */}
                 <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center gap-2.5">
-                    <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
+                    <span className="p-1.5 rounded-md bg-primary/10 text-primary">
                         <ClockIcon size={18} weight="bold" />
                     </span>
                     <div>
-                        <h2 className="text-base font-bold text-black dark:text-white/90">
-                            Weekly Recurring Hours
-                        </h2>
-                        <p className="text-xs text-black/40 dark:text-white/90 mt-0.5">
-                            Your default availability - applied to every week unless overridden below.
-                        </p>
+                        <h2 className="text-base font-bold text-black dark:text-white/90">Weekly Recurring Hours</h2>
+                        <TitleComponent size="extra-small" className="text-black/40 dark:text-white/90 mt-0.5">Your default availability - applied to every week unless overridden below.</TitleComponent>
                     </div>
                 </div>
 
-                {/* Day rows */}
                 <div className="divide-y divide-black/5 dark:divide-white/5">
                     {schedule.map((day) => (
                         <div
@@ -293,7 +269,6 @@ export default function MemberAvailability() {
                                 !day.enabled && "opacity-60"
                             )}
                         >
-                            {/* Toggle + day label */}
                             <div className="flex items-center gap-3 w-36 flex-shrink-0">
                                 <Toggle
                                     checked={day.enabled}
@@ -312,7 +287,6 @@ export default function MemberAvailability() {
                                 </span>
                             </div>
 
-                            {/* Slots area */}
                             <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
                                 {day.enabled ? (
                                     <>
@@ -325,7 +299,6 @@ export default function MemberAvailability() {
                                             />
                                         ))}
 
-                                        {/* Add slot form or trigger */}
                                         {addingSlotForDay === day.day ? (
                                             <AddSlotForm
                                                 onConfirm={(range) => addSlot(day.day, range)}
@@ -349,15 +322,11 @@ export default function MemberAvailability() {
                                         )}
 
                                         {day.ranges.length === 0 && addingSlotForDay !== day.day && (
-                                            <span className="text-xs text-black/30 dark:text-white/90 italic">
-                                                No slots - add one to accept bookings
-                                            </span>
+                                            <span className="text-xs text-black/30 dark:text-white/90 italic">No slots - add one to accept bookings</span>
                                         )}
                                     </>
                                 ) : (
-                                    <span className="text-xs font-medium text-black/35 dark:text-white/90 italic">
-                                        Unavailable
-                                    </span>
+                                    <span className="text-xs font-medium text-black/35 dark:text-white/90 italic">Unavailable</span>
                                 )}
                             </div>
                         </div>
@@ -365,21 +334,15 @@ export default function MemberAvailability() {
                 </div>
             </div>
 
-            {/* Section 2: Date overrides */}
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
-                {/* Section header */}
                 <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                         <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                             <CalendarBlankIcon size={18} weight="bold" />
                         </span>
                         <div>
-                            <h2 className="text-base font-bold text-black dark:text-white/90">
-                                Date Overrides
-                            </h2>
-                            <p className="text-xs text-black/40 dark:text-white/90 mt-0.5">
-                                Block a specific date or set custom hours - overrides your weekly pattern.
-                            </p>
+                            <h2 className="text-base font-bold text-black dark:text-white/90">Date Overrides</h2>
+                            <p className="text-xs text-black/40 dark:text-white/90 mt-0.5">Block a specific date or set custom hours - overrides your weekly pattern.</p>
                         </div>
                     </div>
                     {!addingOverride && (
@@ -387,7 +350,7 @@ export default function MemberAvailability() {
                             type="button"
                             onClick={() => setAddingOverride(true)}
                             className={clsx(
-                                "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-colors",
+                                "inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-colors",
                                 "bg-primary/10 text-primary hover:bg-primary/15",
                                 "focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                             )}
@@ -399,15 +362,10 @@ export default function MemberAvailability() {
                 </div>
 
                 <div className="divide-y divide-black/5 dark:divide-white/5">
-                    {/* Existing overrides list */}
                     {overrides.length === 0 && !addingOverride && (
                         <div className="px-6 py-10 text-center">
-                            <p className="text-sm font-semibold text-black/40 dark:text-white/90">
-                                No date overrides set.
-                            </p>
-                            <p className="text-xs text-black/30 dark:text-white/90 mt-1">
-                                Use overrides for vacations, holidays, or one-off availability changes.
-                            </p>
+                            <TitleComponent size='small-semibold' className="text-black/40 dark:text-white/90">No date overrides set.</TitleComponent>
+                            <TitleComponent size='extra-small' className="text-black/30 dark:text-white/90 mt-1">Use overrides for vacations, holidays, or one-off availability changes.</TitleComponent>
                         </div>
                     )}
 
@@ -416,7 +374,6 @@ export default function MemberAvailability() {
                             key={override.id}
                             className="px-6 py-4 flex items-center gap-4"
                         >
-                            {/* Type icon */}
                             <span
                                 className={clsx(
                                     "p-2 rounded-xl flex-shrink-0",
@@ -432,7 +389,6 @@ export default function MemberAvailability() {
                                 )}
                             </span>
 
-                            {/* Date + type + note */}
                             <div className="flex-1 min-w-0">
                                 <div className="flex flex-wrap items-center gap-2">
                                     <span className="text-sm font-bold text-black dark:text-white/90">
@@ -465,7 +421,6 @@ export default function MemberAvailability() {
                                 )}
                             </div>
 
-                            {/* Remove button */}
                             <button
                                 type="button"
                                 onClick={() => removeOverride(override.id)}
@@ -477,15 +432,11 @@ export default function MemberAvailability() {
                         </div>
                     ))}
 
-                    {/* Inline add override form */}
                     {addingOverride && (
                         <div className="px-6 py-5 bg-black/[0.01] dark:bg-white/[0.01] space-y-4">
-                            <p className="text-xs font-bold uppercase tracking-wider text-black/50 dark:text-white/90">
-                                New Date Override
-                            </p>
+                            <TitleComponent size='extra-small-bold' className="uppercase tracking-wider text-black/50 dark:text-white/90">New Date Override</TitleComponent>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {/* Date picker */}
                                 <div>
                                     <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">
                                         Date
@@ -498,11 +449,8 @@ export default function MemberAvailability() {
                                     />
                                 </div>
 
-                                {/* Type toggle */}
                                 <div>
-                                    <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">
-                                        Override Type
-                                    </label>
+                                    <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">Override Type</label>
                                     <div className="flex gap-2">
                                         {(["blocked", "custom"] as const).map((t) => (
                                             <button
@@ -523,12 +471,9 @@ export default function MemberAvailability() {
                                 </div>
                             </div>
 
-                            {/* Custom hours inputs */}
                             {newOverrideType === "custom" && (
                                 <div className="flex flex-wrap items-center gap-3">
-                                    <label className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
-                                        Hours:
-                                    </label>
+                                    <label className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">Hours:</label>
                                     {newOverrideRanges.map((r, i) => (
                                         <div
                                             key={i}
@@ -544,7 +489,7 @@ export default function MemberAvailability() {
                                                         )
                                                     )
                                                 }
-                                                className="text-xs font-mono bg-transparent  text-black dark:text-white/90"
+                                                className="text-xs bg-transparent text-black dark:text-white/90"
                                             />
                                             <span className="text-[10px] text-black/40">to</span>
                                             <input
@@ -557,14 +502,13 @@ export default function MemberAvailability() {
                                                         )
                                                     )
                                                 }
-                                                className="text-xs font-mono bg-transparent  text-black dark:text-white/90"
+                                                className="text-xs bg-transparent text-black dark:text-white/90"
                                             />
                                         </div>
                                     ))}
                                 </div>
                             )}
 
-                            {/* Note */}
                             <div>
                                 <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">
                                     Note (optional)
@@ -578,7 +522,6 @@ export default function MemberAvailability() {
                                 />
                             </div>
 
-                            {/* Form actions */}
                             <div className="flex items-center gap-3">
                                 <button
                                     type="button"
@@ -602,15 +545,10 @@ export default function MemberAvailability() {
                 </div>
             </div>
 
-            {/* Sticky unsaved / saved indicator */}
-
-            {/* Unsaved changes bar */}
             {hasUnsaved && (
                 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-5 py-3 rounded-2xl shadow-2xl motion-safe:animate-fade-in bg-black dark:bg-white border border-white/10 dark:border-black/10 text-parchment dark:text-black">
                     <WarningIcon size={18} weight="bold" className="text-amber-400 flex-shrink-0" />
-                    <span className="text-sm font-semibold whitespace-nowrap">
-                        Unsaved changes
-                    </span>
+                    <span className="text-sm font-semibold whitespace-nowrap">Unsaved changes</span>
                     <div className="flex items-center gap-2">
                         <button
                             type="button"
@@ -631,7 +569,6 @@ export default function MemberAvailability() {
                 </div>
             )}
 
-            {/* Saved confirmation flash */}
             {justSaved && (
                 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 text-white shadow-xl shadow-emerald-500/20 motion-safe:animate-fade-in">
                     <CheckIcon size={16} weight="bold" />

@@ -14,7 +14,7 @@ import { type ClientAppointment } from "@/mock/clientMockData";
 import { useClientAppointments } from "@/context/client-appointments-context";
 import TitleComponent from "@/components/shared/TitleComponent";
 
-const TODAY = "2026-07-15"; // mock "today"
+const TODAY = "2026-07-15";
 
 type Tab = "upcoming" | "past" | "cancelled";
 
@@ -97,10 +97,8 @@ function DetailDrawer({
                         </button>
                     </div>
 
-                    {/* Body */}
                     <div className="flex-1 overflow-y-auto p-6 space-y-6 text-sm">
 
-                        {/* Member */}
                         <div className="flex items-start gap-3">
                             <MemberAvatar name={appt.memberName} />
                             <div>
@@ -112,7 +110,6 @@ function DetailDrawer({
                             </div>
                         </div>
 
-                        {/* Status badge */}
                         <div>
                             <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-2">
                                 Status
@@ -125,7 +122,6 @@ function DetailDrawer({
                             </span>
                         </div>
 
-                        {/* Date & time */}
                         <div className="flex items-start gap-3">
                             <span className="p-2 rounded-xl bg-primary/10 text-primary mt-0.5 flex-shrink-0">
                                 <CalendarBlankIcon size={16} weight="bold" />
@@ -142,7 +138,6 @@ function DetailDrawer({
                             </div>
                         </div>
 
-                        {/* Purpose */}
                         <div className="flex items-start gap-3">
                             <span className="p-2 rounded-xl bg-primary/10 text-primary mt-0.5 flex-shrink-0">
                                 <SparkleIcon size={16} weight="bold" />
@@ -155,7 +150,6 @@ function DetailDrawer({
                             </div>
                         </div>
 
-                        {/* Notes */}
                         {appt.notes && (
                             <div className="border-t border-black/5 dark:border-white/5 pt-4">
                                 <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-2">
@@ -168,7 +162,6 @@ function DetailDrawer({
                             </div>
                         )}
 
-                        {/* Actions */}
                         {(canCancel || canReschedule) && (
                             <div className="border-t border-black/5 dark:border-white/5 pt-4 space-y-3">
                                 <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
@@ -250,8 +243,6 @@ export default function ClientAppointments() {
 
     return (
         <div className="relative pb-6 space-y-8">
-
-            {/* Header */}
             <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div>
                     <h2 className="heading-h2 text-black dark:text-white/90">My Appointments</h2>
@@ -259,14 +250,13 @@ export default function ClientAppointments() {
                 </div>
                 <Link
                     to="/client/find"
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-primary hover:bg-primary/90 text-sm font-bold text-white shadow-sm shadow-primary/20 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-b from-primary-start to-primary-end hover:bg-primary/90 text-sm font-bold text-white shadow-sm shadow-primary/20 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 hover:from-secondary-start hover:to-secondary-end"
                 >
                     <CalendarBlankIcon size={16} weight="bold" />
                     New booking
                 </Link>
             </div>
 
-            {/* Tab bar */}
             <div className="flex items-center gap-1 bg-white dark:bg-tint-black/60 border border-black/10 dark:border-white/5 rounded-xl p-1.5 shadow-shadow2-effect dark:shadow-shadow1 w-fit">
                 {TABS.map(({ key, label }) => (
                     <button
@@ -278,7 +268,7 @@ export default function ClientAppointments() {
                             "px-4 py-2 rounded-md text-xs font-bold transition-all duration-200",
                             "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                             activeTab === key
-                                ? "bg-primary text-white shadow-sm"
+                                ? "bg-gradient-to-b from-primary-start to-primary-end text-white shadow-sm"
                                 : "text-black/50 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5"
                         )}
                         aria-selected={activeTab === key}
@@ -295,7 +285,6 @@ export default function ClientAppointments() {
                 ))}
             </div>
 
-            {/* Table */}
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 <div className="overflow-x-auto">
                     {filtered.length === 0 ? (

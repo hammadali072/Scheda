@@ -6,21 +6,19 @@ import {
     IdentificationCardIcon,
 } from "@phosphor-icons/react";
 import { LOGGED_IN_CLIENT } from "@/mock/clientMockData";
+import TitleComponent from "@/components/shared/TitleComponent";
 
 export default function ClientSettings() {
-    // Profile state
     const [name, setName] = useState(LOGGED_IN_CLIENT.name);
     const [email, setEmail] = useState(LOGGED_IN_CLIENT.email);
     const [phone, setPhone] = useState(LOGGED_IN_CLIENT.phone);
 
-    // Security state
     const [currentPw, setCurrentPw] = useState("");
     const [newPw, setNewPw] = useState("");
     const [confirmPw, setConfirmPw] = useState("");
 
     const handleProfileSave = (e: React.FormEvent) => {
         e.preventDefault();
-        // Wire to Firestore: update client document
         alert("Profile updated (mock - no persistence yet).");
     };
 
@@ -47,24 +45,18 @@ export default function ClientSettings() {
         "block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1.5";
 
     const saveButtonClass =
-        "inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-xs font-semibold text-white shadow-sm shadow-primary/10 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40";
+        "inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-b from-primary-start to-primary-end hover:bg-primary/90 text-xs font-semibold text-white shadow-sm shadow-primary/10 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40 hover:from-secondary-start hover:to-secondary-end";
 
     return (
         <div className="space-y-8">
 
-            {/* Header */}
             <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
-                    Account Settings
-                </h1>
-                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
-                    Update your contact details and security credentials.
-                </p>
+                <h2 className="heading-h2 text-black dark:text-white/90">Account Settings</h2>
+                <TitleComponent size='small' className="text-black/50 dark:text-white/90 mt-1">Update your contact details and security credentials.</TitleComponent>
             </div>
 
-            {/* Identity strip */}
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-center gap-5">
-                <div className="h-16 w-16 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-xl flex-shrink-0">
+                <div className="size-16 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-xl flex-shrink-0">
                     {LOGGED_IN_CLIENT.avatar}
                 </div>
                 <div>
@@ -78,8 +70,6 @@ export default function ClientSettings() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-                {/* Profile form */}
                 <form
                     onSubmit={handleProfileSave}
                     className="lg:col-span-7 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
@@ -91,7 +81,6 @@ export default function ClientSettings() {
                         <h2 className="text-base font-bold text-black dark:text-white/90">Profile Details</h2>
                     </div>
 
-                    {/* Name / Phone */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label className={labelClass} htmlFor="client-name">Full Name</label>
@@ -117,7 +106,6 @@ export default function ClientSettings() {
                         </div>
                     </div>
 
-                    {/* Email */}
                     <div>
                         <label className={labelClass} htmlFor="client-email">Email Address</label>
                         <input
@@ -136,7 +124,6 @@ export default function ClientSettings() {
                     </button>
                 </form>
 
-                {/* Password form */}
                 <form
                     onSubmit={handlePasswordSave}
                     className="lg:col-span-5 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"

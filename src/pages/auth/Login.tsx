@@ -105,7 +105,7 @@ export default function Login() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="flex w-full items-center justify-center rounded-xl bg-primary hover:bg-primary/90 px-4 py-3.5 text-sm font-semibold text-white transition focus:ring-2 focus:ring-primary/30  disabled:cursor-not-allowed disabled:opacity-75 shadow-md shadow-primary/10"
+                    className="flex w-full items-center justify-center rounded-xl bg-gradient-to-b from-primary-start to-primary-end hover:bg-primary/90 px-4 py-3.5 text-sm font-semibold text-white transition focus:ring-2 focus:ring-primary/30  disabled:cursor-not-allowed disabled:opacity-75 shadow-md shadow-primary/10"
                 >
                     {loading ? (
                         <span className="flex items-center gap-2">

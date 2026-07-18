@@ -20,13 +20,10 @@ import {
 } from "@/mock/clientMockData";
 import { useClientAppointments } from "@/context/client-appointments-context";
 import { type DaySchedule, type TimeRange } from "@/mock/memberMockData";
+import TitleComponent from "@/components/shared/TitleComponent";
 
-// Mock today
 const MOCK_TODAY = "2026-07-15";
 
-// Utilities
-
-/** Returns available YYYY-MM-DD dates for the next `daysAhead` days given a member schedule. */
 function getAvailableDates(schedule: DaySchedule[], daysAhead = 28): string[] {
     const dates: string[] = [];
     const base = new Date(MOCK_TODAY + "T00:00:00");
@@ -42,7 +39,6 @@ function getAvailableDates(schedule: DaySchedule[], daysAhead = 28): string[] {
     return dates;
 }
 
-/** Generates 60-minute slot strings ("9:00 AM", "10:00 AM", ...) from TimeRanges. */
 function generateSlots(ranges: TimeRange[]): string[] {
     const slots: string[] = [];
     for (const range of ranges) {
@@ -62,7 +58,6 @@ function generateSlots(ranges: TimeRange[]): string[] {
     return slots;
 }
 
-/** Pretty-prints YYYY-MM-DD to e.g. "Thu, Jul 17" */
 function fmtDateShort(d: string) {
     return new Date(d + "T00:00:00").toLocaleDateString("en-US", {
         weekday: "short",
@@ -71,7 +66,6 @@ function fmtDateShort(d: string) {
     });
 }
 
-/** Pretty-prints YYYY-MM-DD to e.g. "Thursday, July 17, 2026" */
 function fmtDateLong(d: string) {
     return new Date(d + "T00:00:00").toLocaleDateString("en-US", {
         weekday: "long",
@@ -80,8 +74,6 @@ function fmtDateLong(d: string) {
         year: "numeric",
     });
 }
-
-// Step indicator
 
 const STEPS = ["Select a time", "Your details", "Confirm"] as const;
 type Step = 0 | 1 | 2 | 3; // 3 = success
@@ -97,7 +89,7 @@ function StepBar({ current }: { current: Step }) {
                         <div role="listitem" className="flex items-center gap-2">
                             <div
                                 className={clsx(
-                                    "h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors",
+                                    "size-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors",
                                     done
                                         ? "bg-primary text-white"
                                         : active
@@ -135,8 +127,6 @@ function StepBar({ current }: { current: Step }) {
         </div>
     );
 }
-
-// Date chip
 
 function DateChip({
     date,
@@ -177,21 +167,17 @@ function DateChip({
     );
 }
 
-// Main component
-
 export default function ClientBookAppointment() {
     const { memberId } = useParams<{ memberId: string }>();
     const navigate = useNavigate();
     const location = useLocation();
     const { addAppointment, cancelAppointment } = useClientAppointments();
 
-    // Reschedule support: navigate here with state { reschedule: ClientAppointment }
     const reschedule: ClientAppointment | undefined = (location.state as { reschedule?: ClientAppointment })?.reschedule;
 
     const member = BOOKABLE_MEMBERS.find((m) => m.id === memberId);
     const schedule = memberId ? MEMBER_AVAILABILITY_MAP[memberId] ?? [] : [];
 
-    // Booking state
     const [step, setStep] = useState<Step>(0);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -205,7 +191,6 @@ export default function ClientBookAppointment() {
     );
     const [notes, setNotes] = useState(reschedule?.notes ?? "");
 
-    // Computed
     const availableDates = useMemo(() => getAvailableDates(schedule), [schedule]);
 
     const slotsForDate = useMemo(() => {
@@ -216,13 +201,11 @@ export default function ClientBookAppointment() {
         return day ? generateSlots(day.ranges) : [];
     }, [selectedDate, schedule]);
 
-    // Effective purpose string (resolves "Other" to free text)
     const effectivePurpose = purpose === "Other" ? purposeOther.trim() : purpose;
 
     const step0Valid = !!selectedDate && !!selectedSlot;
     const step1Valid = !!effectivePurpose;
 
-    // Handlers
     const handleSubmit = () => {
         if (!member || !selectedDate || !selectedSlot || !effectivePurpose) return;
 
@@ -238,7 +221,6 @@ export default function ClientBookAppointment() {
             status: "pending",
         };
 
-        // If rescheduling, cancel the original first
         if (reschedule) {
             cancelAppointment(reschedule.id);
         }
@@ -247,7 +229,6 @@ export default function ClientBookAppointment() {
         setStep(3);
     };
 
-    // Guard: unknown member
     if (!member) {
         return (
             <div className="py-24 text-center space-y-4">
@@ -267,25 +248,21 @@ export default function ClientBookAppointment() {
         );
     }
 
-    // Success state
-    // Step 3 - Success
     if (step === 3) {
         return (
             <div className="max-w-lg mx-auto py-12 space-y-6">
-                {/* Success badge */}
                 <div className="flex flex-col items-center text-center space-y-4">
                     <div className="h-20 w-20 rounded-full bg-emerald-500/10 text-emerald-500 flex items-center justify-center motion-safe:animate-bounce">
                         <CheckCircleIcon size={48} weight="fill" />
                     </div>
                     <div>
                         <h1 className="text-2xl font-extrabold text-black dark:text-white/90">Booking request sent!</h1>
-                        <p className="text-sm text-black/50 dark:text-white/90 mt-2 max-w-sm">
+                        <TitleComponent size='small' className="text-black/50 dark:text-white/90 mt-2 max-w-sm">
                             {reschedule ? "Your original appointment has been cancelled and a new request has been submitted." : "Your appointment request has been submitted."} You'll be notified once {member.name} confirms.
-                        </p>
+                        </TitleComponent>
                     </div>
                 </div>
 
-                {/* Summary card */}
                 <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                     <div className="bg-primary/5 border-b border-primary/10 px-6 py-4 flex items-center gap-3">
                         <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black text-sm flex-shrink-0">
@@ -347,12 +324,9 @@ export default function ClientBookAppointment() {
         );
     }
 
-    // Main booking flow
-    // Steps 0-2
     return (
         <div className="space-y-8">
 
-            {/* Back link */}
             <div className="flex items-center gap-2">
                 <Link
                     to="/client/find"
@@ -365,27 +339,20 @@ export default function ClientBookAppointment() {
                 <span className="text-sm font-semibold text-black dark:text-white/90 truncate">{member.name}</span>
             </div>
 
-            {/* Member header card */}
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-start gap-5">
-                <div className="h-16 w-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">
-                    {member.avatar}
-                </div>
+                <div className="size-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">{member.avatar}</div>
                 <div className="flex-1 min-w-0">
                     <div className="text-xl font-extrabold text-black dark:text-white/90 leading-tight">{member.name}</div>
                     <div className="text-sm text-black/50 dark:text-white/90 mt-0.5">{member.role}</div>
                     <span className="inline-flex mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">
                         {member.specialty}
                     </span>
-                    <p className="mt-3 text-sm text-black/60 dark:text-white/90 leading-relaxed line-clamp-2">
-                        {member.bio}
-                    </p>
+                    <TitleComponent size='small' className="mt-3 text-black/60 dark:text-white/90 leading-relaxed line-clamp-2">{member.bio}</TitleComponent>
                 </div>
             </div>
 
-            {/* Booking form card */}
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
 
-                {/* Step bar */}
                 <div className="px-6 py-5 border-b border-black/5 dark:border-white/5">
                     {reschedule && (
                         <div className="mb-4 px-4 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-semibold text-amber-600 dark:text-amber-400">
@@ -395,25 +362,18 @@ export default function ClientBookAppointment() {
                     <StepBar current={step} />
                 </div>
 
-                {/* Step 0: Pick date & time */}
                 {step === 0 && (
                     <div className="p-6 space-y-7">
-
-                        {/* Date picker */}
                         <div>
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                                     <CalendarBlankIcon size={16} weight="bold" />
                                 </span>
-                                <h2 className="text-base font-bold text-black dark:text-white/90">
-                                    Select a date
-                                </h2>
+                                <h2 className="text-base font-bold text-black dark:text-white/90">Select a date</h2>
                             </div>
 
                             {availableDates.length === 0 ? (
-                                <p className="text-sm text-black/50 dark:text-white/90 py-4">
-                                    No available dates in the next 28 days.
-                                </p>
+                                <TitleComponent size='small' className="text-black/50 dark:text-white/90 py-4">No available dates in the next 28 days.</TitleComponent>
                             ) : (
                                 <div className="flex gap-2.5 overflow-x-auto pb-2 snap-x snap-mandatory">
                                     {availableDates.map((date) => (
@@ -432,25 +392,20 @@ export default function ClientBookAppointment() {
                             )}
                         </div>
 
-                        {/* Time slot picker */}
                         {selectedDate && (
                             <div>
                                 <div className="flex items-center gap-2 mb-4">
                                     <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                                         <ClockIcon size={16} weight="bold" />
                                     </span>
-                                    <h2 className="text-base font-bold text-black dark:text-white/90">
-                                        Select a time
-                                    </h2>
+                                    <h2 className="text-base font-bold text-black dark:text-white/90">Select a time</h2>
                                     <span className="text-xs text-black/40 dark:text-white/90">
                                         - {fmtDateShort(selectedDate)}
                                     </span>
                                 </div>
 
                                 {slotsForDate.length === 0 ? (
-                                    <p className="text-sm text-black/50 dark:text-white/90">
-                                        No slots available for this day.
-                                    </p>
+                                    <TitleComponent size='small' className="text-black/50 dark:text-white/90">No slots available for this day.</TitleComponent>
                                 ) : (
                                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
                                         {slotsForDate.map((slot) => (
@@ -475,7 +430,6 @@ export default function ClientBookAppointment() {
                             </div>
                         )}
 
-                        {/* Footer */}
                         <div className="flex justify-end pt-2 border-t border-black/5 dark:border-white/5">
                             <button
                                 type="button"
@@ -496,19 +450,14 @@ export default function ClientBookAppointment() {
                     </div>
                 )}
 
-                {/* Step 1: Purpose & notes */}
                 {step === 1 && (
                     <div className="p-6 space-y-6">
-
-                        {/* Purpose */}
                         <div>
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                                     <SparkleIcon size={16} weight="bold" />
                                 </span>
-                                <h2 className="text-base font-bold text-black dark:text-white/90">
-                                    What's the purpose of this appointment?
-                                </h2>
+                                <h2 className="text-base font-bold text-black dark:text-white/90">What's the purpose of this appointment?</h2>
                                 <span className="text-[10px] font-bold text-red-500 ml-auto">Required</span>
                             </div>
 
@@ -533,7 +482,6 @@ export default function ClientBookAppointment() {
                                     ))}
                                 </div>
 
-                                {/* "Other" free text */}
                                 {purpose === "Other" && (
                                     <div>
                                         <label
@@ -556,15 +504,12 @@ export default function ClientBookAppointment() {
                             </div>
                         </div>
 
-                        {/* Notes */}
                         <div>
                             <div className="flex items-center gap-2 mb-4">
                                 <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
                                     <ChatCenteredTextIcon size={16} weight="bold" />
                                 </span>
-                                <h2 className="text-base font-bold text-black dark:text-white/90">
-                                    Additional notes
-                                </h2>
+                                <h2 className="text-base font-bold text-black dark:text-white/90">Additional notes</h2>
                                 <span className="text-[10px] font-semibold text-black/30 dark:text-white/90 ml-auto">Optional</span>
                             </div>
                             <textarea
@@ -577,7 +522,6 @@ export default function ClientBookAppointment() {
                             />
                         </div>
 
-                        {/* Footer */}
                         <div className="flex items-center justify-between pt-2 border-t border-black/5 dark:border-white/5">
                             <button
                                 type="button"
@@ -606,22 +550,15 @@ export default function ClientBookAppointment() {
                     </div>
                 )}
 
-                {/* Step 2: Confirm */}
                 {step === 2 && (
                     <div className="p-6 space-y-6">
                         <div>
-                            <h2 className="text-lg font-extrabold text-black dark:text-white/90">
-                                Review your booking
-                            </h2>
-                            <p className="text-sm text-black/50 dark:text-white/90 mt-1">
-                                Take a moment to confirm everything looks right before submitting.
-                            </p>
+                            <h2 className="text-lg font-extrabold text-black dark:text-white/90">Review your booking</h2>
+                            <TitleComponent size="small" className="text-sm text-black/50 dark:text-white/90 mt-1">Take a moment to confirm everything looks right before submitting.</TitleComponent>
                         </div>
 
-                        {/* Summary card */}
                         <div className="rounded-2xl border-2 border-primary/20 bg-primary/[0.03] dark:bg-primary/[0.04] overflow-hidden">
 
-                            {/* Member strip */}
                             <div className="px-6 py-5 border-b border-primary/10 flex items-center gap-4">
                                 <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-base flex-shrink-0">
                                     {member.avatar}
@@ -632,7 +569,6 @@ export default function ClientBookAppointment() {
                                 </div>
                             </div>
 
-                            {/* Detail rows */}
                             <div className="px-6 py-5 space-y-5 text-sm">
                                 <div className="flex items-start gap-4">
                                     <CalendarBlankIcon size={18} className="text-primary mt-0.5 flex-shrink-0" weight="bold" />
@@ -674,12 +610,10 @@ export default function ClientBookAppointment() {
                             </div>
                         </div>
 
-                        {/* Notice */}
-                        <p className="text-xs text-black/40 dark:text-white/90 text-center leading-relaxed">
+                        <TitleComponent size='extra-small' className="text-black/40 dark:text-white/90 text-center leading-relaxed">
                             Your request will be sent to {member.name}. The appointment is confirmed once they accept.
-                        </p>
+                        </TitleComponent>
 
-                        {/* Actions */}
                         <div className="flex flex-col sm:flex-row items-center gap-3 pt-2 border-t border-black/5 dark:border-white/5">
                             <button
                                 type="button"

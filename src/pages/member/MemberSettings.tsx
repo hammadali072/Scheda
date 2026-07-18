@@ -6,6 +6,7 @@ import {
     IdentificationCardIcon,
 } from "@phosphor-icons/react";
 import { LOGGED_IN_MEMBER } from "@/mock/memberMockData";
+import TitleComponent from "@/components/shared/TitleComponent";
 
 const MAX_BIO = 280;
 
@@ -47,32 +48,26 @@ export default function MemberSettings() {
         "block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1.5";
 
     const saveButtonClass =
-        "inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gradient-to-b from-primary-start to-primary-end hover:from-secondary-start hover:to-secondary-end text-sm font-semibold text-white shadow-sm shadow-primary/10 transition-colors focus-visible:ring-2 focus-visible:ring-primary/40";
+        "inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-b from-primary-start to-primary-end hover:from-secondary-start hover:to-secondary-end text-sm font-semibold text-white shadow-sm shadow-primary/10 transition-colors focus-visible:ring-2 focus-visible:ring-primary/40";
 
     return (
         <div className="space-y-8">
-            {/* Header */}
             <div>
-                <h1 className="text-3xl font-extrabold tracking-tight text-black dark:text-white/90">
-                    Account Settings
-                </h1>
-                <p className="text-sm text-black/50 dark:text-white/90 mt-1">
-                    Update your personal profile, contact details, and security credentials.
-                </p>
+                <h2 className="heading-h2 text-black dark:text-white/90">Account Settings</h2>
+                <TitleComponent size="small" className="text-black/50 dark:text-white/90 md:text-base mt-1">Update your personal profile, contact details, and security credentials.</TitleComponent>
             </div>
 
-            {/* Avatar / identity strip */}
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-center gap-5">
                 <div className="h-16 w-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">
                     {LOGGED_IN_MEMBER.avatar}
                 </div>
                 <div>
-                    <div className="text-lg font-extrabold text-black dark:text-white/90">
+                    <h4 className="text-lg font-extrabold text-black dark:text-white/90">
                         {LOGGED_IN_MEMBER.name}
-                    </div>
-                    <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">
+                    </h4>
+                    <h5 className="text-xs text-black/50 dark:text-white/90 mt-0.5">
                         {LOGGED_IN_MEMBER.role}
-                    </div>
+                    </h5>
                     <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">
                         <IdentificationCardIcon size={12} weight="bold" />
                         Member Portal
@@ -81,8 +76,6 @@ export default function MemberSettings() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-                {/* Left: Profile form */}
                 <form
                     onSubmit={handleProfileSave}
                     className="lg:col-span-7 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
@@ -91,17 +84,12 @@ export default function MemberSettings() {
                         <span className="p-1 rounded bg-primary/10 text-primary">
                             <UserIcon size={16} weight="bold" />
                         </span>
-                        <h2 className="text-base font-bold text-black dark:text-white/90">
-                            Profile Details
-                        </h2>
+                        <h2 className="text-base font-bold text-black dark:text-white/90">Profile Details</h2>
                     </div>
 
-                    {/* Name / Phone row */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className={labelClass} htmlFor="member-name">
-                                Full Name
-                            </label>
+                            <label className={labelClass} htmlFor="member-name">Full Name</label>
                             <input
                                 id="member-name"
                                 type="text"
@@ -112,9 +100,7 @@ export default function MemberSettings() {
                             />
                         </div>
                         <div>
-                            <label className={labelClass} htmlFor="member-phone">
-                                Phone
-                            </label>
+                            <label className={labelClass} htmlFor="member-phone">Phone</label>
                             <input
                                 id="member-phone"
                                 type="tel"
@@ -126,11 +112,8 @@ export default function MemberSettings() {
                         </div>
                     </div>
 
-                    {/* Email */}
                     <div>
-                        <label className={labelClass} htmlFor="member-email">
-                            Email Address
-                        </label>
+                        <label className={labelClass} htmlFor="member-email">Email Address</label>
                         <input
                             id="member-email"
                             type="email"
@@ -141,7 +124,6 @@ export default function MemberSettings() {
                         />
                     </div>
 
-                    {/* Specialty */}
                     <div>
                         <label className={labelClass} htmlFor="member-specialty">
                             Specialty <span className="normal-case font-normal text-black/30 dark:text-white/90">(shown to clients)</span>
@@ -156,7 +138,6 @@ export default function MemberSettings() {
                         />
                     </div>
 
-                    {/* Bio */}
                     <div>
                         <div className="flex items-center justify-between mb-1.5">
                             <label className={labelClass} htmlFor="member-bio">
@@ -178,9 +159,7 @@ export default function MemberSettings() {
                             placeholder="A brief description of your background and expertise..."
                             className={`${inputClass} resize-none`}
                         />
-                        <p className="mt-1 text-[10px] text-black/30 dark:text-white/90">
-                            Displayed on your public booking page. Keep it concise and client-focused.
-                        </p>
+                        <p className="mt-1 text-[10px] text-black/30 dark:text-white/90">Displayed on your public booking page. Keep it concise and client-focused.</p>
                     </div>
 
                     <button type="submit" className={saveButtonClass}>
@@ -189,7 +168,6 @@ export default function MemberSettings() {
                     </button>
                 </form>
 
-                {/* Right: Security form */}
                 <form
                     onSubmit={handlePasswordSave}
                     className="lg:col-span-5 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
@@ -198,15 +176,11 @@ export default function MemberSettings() {
                         <span className="p-1 rounded bg-primary/10 text-primary">
                             <LockKeyIcon size={16} weight="bold" />
                         </span>
-                        <h2 className="text-base font-bold text-black dark:text-white/90">
-                            Change Password
-                        </h2>
+                        <h2 className="text-base font-bold text-black dark:text-white/90">Change Password</h2>
                     </div>
 
                     <div>
-                        <label className={labelClass} htmlFor="current-pw">
-                            Current Password
-                        </label>
+                        <label className={labelClass} htmlFor="current-pw">Current Password</label>
                         <input
                             id="current-pw"
                             type="password"
@@ -218,9 +192,7 @@ export default function MemberSettings() {
                     </div>
 
                     <div>
-                        <label className={labelClass} htmlFor="new-pw">
-                            New Password
-                        </label>
+                        <label className={labelClass} htmlFor="new-pw">New Password</label>
                         <input
                             id="new-pw"
                             type="password"
@@ -232,9 +204,7 @@ export default function MemberSettings() {
                     </div>
 
                     <div>
-                        <label className={labelClass} htmlFor="confirm-pw">
-                            Confirm New Password
-                        </label>
+                        <label className={labelClass} htmlFor="confirm-pw">Confirm New Password</label>
                         <input
                             id="confirm-pw"
                             type="password"
