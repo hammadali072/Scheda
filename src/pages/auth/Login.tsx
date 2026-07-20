@@ -1,8 +1,9 @@
 ﻿import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import AuthLayout from "@/pages/auth/AuthLayout";
 import TitleComponent from "@/components/shared/TitleComponent";
+import { useAuth } from "@/context/auth-context";
 
 interface LoginFormState {
     email: string;
@@ -15,16 +16,19 @@ interface LoginErrors {
 }
 
 export default function Login() {
+    const navigate = useNavigate();
+    const { login } = useAuth();
     const [form, setForm] = useState<LoginFormState>({ email: "", password: "" });
     const [errors, setErrors] = useState<LoginErrors>({});
     const [loading, setLoading] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     const handleChange = (field: keyof LoginFormState, value: string) => {
         setForm((current) => ({ ...current, [field]: value }));
         setErrors((current) => ({ ...current, [field]: undefined }));
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const nextErrors: LoginErrors = {};
@@ -40,16 +44,22 @@ export default function Login() {
 
         if (Object.keys(nextErrors).length > 0) {
             setErrors(nextErrors);
+            setSubmitError(null);
             return;
         }
 
         setErrors({});
         setLoading(true);
+        setSubmitError(null);
 
-        window.setTimeout(() => {
-            console.log("Login submit", form);
+        try {
+            const profile = await login(form.email.trim(), form.password);
+            navigate(profile.role === "admin" ? "/admin" : profile.role === "member" ? "/member" : "/client");
+        } catch (error) {
+            setSubmitError(error instanceof Error ? error.message : "Unable to sign in right now.");
+        } finally {
             setLoading(false);
-        }, 800);
+        }
     };
 
     return (
@@ -101,6 +111,12 @@ export default function Login() {
                     />
                     {errors.password ? <p className="mt-1.5 text-xs text-red-500 font-medium">{errors.password}</p> : null}
                 </div>
+
+                {submitError ? (
+                    <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400">
+                        {submitError}
+                    </p>
+                ) : null}
 
                 <button
                     type="submit"

@@ -4,11 +4,14 @@ import './index.css'
 import './fonts/fonts.css'
 import App from './App.tsx'
 import { ThemeProvider } from './context/theme-provider'
+import { AuthProvider } from './context/auth-context'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>,
 )

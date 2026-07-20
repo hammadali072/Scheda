@@ -1,6 +1,7 @@
 ﻿import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "@/context/theme-provider";
+import { useAuth } from "@/context/auth-context";
 import logoDark from "@/assets/logo-dark.svg";
 import logoLight from "@/assets/logo-light.svg";
 import {
@@ -14,7 +15,6 @@ import {
     BellSimpleIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { LOGGED_IN_CLIENT } from "@/mock/clientMockData";
 import { ClientAppointmentsProvider } from "@/context/client-appointments-context";
 import TitleComponent from "@/components/shared/TitleComponent";
 
@@ -53,10 +53,26 @@ function SidebarContent({
     logoSrc: string;
 }) {
     const location = useLocation();
+    const navigate = useNavigate();
+    const { authUser, profile, logout } = useAuth();
 
     const isActive = (item: (typeof NAV_ITEMS)[0]) => {
         if (item.exact) return location.pathname === item.path;
         return location.pathname.startsWith(item.path);
+    };
+
+    const displayName = profile?.name || authUser?.displayName || "Your account";
+    const displayEmail = profile?.email || authUser?.email || "Update your profile";
+    const initials = displayName
+        .split(" ")
+        .map((part) => part[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase() || "A";
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/");
     };
 
     return (
@@ -111,26 +127,40 @@ function SidebarContent({
             </nav>
 
             <div className="border-t border-black/10 p-4 dark:border-white/5">
-                <div className="flex items-center gap-3 rounded-2xl border border-black/10 bg-black/[0.02] p-3 dark:border-white/10 dark:bg-white/[0.03]">
+                <Link
+                    to="/client/settings"
+                    className="flex items-center gap-3 rounded-2xl border border-black/10 bg-black/[0.02] p-3 transition-colors hover:bg-black/[0.04] dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
+                >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 font-bold text-primary">
-                        {LOGGED_IN_CLIENT.avatar}
+                        {initials}
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="truncate text-sm font-bold text-black dark:text-white/90">
-                            {LOGGED_IN_CLIENT.name}
+                            {displayName}
                         </div>
                         <div className="truncate text-xs text-black/40 dark:text-white/90">
-                            {LOGGED_IN_CLIENT.email}
+                            {displayEmail}
                         </div>
                     </div>
-                </div>
-                <Link
-                    to="/login"
-                    className="mt-3 flex items-center gap-3 rounded-full px-4 py-2.5 text-xs font-semibold text-red-500 transition-colors hover:bg-red-500/5"
-                >
-                    <SignOutIcon size={16} />
-                    <span>Sign Out</span>
                 </Link>
+
+                <div className="mt-3 flex items-center gap-2">
+                    <Link
+                        to="/client/settings"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-full border border-black/10 bg-black/[0.02] px-3 py-2 text-xs font-semibold text-black/70 transition-colors hover:bg-black/[0.04] dark:border-white/10 dark:bg-white/[0.03] dark:text-white/70 dark:hover:bg-white/[0.05]"
+                    >
+                        <GearIcon size={14} />
+                        <span>Update account</span>
+                    </Link>
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="rounded-full border border-red-200 bg-red-50 p-2.5 text-red-500 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:hover:bg-red-500/20"
+                        aria-label="Sign out"
+                    >
+                        <SignOutIcon size={16} />
+                    </button>
+                </div>
             </div>
         </div>
     );

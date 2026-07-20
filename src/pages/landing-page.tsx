@@ -1,18 +1,40 @@
-﻿import { Link } from "react-router-dom";
+﻿import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@/context/theme-provider";
 import ThemeButton from "@/components/shared/ThemeButton";
 import AvailabilityGridDecor from "@/components/shared/AvailabilityGridDecor";
 import logoDark from "@/assets/logo-dark.svg";
 import logoLight from "@/assets/logo-light.svg";
-import { ShieldCheckIcon, CalendarCheckIcon, ListIcon, XIcon } from "@phosphor-icons/react";
-import { useState } from "react";
+import { ShieldCheckIcon, CalendarCheckIcon, ListIcon, XIcon, CaretDownIcon, SignOutIcon } from "@phosphor-icons/react";
+import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import TitleComponent from "@/components/shared/TitleComponent";
+import { getDashboardPath, useAuth } from "@/context/auth-context";
 
 export default function LandingPage() {
+    const navigate = useNavigate();
     const { dark } = useTheme();
     const logoSrc = dark ? logoLight : logoDark;
+    const { authUser, profile, logout } = useAuth();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const userMenuRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+                setUserMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleLogout = async () => {
+        await logout();
+        setUserMenuOpen(false);
+        navigate("/");
+    };
 
     return (
         <div className="relative min-h-screen flex flex-col bg-tint-gray dark:bg-black transition-colors duration-300">
@@ -24,13 +46,52 @@ export default function LandingPage() {
                         </Link>
 
                         <div className="hidden items-center gap-4 md:flex">
-                            <Link
-                                to="/login"
-                                className="text-slate dark:text-white/50 duration-300 hover:text-black dark:hover:text-white/90"
-                            >
-                                Sign In
-                            </Link>
-                            <ThemeButton as="link" to="/signup">Create Account</ThemeButton>
+                            {authUser && profile ? (
+                                <div className="relative" ref={userMenuRef}>
+                                    <button
+                                        onClick={() => setUserMenuOpen((prev) => !prev)}
+                                        className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-3 py-2 text-sm font-semibold text-black shadow-sm transition-colors hover:bg-black/5 dark:border-white/10 dark:bg-white/[0.06] dark:text-white/90"
+                                    >
+                                        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                            {profile.name.split(" ")[0][0] ?? "U"}
+                                        </span>
+                                        <span>{profile.name.split(" ")[0]}</span>
+                                        <CaretDownIcon size={16} />
+                                    </button>
+
+                                    {userMenuOpen ? (
+                                        <div className="absolute right-0 z-50 mt-2 w-48 rounded-2xl border border-black/10 bg-white p-2 shadow-shadow2-effect dark:border-white/10 dark:bg-tint-black">
+                                            <Link
+                                                to={getDashboardPath(profile.role)}
+                                                onClick={() => setUserMenuOpen(false)}
+                                                className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-black transition-colors hover:bg-black/5 dark:text-white/90 dark:hover:bg-white/10"
+                                            >
+                                                <span className="rounded-lg bg-primary/10 p-1.5 text-primary">
+                                                    <ListIcon size={16} />
+                                                </span>
+                                                Dashboard
+                                            </Link>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-red-500 transition-colors hover:bg-red-500/5"
+                                            >
+                                                <SignOutIcon size={16} />
+                                                Logout
+                                            </button>
+                                        </div>
+                                    ) : null}
+                                </div>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/login"
+                                        className="text-slate dark:text-white/50 duration-300 hover:text-black dark:hover:text-white/90"
+                                    >
+                                        Sign In
+                                    </Link>
+                                    <ThemeButton as="link" to="/signup">Create Account</ThemeButton>
+                                </>
+                            )}
                         </div>
 
                         <button
@@ -72,20 +133,43 @@ export default function LandingPage() {
                     </div>
 
                     <nav className="mt-8 flex flex-col gap-2">
-                        <Link
-                            to="/login"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="rounded-2xl px-4 py-3 text-sm font-semibold text-black transition-colors hover:bg-black/5 dark:text-white/90 dark:hover:bg-white/10"
-                        >
-                            Sign In
-                        </Link>
-                        <Link
-                            to="/signup"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="rounded-2xl px-4 py-3 text-sm font-semibold text-black transition-colors hover:bg-black/5 dark:text-white/90 dark:hover:bg-white/10"
-                        >
-                            Create Account
-                        </Link>
+                        {authUser && profile ? (
+                            <>
+                                <Link
+                                    to={getDashboardPath(profile.role)}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="rounded-2xl px-4 py-3 text-sm font-semibold text-black transition-colors hover:bg-black/5 dark:text-white/90 dark:hover:bg-white/10"
+                                >
+                                    Dashboard
+                                </Link>
+                                <button
+                                    onClick={() => {
+                                        setMobileMenuOpen(false);
+                                        void handleLogout();
+                                    }}
+                                    className="rounded-2xl px-4 py-3 text-left text-sm font-semibold text-red-500 transition-colors hover:bg-red-500/5"
+                                >
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/login"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="rounded-2xl px-4 py-3 text-sm font-semibold text-black transition-colors hover:bg-black/5 dark:text-white/90 dark:hover:bg-white/10"
+                                >
+                                    Sign In
+                                </Link>
+                                <Link
+                                    to="/signup"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="rounded-2xl px-4 py-3 text-sm font-semibold text-black transition-colors hover:bg-black/5 dark:text-white/90 dark:hover:bg-white/10"
+                                >
+                                    Create Account
+                                </Link>
+                            </>
+                        )}
                     </nav>
                 </aside>
             </div>
