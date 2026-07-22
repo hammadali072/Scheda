@@ -77,8 +77,8 @@ function SidebarContent({
     return (
         <div className="flex h-full w-full flex-col bg-white/95 backdrop-blur-xl transition-colors duration-300 dark:bg-tint-black">
             <div className="flex items-center justify-between border-b border-black/10 px-4 py-4 dark:border-white/5 lg:px-6">
-                <Link to="/" className="flex items-center gap-3">
-                    <img src={logoSrc} alt="Scheda" className="h-9 w-auto max-w-32 object-contain" />
+                <Link to="/" className="flex">
+                    <img src={logoSrc} alt="Scheda" className="max-w-34 h-auto object-contain" />
                 </Link>
                 {isMobile && (
                     <button
@@ -129,36 +129,26 @@ function SidebarContent({
             <div className="border-t border-black/10 p-4 dark:border-white/5">
                 <Link
                     to="/member/settings"
-                    className="flex items-center gap-3 rounded-2xl border border-black/10 bg-black/[0.02] p-3 transition-colors hover:bg-black/[0.04] dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
+                    className="flex items-center gap-3 rounded-xl border border-black/10 bg-black/[0.02] p-3 transition-colors hover:bg-black/[0.04] dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
                 >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 font-bold text-primary">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary">
                         {initials}
                     </div>
                     <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm font-bold text-black dark:text-white/90">
-                            {displayName}
-                        </div>
-                        <div className="truncate text-xs text-black/40 dark:text-white/90">
-                            {displayEmail}
-                        </div>
+                        <h5 className="truncate text-sm font-bold text-black dark:text-white/90">{displayName}</h5>
+                        <TitleComponent size='extra-small' className="truncate text-black/40 dark:text-white/90">{displayEmail}</TitleComponent>
                     </div>
                 </Link>
 
-                <div className="mt-3 flex items-center gap-2">
-                    <Link
-                        to="/member/settings"
-                        className="flex flex-1 items-center justify-center gap-2 rounded-full border border-black/10 bg-black/[0.02] px-3 py-2 text-xs font-semibold text-black/70 transition-colors hover:bg-black/[0.04] dark:border-white/10 dark:bg-white/[0.03] dark:text-white/70 dark:hover:bg-white/[0.05]"
-                    >
-                        <GearIcon size={14} />
-                        <span>Update account</span>
-                    </Link>
+                <div className="mt-3">
                     <button
                         type="button"
                         onClick={handleLogout}
-                        className="rounded-full border border-red-200 bg-red-50 p-2.5 text-red-500 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:hover:bg-red-500/20"
+                        className="w-full rounded-full border border-red-200 bg-red-50 p-2.5 flex items-center justify-center gap-2 text-red-500 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:hover:bg-red-500/20"
                         aria-label="Sign out"
                     >
                         <SignOutIcon size={16} />
+                        <span>Log Out</span>
                     </button>
                 </div>
             </div>
@@ -205,7 +195,7 @@ export default function MemberLayout() {
             </aside>
 
             <div className="flex min-w-0 flex-1 flex-col">
-                <header className="sticky top-0 z-10 border-b border-black/10 bg-white/80 px-4 py-4 backdrop-blur-xl dark:border-white/5 dark:bg-tint-black/80 sm:px-6 lg:px-8">
+                <header className="sticky top-0 z-10 border-b border-black/10 bg-white/80 sm:px-6 lg:px-8 p-4 backdrop-blur-xl dark:border-white/5 dark:bg-tint-black/80 ">
                     <div className="flex items-center justify-between gap-3">
                         <div className="flex min-w-0 items-center gap-3">
                             <button
@@ -227,15 +217,13 @@ export default function MemberLayout() {
                                 aria-label="Open notifications"
                             >
                                 <BellSimpleIcon size={22} />
-                                <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-primary" />
+                                <span className="absolute right-1.5 top-1.5 size-2.5 rounded-full bg-primary" />
                             </button>
 
                             {notificationsOpen && (
                                 <div className="absolute right-0 z-[60] mt-3 w-80 rounded-xl border border-black/10 bg-white p-3 shadow-shadow2-effect dark:border-white/10 dark:bg-tint-black dark:shadow-shadow2">
                                     <div className="flex items-center justify-between px-2 py-1">
-                                        <TitleComponent size="small-semibold" className="text-black dark:text-white/90">
-                                            Notifications
-                                        </TitleComponent>
+                                        <TitleComponent size="small-semibold" className="text-black dark:text-white/90">Notifications</TitleComponent>
                                         <button className="text-xs font-medium text-primary">Mark all read</button>
                                     </div>
                                     <ul className="mt-2 space-y-2">

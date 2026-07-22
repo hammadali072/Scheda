@@ -37,7 +37,7 @@ export interface LoggedInMember {
     email: string;
     phone: string;
     role: string;
-    specialty: string;
+    designation: string;
     bio: string;
     avatar: string; // initials
 }
@@ -50,7 +50,7 @@ export const LOGGED_IN_MEMBER: LoggedInMember = {
     email: "adrian.thorne@scheda.com",
     phone: "+1 (555) 012-3456",
     role: "Senior Legal Advisor",
-    specialty: "Corporate Law & Restructuring",
+    designation: "Corporate Law & Restructuring",
     bio: "15+ years advising mid-market companies on mergers, restructuring, and contract disputes. Focused on pragmatic, execution-ready legal strategy.",
     avatar: "AT",
 };

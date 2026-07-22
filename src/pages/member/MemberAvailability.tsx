@@ -3,21 +3,17 @@ import {
     PlusIcon,
     XIcon,
     CheckIcon,
-    FloppyDiskIcon,
-    WarningIcon,
-    CalendarBlankIcon,
-    LockIcon,
     ClockIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import {
     type DaySchedule,
-    type DateOverride,
     type TimeRange,
     MEMBER_WEEKLY_AVAILABILITY,
-    MEMBER_DATE_OVERRIDES,
 } from "@/mock/memberMockData";
 import TitleComponent from "@/components/shared/TitleComponent";
+import { useAuth } from "@/context/auth-context";
+import { getAvailability, saveWeeklySchedule } from "@/services/availabilityService";
 
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
     return (
@@ -56,7 +52,7 @@ function TimeChip({
     return (
         <div
             className={clsx(
-                "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-colors",
+                "inline-flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-semibold transition-colors",
                 disabled
                     ? "border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5 text-black/30 dark:text-white/90"
                     : "border-primary/20 bg-primary/5 text-primary"
@@ -97,14 +93,14 @@ function AddSlotForm({
     };
 
     return (
-        <div className="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03]">
+        <div className="inline-flex flex-wrap items-center gap-2 px-3 py-2 rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03]">
             <input
                 type="time"
                 value={start}
                 onChange={(e) => setStart(e.target.value)}
                 aria-label="Start time"
                 placeholder="Start"
-                className="text-xs   text-black dark:text-white/90 bg-transparent focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
+                className="text-xs text-black dark:text-white/90 bg-transparent focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
             />
             <span className="text-[10px] text-black/40 dark:text-white/90 font-semibold">to</span>
             <input
@@ -113,7 +109,7 @@ function AddSlotForm({
                 onChange={(e) => setEnd(e.target.value)}
                 aria-label="End time"
                 placeholder="End"
-                className="text-xs   text-black dark:text-white/90 bg-transparent focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
+                className="text-xs text-black dark:text-white/90 bg-transparent focus-visible:ring-1 focus-visible:ring-primary/50 rounded"
             />
             <div className="flex items-center gap-1">
                 <button
@@ -139,27 +135,52 @@ function AddSlotForm({
 }
 
 export default function MemberAvailability() {
+    const { profile } = useAuth();
     const [schedule, setSchedule] = useState<DaySchedule[]>(() =>
         MEMBER_WEEKLY_AVAILABILITY.map((d) => ({ ...d, ranges: d.ranges.map((r) => ({ ...r })) }))
     );
-    const [overrides, setOverrides] = useState<DateOverride[]>(() =>
-        MEMBER_DATE_OVERRIDES.map((o) => ({ ...o, ranges: o.ranges.map((r) => ({ ...r })) }))
-    );
-
     const [addingSlotForDay, setAddingSlotForDay] = useState<string | null>(null);
+    const [availabilityExists, setAvailabilityExists] = useState<boolean | null>(null);
+    const [availabilityLoading, setAvailabilityLoading] = useState(true);
+
+    useEffect(() => {
+        if (!profile?.uid) {
+            setAvailabilityLoading(false);
+            return;
+        }
+
+        let active = true;
+
+        const loadAvailability = async () => {
+            try {
+                const availability = await getAvailability(profile.uid);
+                if (!active) return;
+
+                setSchedule(
+                    availability.exists
+                        ? availability.weekly.map((d) => ({ ...d, ranges: d.ranges.map((r) => ({ ...r })) }))
+                        : MEMBER_WEEKLY_AVAILABILITY.map((d) => ({ ...d, ranges: d.ranges.map((r) => ({ ...r })) }))
+                );
+                setAvailabilityExists(availability.exists);
+            } catch (error) {
+                console.warn("Unable to load availability:", error);
+                setAvailabilityExists(false);
+            } finally {
+                if (active) setAvailabilityLoading(false);
+            }
+        };
+
+        void loadAvailability();
+
+        return () => {
+            active = false;
+        };
+    }, [profile?.uid]);
 
     const [hasUnsaved, setHasUnsaved] = useState(false);
-    const [justSaved, setJustSaved] = useState(false);
-
-    const [addingOverride, setAddingOverride] = useState(false);
-    const [newOverrideDate, setNewOverrideDate] = useState("");
-    const [newOverrideType, setNewOverrideType] = useState<"blocked" | "custom">("blocked");
-    const [newOverrideRanges, setNewOverrideRanges] = useState<TimeRange[]>([{ start: "09:00", end: "17:00" }]);
-    const [newOverrideNote, setNewOverrideNote] = useState("");
 
     const markUnsaved = useCallback(() => {
         setHasUnsaved(true);
-        setJustSaved(false);
     }, []);
 
     const toggleDay = (day: string) => {
@@ -186,45 +207,16 @@ export default function MemberAvailability() {
         markUnsaved();
     };
 
-    const addOverride = () => {
-        if (!newOverrideDate) return;
-        const id = `do_${Date.now()}`;
-        const override: DateOverride = {
-            id,
-            date: newOverrideDate,
-            type: newOverrideType,
-            ranges: newOverrideType === "custom" ? newOverrideRanges.map((r) => ({ ...r })) : [],
-            note: newOverrideNote,
-        };
-        setOverrides((prev) => [...prev, override].sort((a, b) => a.date.localeCompare(b.date)));
-        setAddingOverride(false);
-        setNewOverrideDate("");
-        setNewOverrideType("blocked");
-        setNewOverrideRanges([{ start: "09:00", end: "17:00" }]);
-        setNewOverrideNote("");
-        markUnsaved();
-    };
 
-    const removeOverride = (id: string) => {
-        setOverrides((prev) => prev.filter((o) => o.id !== id));
-        markUnsaved();
-    };
+    const handleSave = async () => {
+        if (!profile?.uid) return;
 
-    const handleSave = () => {
-        setHasUnsaved(false);
-        setJustSaved(true);
-        setTimeout(() => setJustSaved(false), 2500);
-    };
-
-    const handleDiscard = () => {
-        setSchedule(
-            MEMBER_WEEKLY_AVAILABILITY.map((d) => ({ ...d, ranges: d.ranges.map((r) => ({ ...r })) }))
-        );
-        setOverrides(
-            MEMBER_DATE_OVERRIDES.map((o) => ({ ...o, ranges: o.ranges.map((r) => ({ ...r })) }))
-        );
-        setAddingSlotForDay(null);
-        setHasUnsaved(false);
+        try {
+            await saveWeeklySchedule(profile.uid, schedule, profile.name, profile.designation ?? "");
+            setHasUnsaved(false);
+        } catch (error) {
+            console.warn("Unable to save availability:", error);
+        }
     };
 
     useEffect(() => {
@@ -235,11 +227,6 @@ export default function MemberAvailability() {
         return () => window.removeEventListener("keydown", handler);
     }, []);
 
-    const formatDate = (dateStr: string) => {
-        const d = new Date(dateStr + "T00:00:00");
-        return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    };
-
     return (
         <div className="space-y-8 pb-24">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -247,6 +234,23 @@ export default function MemberAvailability() {
                     <h2 className="heading-h2 text-black dark:text-white/90">My Availability</h2>
                     <TitleComponent size='small' className="text-black/50 dark:text-white/90 md:text-base mt-1">Configure recurring weekly hours and block specific dates.</TitleComponent>
                 </div>
+                <button
+                    type="button"
+                    onClick={handleSave}
+                    disabled={
+                        !profile?.uid ||
+                        availabilityLoading ||
+                        (availabilityExists === true && !hasUnsaved)
+                    }
+                    className={clsx(
+                        "inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40",
+                        profile?.uid && !availabilityLoading && (availabilityExists === false || hasUnsaved)
+                            ? "bg-gradient-to-b from-primary-start to-primary-end text-white hover:bg-primary/90"
+                            : "bg-black/10 text-black/50 dark:bg-white/10 dark:text-white/50 cursor-not-allowed"
+                    )}
+                >
+                    Save
+                </button>
             </div>
 
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
@@ -255,7 +259,7 @@ export default function MemberAvailability() {
                         <ClockIcon size={18} weight="bold" />
                     </span>
                     <div>
-                        <h2 className="text-base font-bold text-black dark:text-white/90">Weekly Recurring Hours</h2>
+                        <h5 className="text-base font-bold text-black dark:text-white/90">Weekly Recurring Hours</h5>
                         <TitleComponent size="extra-small" className="text-black/40 dark:text-white/90 mt-0.5">Your default availability - applied to every week unless overridden below.</TitleComponent>
                     </div>
                 </div>
@@ -334,7 +338,7 @@ export default function MemberAvailability() {
                 </div>
             </div>
 
-            <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
+            {/* <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                         <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
@@ -415,9 +419,7 @@ export default function MemberAvailability() {
                                         ))}
                                 </div>
                                 {override.note && (
-                                    <p className="text-xs text-black/40 dark:text-white/90 mt-0.5">
-                                        {override.note}
-                                    </p>
+                                    <p className="text-xs text-black/40 dark:text-white/90 mt-0.5">{override.note}</p>
                                 )}
                             </div>
 
@@ -438,9 +440,7 @@ export default function MemberAvailability() {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">
-                                        Date
-                                    </label>
+                                    <label className="block text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-1.5">Date</label>
                                     <input
                                         type="date"
                                         value={newOverrideDate}
@@ -543,41 +543,11 @@ export default function MemberAvailability() {
                         </div>
                     )}
                 </div>
-            </div>
+            </div> */}
 
-            {hasUnsaved && (
-                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 px-5 py-3 rounded-2xl shadow-2xl motion-safe:animate-fade-in bg-black dark:bg-white border border-white/10 dark:border-black/10 text-parchment dark:text-black">
-                    <WarningIcon size={18} weight="bold" className="text-amber-400 flex-shrink-0" />
-                    <span className="text-sm font-semibold whitespace-nowrap">Unsaved changes</span>
-                    <div className="flex items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={handleDiscard}
-                            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-parchment/60 dark:text-black/60 hover:bg-white/10 dark:hover:bg-black/10 transition-colors focus: focus-visible:ring-2 focus-visible:ring-white/30"
-                        >
-                            Discard
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleSave}
-                            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-primary text-white text-xs font-bold transition-colors hover:bg-primary/90 focus: focus-visible:ring-2 focus-visible:ring-primary/50"
-                        >
-                            <FloppyDiskIcon size={13} weight="bold" />
-                            Save changes
-                        </button>
-                    </div>
-                </div>
-            )}
 
-            {justSaved && (
-                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-2xl bg-emerald-500 text-white shadow-xl shadow-emerald-500/20 motion-safe:animate-fade-in">
-                    <CheckIcon size={16} weight="bold" />
-                    <span className="text-sm font-semibold">Availability saved</span>
-                </div>
-            )}
         </div>
     );
 }
-
 
 

@@ -10,15 +10,18 @@ import {
 import { get, ref, set } from "firebase/database";
 import { auth, database } from "@/firebase";
 
-export type AuthRole = "client" | "member" | "admin";
-
 export interface AuthUserProfile {
     uid: string;
     name: string;
     email: string;
     role: AuthRole;
     createdAt?: string;
+    phone?: string;
+    designation?: string;
+    bio?: string;
 }
+
+export type AuthRole = "client" | "member" | "admin";
 
 interface AuthContextValue {
     authUser: User | null;
@@ -53,6 +56,9 @@ async function loadProfile(uid: string): Promise<AuthUserProfile> {
                 email: typeof data.email === "string" ? data.email : "",
                 role: (data.role as AuthRole) ?? "client",
                 createdAt: typeof data.createdAt === "string" ? data.createdAt : undefined,
+                phone: typeof data.phone === "string" ? data.phone : undefined,
+                designation: typeof data.designation === "string" ? data.designation : undefined,
+                bio: typeof data.bio === "string" ? data.bio : undefined,
             };
         }
     } catch (error) {

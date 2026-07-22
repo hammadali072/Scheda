@@ -16,7 +16,7 @@ export default function ClientFindMember() {
         const q = query.toLowerCase();
         return (
             m.name.toLowerCase().includes(q) ||
-            m.specialty.toLowerCase().includes(q) ||
+            m.designation.toLowerCase().includes(q) ||
             m.role.toLowerCase().includes(q)
         );
     });
@@ -37,7 +37,7 @@ export default function ClientFindMember() {
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search by name or specialty..."
+                    placeholder="Search by name or designation..."
                     aria-label="Search members"
                     className="w-full pl-11 pr-10 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-tint-black/60 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 shadow-shadow2-effect dark:shadow-shadow1 focus: focus-visible:ring-2 focus-visible:ring-primary/40 transition"
                 />
@@ -63,7 +63,7 @@ export default function ClientFindMember() {
                 <div className="py-20 text-center">
                     <div className="text-4xl mb-4">•</div>
                     <TitleComponent size='small-semibold' className="text-black/50 dark:text-white/90">No members match "{query}"</TitleComponent>
-                    <TitleComponent size='extra-small' className="text-black/30 dark:text-white/90 mt-1">Try a different name or specialty.</TitleComponent>
+                    <TitleComponent size='extra-small' className="text-black/30 dark:text-white/90 mt-1">Try a different name or designation.</TitleComponent>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
@@ -82,7 +82,7 @@ export default function ClientFindMember() {
                                     </div>
                                     <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">{member.role}</div>
                                     <span className="inline-flex mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">
-                                        {member.specialty}
+                                        {member.designation}
                                     </span>
                                 </div>
                             </div>

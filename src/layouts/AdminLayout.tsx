@@ -102,8 +102,8 @@ export default function AdminLayout() {
     const SidebarContent = ({ isMobile = false }: { isMobile?: boolean }) => (
         <div className="flex w-full h-full flex-col bg-white/95 dark:bg-tint-black backdrop-blur-xl transition-colors duration-300">
             <div className="flex items-center justify-between border-b border-black/10 px-4 py-4 dark:border-white/5 lg:px-6">
-                <Link to="/" className="flex items-center gap-3">
-                    <img src={logoSrc} alt="Scheda" className="h-9 w-auto max-w-32 object-contain" />
+                <Link to="/" className="flex">
+                    <img src={logoSrc} alt="Scheda" className="max-w-34 h-auto object-contain" />
                 </Link>
                 {isMobile && (
                     <button
@@ -151,37 +151,25 @@ export default function AdminLayout() {
 
             <div className="border-t border-black/10 p-4 dark:border-white/5">
                 <Link
-                    to="/admin/settings"
-                    className="flex items-center gap-3 rounded-2xl border border-black/10 bg-black/[0.02] p-3 transition-colors hover:bg-black/[0.04] dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
+                    to="/member/settings"
+                    className="flex items-center gap-3 rounded-xl border border-black/10 bg-black/[0.02] p-3 transition-colors hover:bg-black/[0.04] dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
                 >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 font-bold text-primary">
-                        {initials}
-                    </div>
+                    <div className="size-10 flex shrink-0 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary">{initials}</div>
                     <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm font-bold text-black dark:text-white/90">
-                            {displayName}
-                        </div>
-                        <div className="truncate text-xs text-black/40 dark:text-white/90">
-                            {displayEmail}
-                        </div>
+                        <h5 className="truncate text-sm font-bold text-black dark:text-white/90">{displayName}</h5>
+                        <TitleComponent size='extra-small' className="truncate text-black/40 dark:text-white/90">{displayEmail}</TitleComponent>
                     </div>
                 </Link>
 
-                <div className="mt-3 flex items-center gap-2">
-                    <Link
-                        to="/admin/settings"
-                        className="flex flex-1 items-center justify-center gap-2 rounded-full border border-black/10 bg-black/[0.02] px-3 py-2 text-xs font-semibold text-black/70 transition-colors hover:bg-black/[0.04] dark:border-white/10 dark:bg-white/[0.03] dark:text-white/70 dark:hover:bg-white/[0.05]"
-                    >
-                        <GearIcon size={14} />
-                        <span>Update account</span>
-                    </Link>
+                <div className="mt-3">
                     <button
                         type="button"
                         onClick={handleLogout}
-                        className="rounded-full border border-red-200 bg-red-50 p-2.5 text-red-500 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:hover:bg-red-500/20"
+                        className="w-full rounded-full border border-red-200 bg-red-50 p-2.5 flex items-center justify-center gap-2 text-red-500 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:hover:bg-red-500/20"
                         aria-label="Sign out"
                     >
                         <SignOutIcon size={16} />
+                        <span>Log Out</span>
                     </button>
                 </div>
             </div>

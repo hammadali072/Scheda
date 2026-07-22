@@ -2,7 +2,11 @@
 import {
     PlusIcon,
     MagnifyingGlassIcon,
-    DotsThreeVerticalIcon
+    PencilSimpleIcon,
+    TrashIcon,
+    ShieldCheckIcon,
+    UserIcon,
+    BriefcaseIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 
@@ -14,12 +18,13 @@ export default function Members() {
     const [members, setMembers] = useState<Member[]>(INITIAL_MEMBERS);
     const [searchQuery, setSearchQuery] = useState("");
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+    const [editRole, setEditRole] = useState("Member");
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [role, setRole] = useState("");
-
-    const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
     const handleAddMember = (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,22 +46,29 @@ export default function Members() {
         setRole("");
     };
 
-    const toggleStatus = (id: string) => {
-        setMembers(members.map(member => {
-            if (member.id === id) {
-                return {
-                    ...member,
-                    status: member.status === "active" ? "inactive" : "active"
-                };
-            }
-            return member;
-        }));
-        setActiveDropdown(null);
-    };
-
     const deleteMember = (id: string) => {
         setMembers(members.filter(m => m.id !== id));
-        setActiveDropdown(null);
+    };
+
+    const openEditModal = (member: Member) => {
+        setSelectedMember(member);
+        setEditRole(member.role);
+        setIsEditModalOpen(true);
+    };
+
+    const handleEditMember = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!selectedMember) return;
+
+        setMembers((currentMembers) =>
+            currentMembers.map((member) =>
+                member.id === selectedMember.id ? { ...member, role: editRole } : member
+            )
+        );
+
+        setIsEditModalOpen(false);
+        setSelectedMember(null);
+        setEditRole("Member");
     };
 
     const filteredMembers = members.filter(member =>
@@ -107,80 +119,152 @@ export default function Members() {
                         <table className="w-full text-left border-collapse min-w-[700px]">
                             <thead>
                                 <tr className="border-b border-black/5 dark:border-white/5 bg-black/[0.01] dark:bg-white/[0.01] text-xs font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
-                                    <th className="px-6 py-4">Name / Role</th>
+                                    <th className="px-6 py-4">Name</th>
                                     <th className="px-6 py-4">Email</th>
-                                    <th className="px-6 py-4">Appointments</th>
-                                    <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4 text-right">Actions</th>
+                                    <th className="px-6 py-4">Role</th>
+                                    <th className="px-6 py-4 text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-black/5 dark:divide-white/5 text-sm">
-                                {filteredMembers.map((member) => (
-                                    <tr
-                                        key={member.id}
-                                        className="hover:bg-black/[0.01] dark:hover:bg-white/[0.01] transition-colors"
-                                    >
-                                        <td className="px-6 py-4">
-                                            <div className="font-semibold text-black dark:text-white/90">
-                                                {member.name}
-                                            </div>
-                                            <div className="text-xs text-black/40 dark:text-white/90 mt-0.5">
-                                                {member.role}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-black/80 dark:text-white/90">
-                                            {member.email}
-                                        </td>
-                                        <td className="px-6 py-4 font-semibold text-black dark:text-white/90">
-                                            {member.appointmentCount} bookings
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={clsx(
-                                                "inline-flex px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider",
-                                                member.status === "active"
-                                                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                                                    : "bg-red-500/10 text-red-500"
-                                            )}>
-                                                {member.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-right relative">
-                                            <button
-                                                onClick={() => setActiveDropdown(activeDropdown === member.id ? null : member.id)}
-                                                className="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-slate"
-                                                aria-label="Toggle action menu"
-                                            >
-                                                <DotsThreeVerticalIcon size={20} weight="bold" />
-                                            </button>
+                                {filteredMembers.map((member) => {
+                                    const roleBadge = (() => {
+                                        if (member.role.toLowerCase().includes("admin")) {
+                                            return {
+                                                label: "Admin",
+                                                icon: ShieldCheckIcon,
+                                                className: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+                                            };
+                                        }
+                                        if (member.role.toLowerCase().includes("client")) {
+                                            return {
+                                                label: "Client",
+                                                icon: UserIcon,
+                                                className: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+                                            };
+                                        }
+                                        return {
+                                            label: "Member",
+                                            icon: BriefcaseIcon,
+                                            className: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+                                        };
+                                    })();
 
-                                            {activeDropdown === member.id && (
-                                                <>
-                                                    {/* Backdrop to close */}
-                                                    <div className="fixed inset-0 z-10" onClick={() => setActiveDropdown(null)} />
-                                                    <div className="absolute right-6 top-12 z-20 w-44 bg-white dark:bg-tint-black/60 rounded-xl border border-black/10 dark:border-white/10 shadow-lg py-1.5 text-left text-xs">
-                                                        <button
-                                                            onClick={() => toggleStatus(member.id)}
-                                                            className="w-full px-4 py-2 hover:bg-black/5 dark:hover:bg-white/5 font-semibold text-black dark:text-white/90 text-left"
-                                                        >
-                                                            {member.status === "active" ? "Deactivate" : "Activate"}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => deleteMember(member.id)}
-                                                            className="w-full px-4 py-2 hover:bg-red-500/5 text-red-500 font-semibold text-left"
-                                                        >
-                                                            Remove Member
-                                                        </button>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
+                                    const RoleIcon = roleBadge.icon;
+
+                                    return (
+                                        <tr
+                                            key={member.id}
+                                            className="hover:bg-black/[0.01] dark:hover:bg-white/[0.01] transition-colors"
+                                        >
+                                            <td className="px-6 py-4">
+                                                <div className="font-semibold text-black dark:text-white/90">
+                                                    {member.name}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-black/80 dark:text-white/90">
+                                                {member.email}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className={clsx(
+                                                    "inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold",
+                                                    roleBadge.className
+                                                )}>
+                                                    <RoleIcon size={14} weight="bold" />
+                                                    {roleBadge.label}
+                                                </span>
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    <button
+                                                        onClick={() => openEditModal(member)}
+                                                        className="rounded-full border border-black/10 p-2 text-black/70 transition-colors hover:bg-black/5 dark:border-white/10 dark:text-white/70 dark:hover:bg-white/5"
+                                                        aria-label="Edit member"
+                                                    >
+                                                        <PencilSimpleIcon size={16} />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => deleteMember(member.id)}
+                                                        className="rounded-full border border-red-200 p-2 text-red-500 transition-colors hover:bg-red-50 dark:border-red-500/20 dark:hover:bg-red-500/10"
+                                                        aria-label="Delete member"
+                                                    >
+                                                        <TrashIcon size={16} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     )}
                 </div>
             </div>
+
+            {/* Edit Member Modal */}
+            {isEditModalOpen && selectedMember && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div
+                        className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+                        onClick={() => {
+                            setIsEditModalOpen(false);
+                            setSelectedMember(null);
+                            setEditRole("Member");
+                        }}
+                    />
+
+                    <div className="bg-white dark:bg-tint-black shadow-shadow1 rounded-3xl border border-black/20 dark:border-white/5 max-w-md w-full p-6 shadow-2xl z-10 relative">
+                        <h5 className="heading-h5 font-semibold text-black dark:text-white/90 mb-4">
+                            Edit Role
+                        </h5>
+
+                        <form onSubmit={handleEditMember} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1">
+                                    Member
+                                </label>
+                                <div className="rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] px-4 py-3 text-sm text-black dark:text-white/90">
+                                    {selectedMember.name}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1">
+                                    Role
+                                </label>
+                                <select
+                                    value={editRole}
+                                    onChange={(e) => setEditRole(e.target.value)}
+                                    className="w-full rounded-lg border border-black/10 dark:border-white/10 bg-transparent px-4 py-3 text-sm transition focus:border-primary focus:ring-2 focus:ring-primary/20 text-black dark:text-white/90"
+                                >
+                                    <option value="Admin">Admin</option>
+                                    <option value="Member">Member</option>
+                                    <option value="Client">Client</option>
+                                </select>
+                            </div>
+
+                            <div className="flex items-center justify-end gap-3 pt-2">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsEditModalOpen(false);
+                                        setSelectedMember(null);
+                                        setEditRole("Member");
+                                    }}
+                                    className="px-4 py-2 rounded-full text-sm font-semibold text-slate hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2.5 rounded-full bg-gradient-to-b from-primary-start to-primary-end hover:bg-primary/90 text-sm font-semibold text-white shadow-md shadow-primary/10 transition-colors hover:from-secondary-start hover:to-secondary-end"
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             {/* Add Member Modal */}
             {isAddModalOpen && (
@@ -228,7 +312,7 @@ export default function Members() {
 
                             <div>
                                 <label className="block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1">
-                                    Role / Specialty
+                                    Role / Designation
                                 </label>
                                 <input
                                     type="text"

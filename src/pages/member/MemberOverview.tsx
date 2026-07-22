@@ -75,16 +75,10 @@ export default function MemberOverview() {
                         className="bg-white dark:bg-tint-black/60 p-5 rounded-2xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1"
                     >
                         <div className="flex items-center justify-between mb-3">
-                            <span className={clsx("p-2 rounded-xl", stat.color)}>
-                                <stat.icon size={18} weight="bold" />
-                            </span>
-                            <span className="text-3xl font-black text-black dark:text-white/90">
-                                {stat.value}
-                            </span>
+                            <span className={clsx("p-2 rounded-lg", stat.color)}><stat.icon size={20} weight="bold" /></span>
+                            <span className="text-3xl font-black text-black dark:text-white/90">{stat.value}</span>
                         </div>
-                        <div className="text-xs font-semibold text-black/50 dark:text-white/90 leading-tight">
-                            {stat.label}
-                        </div>
+                        <TitleComponent size='extra-small-semibold' className="text-black/50 dark:text-white/90">{stat.label}</TitleComponent>
                     </div>
                 ))}
             </div>
@@ -100,10 +94,10 @@ export default function MemberOverview() {
                     </div>
                     <Link
                         to="/member/appointments"
-                        className="flex items-center gap-1 text-sm font-bold text-primary hover:underline"
+                        className="flex items-center gap-1 text-xs font-bold text-primary hover:underline"
                     >
                         All Appointments
-                        <CaretRightIcon size={13} weight="bold" />
+                        <CaretRightIcon size={11} weight="bold" />
                     </Link>
                 </div>
 

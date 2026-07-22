@@ -1,54 +1,132 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import {
     UserIcon,
     LockKeyIcon,
     CheckIcon,
     IdentificationCardIcon,
 } from "@phosphor-icons/react";
-import { LOGGED_IN_MEMBER } from "@/mock/memberMockData";
 import TitleComponent from "@/components/shared/TitleComponent";
+import { useAuth } from "@/context/auth-context";
+import { getUserProfile, updateUserProfile, updateUserPassword, isReauthRequiredError } from "@/services/userService";
 
 const MAX_BIO = 280;
 
 export default function MemberSettings() {
-    // Profile state
-    const [name, setName] = useState(LOGGED_IN_MEMBER.name);
-    const [email, setEmail] = useState(LOGGED_IN_MEMBER.email);
-    const [phone, setPhone] = useState(LOGGED_IN_MEMBER.phone);
-    const [specialty, setSpecialty] = useState(LOGGED_IN_MEMBER.specialty);
-    const [bio, setBio] = useState(LOGGED_IN_MEMBER.bio);
+    const { profile, authUser } = useAuth();
+    const [loadingProfile, setLoadingProfile] = useState(true);
+    const [profileError, setProfileError] = useState<string | null>(null);
+    const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
+    const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
+    const [passwordPrompt, setPasswordPrompt] = useState(false);
 
-    // Security state
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [designation, setDesignation] = useState("");
+    const [bio, setBio] = useState("");
+
     const [currentPw, setCurrentPw] = useState("");
     const [newPw, setNewPw] = useState("");
     const [confirmPw, setConfirmPw] = useState("");
 
-    const handleProfileSave = (e: React.FormEvent) => {
+    useEffect(() => {
+        const loadProfile = async () => {
+            if (!profile?.uid) {
+                setLoadingProfile(false);
+                return;
+            }
+
+            try {
+                setLoadingProfile(true);
+                const nextProfile = await getUserProfile(profile.uid);
+                setName(nextProfile.name);
+                setEmail(nextProfile.email);
+                setPhone(nextProfile.phone ?? "");
+                setDesignation(nextProfile.designation ?? "");
+                setBio(nextProfile.bio ?? "");
+                setProfileError(null);
+            } catch (error) {
+                setProfileError(error instanceof Error ? error.message : "Unable to load profile.");
+            } finally {
+                setLoadingProfile(false);
+            }
+        };
+
+        void loadProfile();
+    }, [profile?.uid]);
+
+    const handleProfileSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Wire to Firestore: update member document
-        alert("Profile updated (mock - no persistence yet).");
+        if (!profile?.uid) return;
+
+        try {
+            setProfileError(null);
+            setProfileSuccess(null);
+            await updateUserProfile(profile.uid, {
+                name,
+                email,
+                phone,
+                designation,
+                bio,
+            });
+            setProfileSuccess("Profile updated successfully.");
+        } catch (error) {
+            setProfileError(error instanceof Error ? error.message : "Unable to update profile.");
+        }
     };
 
-    const handlePasswordSave = (e: React.FormEvent) => {
+    const handlePasswordSave = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newPw !== confirmPw) {
-            alert("Passwords do not match.");
+            setPasswordError("Passwords do not match.");
+            setPasswordSuccess(null);
             return;
         }
-        alert("Password change requested (mock).");
-        setCurrentPw("");
-        setNewPw("");
-        setConfirmPw("");
+
+        if (!newPw || newPw.length < 8) {
+            setPasswordError("New password must be at least 8 characters.");
+            setPasswordSuccess(null);
+            return;
+        }
+
+        try {
+            setPasswordError(null);
+            setPasswordSuccess(null);
+            await updateUserPassword(newPw, passwordPrompt ? currentPw : undefined);
+            setPasswordSuccess("Password updated successfully.");
+            setCurrentPw("");
+            setNewPw("");
+            setConfirmPw("");
+            setPasswordPrompt(false);
+        } catch (error) {
+            if (isReauthRequiredError(error)) {
+                setPasswordError("Please re-enter your current password to continue.");
+                setPasswordPrompt(true);
+            } else {
+                setPasswordError(error instanceof Error ? error.message : "Unable to update password.");
+            }
+        }
     };
 
     const inputClass =
         "w-full rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-2.5 text-sm transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30";
 
-    const labelClass =
-        "block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1.5";
+    const profileCardName = useMemo(() => profile?.name || authUser?.displayName || "Your account", [profile?.name, authUser?.displayName]);
+    const profileCardRole = useMemo(() => profile?.role || "member", [profile?.role]);
+    const profileCardInitials = useMemo(() => {
+        const initials = profileCardName
+            .split(" ")
+            .map((part) => part[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase();
+        return initials || "ME";
+    }, [profileCardName]);
 
-    const saveButtonClass =
-        "inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-b from-primary-start to-primary-end hover:from-secondary-start hover:to-secondary-end text-sm font-semibold text-white shadow-sm shadow-primary/10 transition-colors focus-visible:ring-2 focus-visible:ring-primary/40";
+    const labelClass = "block text-xs font-semibold uppercase tracking-wider text-black/50 dark:text-white/90 mb-1.5";
+
+    const saveButtonClass = "inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-b from-primary-start to-primary-end hover:from-secondary-start hover:to-secondary-end text-sm font-semibold text-white shadow-sm shadow-primary/10 transition-colors focus-visible:ring-2 focus-visible:ring-primary/40";
 
     return (
         <div className="space-y-8">
@@ -58,20 +136,10 @@ export default function MemberSettings() {
             </div>
 
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-center gap-5">
-                <div className="h-16 w-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">
-                    {LOGGED_IN_MEMBER.avatar}
-                </div>
+                <div className="size-16 rounded-xl bg-primary/10 border border-primary/50 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">{profileCardInitials}</div>
                 <div>
-                    <h4 className="text-lg font-extrabold text-black dark:text-white/90">
-                        {LOGGED_IN_MEMBER.name}
-                    </h4>
-                    <h5 className="text-xs text-black/50 dark:text-white/90 mt-0.5">
-                        {LOGGED_IN_MEMBER.role}
-                    </h5>
-                    <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2.5 py-1 rounded-full">
-                        <IdentificationCardIcon size={12} weight="bold" />
-                        Member Portal
-                    </div>
+                    <h4 className="text-lg font-extrabold text-black dark:text-white/90">{profileCardName}</h4>
+                    <h5 className="capitalize text-sm text-black/50 dark:text-white/90 mt-0.5">{profileCardRole}</h5>
                 </div>
             </div>
 
@@ -84,7 +152,7 @@ export default function MemberSettings() {
                         <span className="p-1 rounded bg-primary/10 text-primary">
                             <UserIcon size={16} weight="bold" />
                         </span>
-                        <h2 className="text-base font-bold text-black dark:text-white/90">Profile Details</h2>
+                        <h4 className="text-black dark:text-white/90 text-base font-bold">Profile Details</h4>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -125,14 +193,14 @@ export default function MemberSettings() {
                     </div>
 
                     <div>
-                        <label className={labelClass} htmlFor="member-specialty">
-                            Specialty <span className="normal-case font-normal text-black/30 dark:text-white/90">(shown to clients)</span>
+                        <label className={labelClass} htmlFor="member-designation">
+                            Designation <span className="normal-case font-normal text-black/30 dark:text-white/90">(shown to clients)</span>
                         </label>
                         <input
-                            id="member-specialty"
+                            id="member-designation"
                             type="text"
-                            value={specialty}
-                            onChange={(e) => setSpecialty(e.target.value)}
+                            value={designation}
+                            onChange={(e) => setDesignation(e.target.value)}
                             placeholder="e.g. Corporate Law & Restructuring"
                             className={inputClass}
                         />
@@ -162,6 +230,10 @@ export default function MemberSettings() {
                         <p className="mt-1 text-[10px] text-black/30 dark:text-white/90">Displayed on your public booking page. Keep it concise and client-focused.</p>
                     </div>
 
+                    {profileError ? <p className="text-sm text-red-500">{profileError}</p> : null}
+                    {profileSuccess ? <p className="text-sm text-emerald-600">{profileSuccess}</p> : null}
+                    {loadingProfile ? <p className="text-sm text-black/50 dark:text-white/90">Loading profile…</p> : null}
+
                     <button type="submit" className={saveButtonClass}>
                         <CheckIcon size={13} weight="bold" />
                         Save Profile
@@ -176,7 +248,7 @@ export default function MemberSettings() {
                         <span className="p-1 rounded bg-primary/10 text-primary">
                             <LockKeyIcon size={16} weight="bold" />
                         </span>
-                        <h2 className="text-base font-bold text-black dark:text-white/90">Change Password</h2>
+                        <h4 className="text-black dark:text-white/90 text-base font-bold">Change Password</h4>
                     </div>
 
                     <div>
@@ -214,6 +286,9 @@ export default function MemberSettings() {
                             className={inputClass}
                         />
                     </div>
+
+                    {passwordError ? <p className="text-sm text-red-500">{passwordError}</p> : null}
+                    {passwordSuccess ? <p className="text-sm text-emerald-600">{passwordSuccess}</p> : null}
 
                     <button type="submit" className={saveButtonClass}>
                         <CheckIcon size={13} weight="bold" />

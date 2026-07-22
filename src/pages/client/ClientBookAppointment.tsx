@@ -345,7 +345,7 @@ export default function ClientBookAppointment() {
                     <div className="text-xl font-extrabold text-black dark:text-white/90 leading-tight">{member.name}</div>
                     <div className="text-sm text-black/50 dark:text-white/90 mt-0.5">{member.role}</div>
                     <span className="inline-flex mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">
-                        {member.specialty}
+                        {member.designation}
                     </span>
                     <TitleComponent size='small' className="mt-3 text-black/60 dark:text-white/90 leading-relaxed line-clamp-2">{member.bio}</TitleComponent>
                 </div>
