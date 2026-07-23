@@ -110,6 +110,7 @@ export async function saveWeeklySchedule(
     await update(ref(database, `availability/${uid}`), {
         weekly: serializeWeeklySchedule(schedule),
         memberName,
+        designation: memberDesignation,
         memberDesignation,
     });
 }

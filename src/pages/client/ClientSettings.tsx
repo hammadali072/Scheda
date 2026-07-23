@@ -1,42 +1,116 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import {
     UserIcon,
     LockKeyIcon,
     CheckIcon,
     IdentificationCardIcon,
 } from "@phosphor-icons/react";
-import { LOGGED_IN_CLIENT } from "@/mock/clientMockData";
 import TitleComponent from "@/components/shared/TitleComponent";
+import { useAuth } from "@/context/auth-context";
+import {
+    getUserProfile,
+    updateUserProfile,
+    updateUserPassword,
+    isReauthRequiredError,
+} from "@/services/userService";
 
 export default function ClientSettings() {
-    const [name, setName] = useState(LOGGED_IN_CLIENT.name);
-    const [email, setEmail] = useState(LOGGED_IN_CLIENT.email);
-    const [phone, setPhone] = useState(LOGGED_IN_CLIENT.phone);
+    const { profile, authUser } = useAuth();
+    const [profileError, setProfileError] = useState<string | null>(null);
+    const [profileSuccess, setProfileSuccess] = useState<string | null>(null);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
+    const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
+    const [passwordPrompt, setPasswordPrompt] = useState(false);
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
 
     const [currentPw, setCurrentPw] = useState("");
     const [newPw, setNewPw] = useState("");
     const [confirmPw, setConfirmPw] = useState("");
 
-    const handleProfileSave = (e: React.FormEvent) => {
+    useEffect(() => {
+        const loadProfile = async () => {
+            if (!profile?.uid) {
+                return;
+            }
+
+            try {
+                const nextProfile = await getUserProfile(profile.uid);
+                setName(nextProfile.name);
+                setEmail(nextProfile.email);
+                setPhone(nextProfile.phone ?? "");
+                setProfileError(null);
+            } catch (error) {
+                setProfileError(error instanceof Error ? error.message : "Unable to load profile.");
+            }
+        };
+
+        void loadProfile();
+    }, [profile?.uid]);
+
+    const handleProfileSave = async (e: React.FormEvent) => {
         e.preventDefault();
-        alert("Profile updated (mock - no persistence yet).");
+        if (!profile?.uid) return;
+
+        try {
+            setProfileError(null);
+            setProfileSuccess(null);
+            await updateUserProfile(profile.uid, { name, email, phone });
+            setProfileSuccess("Profile updated successfully.");
+        } catch (error) {
+            setProfileError(error instanceof Error ? error.message : "Unable to update profile.");
+        }
     };
 
-    const handlePasswordSave = (e: React.FormEvent) => {
+    const handlePasswordSave = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newPw !== confirmPw) {
-            alert("Passwords do not match.");
+            setPasswordError("Passwords do not match.");
+            setPasswordSuccess(null);
             return;
         }
-        if (newPw.length < 8) {
-            alert("New password must be at least 8 characters.");
+
+        if (!newPw || newPw.length < 8) {
+            setPasswordError("New password must be at least 8 characters.");
+            setPasswordSuccess(null);
             return;
         }
-        alert("Password change requested (mock).");
-        setCurrentPw("");
-        setNewPw("");
-        setConfirmPw("");
+
+        try {
+            setPasswordError(null);
+            setPasswordSuccess(null);
+            await updateUserPassword(newPw, passwordPrompt ? currentPw : undefined);
+            setPasswordSuccess("Password updated successfully.");
+            setCurrentPw("");
+            setNewPw("");
+            setConfirmPw("");
+            setPasswordPrompt(false);
+        } catch (error) {
+            if (isReauthRequiredError(error)) {
+                setPasswordError("Please re-enter your current password to continue.");
+                setPasswordPrompt(true);
+            } else {
+                setPasswordError(error instanceof Error ? error.message : "Unable to update password.");
+            }
+        }
     };
+
+    const profileCardName = useMemo(
+        () => profile?.name || authUser?.displayName || "Your account",
+        [profile?.name, authUser?.displayName]
+    );
+
+    const profileCardInitials = useMemo(() => {
+        const initials = profileCardName
+            .split(" ")
+            .map((part) => part[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase();
+        return initials || "CL";
+    }, [profileCardName]);
 
     const inputClass =
         "w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-2.5 text-sm transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30";
@@ -57,11 +131,11 @@ export default function ClientSettings() {
 
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-center gap-5">
                 <div className="size-16 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-xl flex-shrink-0">
-                    {LOGGED_IN_CLIENT.avatar}
+                    {profileCardInitials}
                 </div>
                 <div>
-                    <div className="text-lg font-extrabold text-black dark:text-white/90">{LOGGED_IN_CLIENT.name}</div>
-                    <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">{LOGGED_IN_CLIENT.email}</div>
+                    <div className="text-lg font-extrabold text-black dark:text-white/90">{profileCardName}</div>
+                    <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">{email}</div>
                     <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full">
                         <IdentificationCardIcon size={12} weight="bold" />
                         Client Portal
@@ -118,6 +192,9 @@ export default function ClientSettings() {
                         />
                     </div>
 
+                    {profileError ? <p className="text-sm text-red-500">{profileError}</p> : null}
+                    {profileSuccess ? <p className="text-sm text-emerald-600">{profileSuccess}</p> : null}
+
                     <button type="submit" className={saveButtonClass}>
                         <CheckIcon size={13} weight="bold" />
                         Save Profile
@@ -170,6 +247,9 @@ export default function ClientSettings() {
                             className={inputClass}
                         />
                     </div>
+
+                    {passwordError ? <p className="text-sm text-red-500">{passwordError}</p> : null}
+                    {passwordSuccess ? <p className="text-sm text-emerald-600">{passwordSuccess}</p> : null}
 
                     <button type="submit" className={saveButtonClass}>
                         <CheckIcon size={13} weight="bold" />

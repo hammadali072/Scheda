@@ -4,16 +4,24 @@ import {
     XIcon,
     CheckIcon,
     ClockIcon,
+    CalendarBlankIcon,
+    LockIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import {
     type DaySchedule,
+    type DateOverride,
     type TimeRange,
     MEMBER_WEEKLY_AVAILABILITY,
 } from "@/mock/memberMockData";
 import TitleComponent from "@/components/shared/TitleComponent";
 import { useAuth } from "@/context/auth-context";
-import { getAvailability, saveWeeklySchedule } from "@/services/availabilityService";
+import {
+    getAvailability,
+    saveWeeklySchedule,
+    addOverride as addOverrideService,
+    removeOverride as removeOverrideService,
+} from "@/services/availabilityService";
 
 function Toggle({ checked, onChange, label }: { checked: boolean; onChange: () => void; label: string }) {
     return (
@@ -74,6 +82,16 @@ function TimeChip({
             )}
         </div>
     );
+}
+
+function formatDate(date: string) {
+    const parsed = new Date(date);
+    if (Number.isNaN(parsed.getTime())) return date;
+    return parsed.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
 }
 
 function AddSlotForm({
@@ -140,6 +158,12 @@ export default function MemberAvailability() {
         MEMBER_WEEKLY_AVAILABILITY.map((d) => ({ ...d, ranges: d.ranges.map((r) => ({ ...r })) }))
     );
     const [addingSlotForDay, setAddingSlotForDay] = useState<string | null>(null);
+    const [overrides, setOverrides] = useState<DateOverride[]>([]);
+    const [addingOverride, setAddingOverride] = useState(false);
+    const [newOverrideDate, setNewOverrideDate] = useState("");
+    const [newOverrideType, setNewOverrideType] = useState<"blocked" | "custom">("blocked");
+    const [newOverrideRanges, setNewOverrideRanges] = useState<TimeRange[]>([{ start: "09:00", end: "17:00" }]);
+    const [newOverrideNote, setNewOverrideNote] = useState("");
     const [availabilityExists, setAvailabilityExists] = useState<boolean | null>(null);
     const [availabilityLoading, setAvailabilityLoading] = useState(true);
 
@@ -161,6 +185,7 @@ export default function MemberAvailability() {
                         ? availability.weekly.map((d) => ({ ...d, ranges: d.ranges.map((r) => ({ ...r })) }))
                         : MEMBER_WEEKLY_AVAILABILITY.map((d) => ({ ...d, ranges: d.ranges.map((r) => ({ ...r })) }))
                 );
+                setOverrides(availability.overrides);
                 setAvailabilityExists(availability.exists);
             } catch (error) {
                 console.warn("Unable to load availability:", error);
@@ -207,6 +232,45 @@ export default function MemberAvailability() {
         markUnsaved();
     };
 
+    const addOverride = async () => {
+        if (!profile?.uid || !newOverrideDate) return;
+
+        const override: DateOverride = {
+            id: `do_${Date.now()}`,
+            date: newOverrideDate,
+            type: newOverrideType,
+            ranges:
+                newOverrideType === "custom"
+                    ? newOverrideRanges.map((range) => ({ ...range }))
+                    : [],
+            note: newOverrideNote,
+        };
+
+        try {
+            await addOverrideService(profile.uid, override);
+            setOverrides((prev) =>
+                [...prev, override].sort((a, b) => a.date.localeCompare(b.date))
+            );
+            setAddingOverride(false);
+            setNewOverrideDate("");
+            setNewOverrideType("blocked");
+            setNewOverrideRanges([{ start: "09:00", end: "17:00" }]);
+            setNewOverrideNote("");
+        } catch (error) {
+            console.warn("Unable to add override:", error);
+        }
+    };
+
+    const removeOverride = async (overrideId: string) => {
+        if (!profile?.uid) return;
+
+        try {
+            await removeOverrideService(profile.uid, overrideId);
+            setOverrides((prev) => prev.filter((override) => override.id !== overrideId));
+        } catch (error) {
+            console.warn("Unable to remove override:", error);
+        }
+    };
 
     const handleSave = async () => {
         if (!profile?.uid) return;
@@ -338,7 +402,7 @@ export default function MemberAvailability() {
                 </div>
             </div>
 
-            {/* <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
+            <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                 <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
                         <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
@@ -543,7 +607,7 @@ export default function MemberAvailability() {
                         </div>
                     )}
                 </div>
-            </div> */}
+            </div>
 
 
         </div>

@@ -1,23 +1,43 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
     MagnifyingGlassIcon,
-    CalendarBlankIcon,
     ArrowRightIcon,
     XIcon,
 } from "@phosphor-icons/react";
-import { BOOKABLE_MEMBERS } from "@/mock/clientMockData";
 import TitleComponent from "@/components/shared/TitleComponent";
+import { getAllMembers, type MemberDirectoryEntry } from "@/services/memberDirectoryService";
 
 export default function ClientFindMember() {
     const [query, setQuery] = useState("");
+    const [members, setMembers] = useState<MemberDirectoryEntry[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const filtered = BOOKABLE_MEMBERS.filter((m) => {
+    useEffect(() => {
+        let active = true;
+
+        const loadMembers = async () => {
+            try {
+                const allMembers = await getAllMembers();
+                if (active) setMembers(allMembers);
+            } catch (error) {
+                console.warn("Unable to load members:", error);
+            } finally {
+                if (active) setLoading(false);
+            }
+        };
+
+        void loadMembers();
+        return () => {
+            active = false;
+        };
+    }, []);
+
+    const filtered = members.filter((m) => {
         const q = query.toLowerCase();
         return (
-            m.name.toLowerCase().includes(q) ||
-            m.designation.toLowerCase().includes(q) ||
-            m.role.toLowerCase().includes(q)
+            m.memberName.toLowerCase().includes(q) ||
+            m.memberDesignation.toLowerCase().includes(q)
         );
     });
 
@@ -52,14 +72,37 @@ export default function ClientFindMember() {
                 )}
             </div>
 
-            {query && (
+            {query && !loading && (
                 <TitleComponent size='extra-small' className="text-black/40 dark:text-white/90 -mt-4">
                     {filtered.length} result{filtered.length !== 1 ? "s" : ""} for "{query}"
                 </TitleComponent>
             )}
 
-            {/* Member grid */}
-            {filtered.length === 0 ? (
+            {loading ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                    {Array.from({ length: 6 }).map((_, index) => (
+                        <div
+                            key={`member-skeleton-${index}`}
+                            className="animate-pulse bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden"
+                        >
+                            <div className="p-6 space-y-4">
+                                <div className="h-4 w-3/4 rounded-full bg-black/10 dark:bg-white/10" />
+                                <div className="h-3 w-1/2 rounded-full bg-black/10 dark:bg-white/10" />
+                                <div className="h-8 w-24 rounded-full bg-primary/10 dark:bg-primary/20" />
+                            </div>
+                            <div className="px-6 py-4 border-t border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.03] flex justify-end">
+                                <div className="h-9 w-20 rounded-full bg-black/10 dark:bg-white/10" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : members.length === 0 ? (
+                <div className="py-20 text-center">
+                    <div className="text-4xl mb-4">•</div>
+                    <TitleComponent size='small-semibold' className="text-black/50 dark:text-white/90">No members are available yet.</TitleComponent>
+                    <TitleComponent size='extra-small' className="text-black/30 dark:text-white/90 mt-1">Check back later when consultants have published their availability.</TitleComponent>
+                </div>
+            ) : filtered.length === 0 ? (
                 <div className="py-20 text-center">
                     <div className="text-4xl mb-4">•</div>
                     <TitleComponent size='small-semibold' className="text-black/50 dark:text-white/90">No members match "{query}"</TitleComponent>
@@ -69,40 +112,21 @@ export default function ClientFindMember() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                     {filtered.map((member) => (
                         <div
-                            key={member.id}
+                            key={member.uid}
                             className="group bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 hover:shadow-shadow2-effect hover:-translate-y-1 transition-all duration-200 flex flex-col overflow-hidden"
                         >
-                            <div className="p-6 flex items-start gap-4">
-                                <div className="size-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-lg flex-shrink-0 transition-transform group-hover:scale-105">
-                                    {member.avatar}
+                            <div className="p-6">
+                                <div className="font-extrabold text-black dark:text-white/90 text-base leading-tight truncate">
+                                    {member.memberName}
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="font-extrabold text-black dark:text-white/90 text-base leading-tight truncate">
-                                        {member.name}
-                                    </div>
-                                    <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">{member.role}</div>
-                                    <span className="inline-flex mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">
-                                        {member.designation}
-                                    </span>
-                                </div>
+                                <span className="inline-flex mt-3 px-2.5 py-1.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">
+                                    {member.memberDesignation}
+                                </span>
                             </div>
 
-                            <div className="px-6 pb-5 flex-1">
-                                <TitleComponent size='extra-small' className="text-black/55 dark:text-white/90 leading-relaxed line-clamp-3">{member.bio}</TitleComponent>
-                            </div>
-
-                            <div className="px-6 py-4 border-t border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.03] flex items-center justify-between gap-3">
-                                <div className="flex items-center gap-1.5 text-xs text-black/40 dark:text-white/90 min-w-0">
-                                    <CalendarBlankIcon size={13} className="flex-shrink-0" />
-                                    <span className="truncate">
-                                        Next:{" "}
-                                        <span className="font-semibold text-black dark:text-white/90">
-                                            {member.nextAvailable}
-                                        </span>
-                                    </span>
-                                </div>
+                            <div className="px-6 py-4 border-t border-black/5 dark:border-white/5 bg-black/[0.02] dark:bg-white/[0.03] flex justify-end">
                                 <Link
-                                    to={`/client/book/${member.id}`}
+                                    to={`/client/book/${member.uid}`}
                                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-b from-primary-start to-primary-end text-white text-xs font-bold hover:bg-primary/90 transition-colors flex-shrink-0 focus: focus-visible:ring-2 focus-visible:ring-primary/40 hover:from-secondary-start hover:to-secondary-end"
                                 >
                                     Book

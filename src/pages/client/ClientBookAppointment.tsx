@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo } from "react";
+﻿import React, { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import {
     ArrowLeftIcon,
@@ -20,6 +20,7 @@ import {
 } from "@/mock/clientMockData";
 import { useClientAppointments } from "@/context/client-appointments-context";
 import { type DaySchedule, type TimeRange } from "@/mock/memberMockData";
+import { getMemberByUid, type MemberDirectoryEntry } from "@/services/memberDirectoryService";
 import TitleComponent from "@/components/shared/TitleComponent";
 
 const MOCK_TODAY = "2026-07-15";
@@ -174,9 +175,56 @@ export default function ClientBookAppointment() {
     const { addAppointment, cancelAppointment } = useClientAppointments();
 
     const reschedule: ClientAppointment | undefined = (location.state as { reschedule?: ClientAppointment })?.reschedule;
+    const [directoryMember, setDirectoryMember] = useState<MemberDirectoryEntry | null>(null);
+    const [loadingMember, setLoadingMember] = useState(true);
 
     const member = BOOKABLE_MEMBERS.find((m) => m.id === memberId);
-    const schedule = memberId ? MEMBER_AVAILABILITY_MAP[memberId] ?? [] : [];
+
+    useEffect(() => {
+        let active = true;
+
+        const loadMember = async () => {
+            if (!memberId) {
+                setDirectoryMember(null);
+                setLoadingMember(false);
+                return;
+            }
+
+            try {
+                const found = await getMemberByUid(memberId);
+                if (active) setDirectoryMember(found);
+            } catch (error) {
+                console.warn("Unable to load member:", error);
+            } finally {
+                if (active) setLoadingMember(false);
+            }
+        };
+
+        void loadMember();
+        return () => {
+            active = false;
+        };
+    }, [memberId]);
+
+    const fallbackMember = directoryMember
+        ? {
+            id: memberId ?? "",
+            name: directoryMember.memberName,
+            role: directoryMember.memberDesignation,
+            designation: directoryMember.memberDesignation,
+            bio: "",
+            avatar: directoryMember.memberName
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((word) => word[0])
+                .join("")
+                .toUpperCase(),
+        }
+        : null;
+
+    const resolvedMember = member ?? fallbackMember;
+    const schedule = directoryMember?.weekly ?? (memberId ? MEMBER_AVAILABILITY_MAP[memberId] ?? [] : []);
 
     const [step, setStep] = useState<Step>(0);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -207,13 +255,13 @@ export default function ClientBookAppointment() {
     const step1Valid = !!effectivePurpose;
 
     const handleSubmit = () => {
-        if (!member || !selectedDate || !selectedSlot || !effectivePurpose) return;
+        if (!resolvedMember || !selectedDate || !selectedSlot || !effectivePurpose) return;
 
         const newAppt: ClientAppointment = {
             id: `ca-${Date.now()}`,
-            memberId: member.id,
-            memberName: member.name,
-            memberRole: member.role,
+            memberId: resolvedMember.id,
+            memberName: resolvedMember.name,
+            memberRole: resolvedMember.role,
             date: selectedDate,
             time: selectedSlot,
             purpose: effectivePurpose,
@@ -229,7 +277,17 @@ export default function ClientBookAppointment() {
         setStep(3);
     };
 
-    if (!member) {
+    if (loadingMember) {
+        return (
+            <div className="py-24 text-center space-y-4">
+                <div className="h-16 w-16 rounded-full bg-black/5 dark:bg-white/5 mx-auto animate-pulse" />
+                <h1 className="text-xl font-bold text-black dark:text-white/90">Loading member...</h1>
+                <p className="text-sm text-black/50 dark:text-white/90">Please wait while we load the booking details.</p>
+            </div>
+        );
+    }
+
+    if (!resolvedMember) {
         return (
             <div className="py-24 text-center space-y-4">
                 <div className="text-4xl">•</div>
@@ -258,7 +316,7 @@ export default function ClientBookAppointment() {
                     <div>
                         <h1 className="text-2xl font-extrabold text-black dark:text-white/90">Booking request sent!</h1>
                         <TitleComponent size='small' className="text-black/50 dark:text-white/90 mt-2 max-w-sm">
-                            {reschedule ? "Your original appointment has been cancelled and a new request has been submitted." : "Your appointment request has been submitted."} You'll be notified once {member.name} confirms.
+                            {reschedule ? "Your original appointment has been cancelled and a new request has been submitted." : "Your appointment request has been submitted."} You'll be notified once {resolvedMember.name} confirms.
                         </TitleComponent>
                     </div>
                 </div>
@@ -266,11 +324,11 @@ export default function ClientBookAppointment() {
                 <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 overflow-hidden">
                     <div className="bg-primary/5 border-b border-primary/10 px-6 py-4 flex items-center gap-3">
                         <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-black text-sm flex-shrink-0">
-                            {member.avatar}
+                            {resolvedMember.avatar}
                         </div>
                         <div>
-                            <div className="font-bold text-black dark:text-white/90 text-sm">{member.name}</div>
-                            <div className="text-xs text-black/40 dark:text-white/90">{member.role}</div>
+                            <div className="font-bold text-black dark:text-white/90 text-sm">{resolvedMember.name}</div>
+                            <div className="text-xs text-black/40 dark:text-white/90">{resolvedMember.role}</div>
                         </div>
                         <span className="ml-auto inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-600 dark:text-amber-400">
                             Pending
@@ -336,18 +394,18 @@ export default function ClientBookAppointment() {
                     Find a Member
                 </Link>
                 <span className="text-black/20 dark:text-white/90">/</span>
-                <span className="text-sm font-semibold text-black dark:text-white/90 truncate">{member.name}</span>
+                <span className="text-sm font-semibold text-black dark:text-white/90 truncate">{resolvedMember.name}</span>
             </div>
 
             <div className="bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 flex items-start gap-5">
-                <div className="size-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">{member.avatar}</div>
+                <div className="size-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-xl flex-shrink-0">{resolvedMember.avatar}</div>
                 <div className="flex-1 min-w-0">
-                    <div className="text-xl font-extrabold text-black dark:text-white/90 leading-tight">{member.name}</div>
-                    <div className="text-sm text-black/50 dark:text-white/90 mt-0.5">{member.role}</div>
+                    <div className="text-xl font-extrabold text-black dark:text-white/90 leading-tight">{resolvedMember.name}</div>
+                    <div className="text-sm text-black/50 dark:text-white/90 mt-0.5">{resolvedMember.role}</div>
                     <span className="inline-flex mt-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">
-                        {member.designation}
+                        {resolvedMember.designation}
                     </span>
-                    <TitleComponent size='small' className="mt-3 text-black/60 dark:text-white/90 leading-relaxed line-clamp-2">{member.bio}</TitleComponent>
+                    <TitleComponent size='small' className="mt-3 text-black/60 dark:text-white/90 leading-relaxed line-clamp-2">{resolvedMember.bio}</TitleComponent>
                 </div>
             </div>
 
@@ -611,7 +669,7 @@ export default function ClientBookAppointment() {
                         </div>
 
                         <TitleComponent size='extra-small' className="text-black/40 dark:text-white/90 text-center leading-relaxed">
-                            Your request will be sent to {member.name}. The appointment is confirmed once they accept.
+                            Your request will be sent to {resolvedMember.name}. The appointment is confirmed once they accept.
                         </TitleComponent>
 
                         <div className="flex flex-col sm:flex-row items-center gap-3 pt-2 border-t border-black/5 dark:border-white/5">

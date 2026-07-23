@@ -3,7 +3,6 @@ import {
     UserIcon,
     LockKeyIcon,
     CheckIcon,
-    IdentificationCardIcon,
 } from "@phosphor-icons/react";
 import TitleComponent from "@/components/shared/TitleComponent";
 import { useAuth } from "@/context/auth-context";
@@ -110,7 +109,7 @@ export default function MemberSettings() {
     };
 
     const inputClass =
-        "w-full rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-2.5 text-sm transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30";
+        "w-full rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-2.5 text-sm transition focus:border-primary focus-visible:ring-2 focus-visible:ring-primary/20 text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/40";
 
     const profileCardName = useMemo(() => profile?.name || authUser?.displayName || "Your account", [profile?.name, authUser?.displayName]);
     const profileCardRole = useMemo(() => profile?.role || "member", [profile?.role]);
@@ -149,8 +148,8 @@ export default function MemberSettings() {
                     className="lg:col-span-7 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
                 >
                     <div className="flex items-center gap-2.5 pb-3 border-b border-black/5 dark:border-white/5">
-                        <span className="p-1 rounded bg-primary/10 text-primary">
-                            <UserIcon size={16} weight="bold" />
+                        <span className="p-2 rounded bg-primary/10 text-primary">
+                            <UserIcon size={18} weight="bold" />
                         </span>
                         <h4 className="text-black dark:text-white/90 text-base font-bold">Profile Details</h4>
                     </div>
@@ -193,9 +192,7 @@ export default function MemberSettings() {
                     </div>
 
                     <div>
-                        <label className={labelClass} htmlFor="member-designation">
-                            Designation <span className="normal-case font-normal text-black/30 dark:text-white/90">(shown to clients)</span>
-                        </label>
+                        <label className={labelClass} htmlFor="member-designation">Designation</label>
                         <input
                             id="member-designation"
                             type="text"
@@ -208,12 +205,9 @@ export default function MemberSettings() {
 
                     <div>
                         <div className="flex items-center justify-between mb-1.5">
-                            <label className={labelClass} htmlFor="member-bio">
-                                Bio <span className="normal-case font-normal text-black/30 dark:text-white/90">(client-facing)</span>
-                            </label>
+                            <label className={labelClass} htmlFor="member-bio">About Yourself</label>
                             <span
-                                className={`text-[10px] font-mono ${bio.length > MAX_BIO ? "text-red-500" : "text-black/30 dark:text-white/90"
-                                    }`}
+                                className={`text-[10px] ${bio.length > MAX_BIO ? "text-red-500" : "text-black/30 placeholder-black/30 dark:placeholder-white/90 dark:text-white/40"}`}
                             >
                                 {bio.length}/{MAX_BIO}
                             </span>
@@ -225,9 +219,8 @@ export default function MemberSettings() {
                             onChange={(e) => setBio(e.target.value)}
                             maxLength={MAX_BIO}
                             placeholder="A brief description of your background and expertise..."
-                            className={`${inputClass} resize-none`}
+                            className={`${inputClass} resize-none placeholder-black/30 dark:placeholder-white/90`}
                         />
-                        <p className="mt-1 text-[10px] text-black/30 dark:text-white/90">Displayed on your public booking page. Keep it concise and client-focused.</p>
                     </div>
 
                     {profileError ? <p className="text-sm text-red-500">{profileError}</p> : null}
@@ -245,8 +238,8 @@ export default function MemberSettings() {
                     className="lg:col-span-5 bg-white dark:bg-tint-black/60 rounded-3xl border border-black/10 dark:border-white/5 shadow-shadow2-effect dark:shadow-shadow1 p-6 space-y-5"
                 >
                     <div className="flex items-center gap-2.5 pb-3 border-b border-black/5 dark:border-white/5">
-                        <span className="p-1 rounded bg-primary/10 text-primary">
-                            <LockKeyIcon size={16} weight="bold" />
+                        <span className="p-2 rounded bg-primary/10 text-primary">
+                            <LockKeyIcon size={18} weight="bold" />
                         </span>
                         <h4 className="text-black dark:text-white/90 text-base font-bold">Change Password</h4>
                     </div>

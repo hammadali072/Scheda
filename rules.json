@@ -1,0 +1,13 @@
+{
+  "rules": {
+    "availability": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.uid == $uid"
+    },
+    "appointments": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["memberId", "clientId"]
+    }
+  }
+}
