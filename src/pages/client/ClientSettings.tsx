@@ -102,6 +102,8 @@ export default function ClientSettings() {
         [profile?.name, authUser?.displayName]
     );
 
+    const profileCardRole = useMemo(() => profile?.role ?? "client", [profile?.role]);
+
     const profileCardInitials = useMemo(() => {
         const initials = profileCardName
             .split(" ")
@@ -138,7 +140,7 @@ export default function ClientSettings() {
                     <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">{email}</div>
                     <div className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full">
                         <IdentificationCardIcon size={12} weight="bold" />
-                        Client Portal
+                        {profileCardRole}
                     </div>
                 </div>
             </div>

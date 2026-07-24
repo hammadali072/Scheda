@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
     XIcon,
@@ -7,7 +7,6 @@ import {
     SparkleIcon,
     ChatCenteredTextIcon,
     ArrowRightIcon,
-    CalendarXIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { type ClientAppointment } from "@/mock/clientMockData";
@@ -51,7 +50,7 @@ function MemberAvatar({ name, size = "md" }: { name: string; size?: "sm" | "md" 
     const initials = name.split(" ").filter((_, i) => i < 2).map(w => w[0]).join("");
     return (
         <div className={clsx(
-            "rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold flex-shrink-0",
+            "rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold flex-shrink-0",
             size === "sm" ? "h-9 w-9 text-xs" : "h-11 w-11 text-sm"
         )}>
             {initials}
@@ -72,24 +71,45 @@ function DetailDrawer({
 }) {
     const canCancel = appt.status !== "cancelled" && appt.status !== "completed";
     const canReschedule = appt.status === "pending" || appt.status === "confirmed";
+    const [visible, setVisible] = useState(false);
+
+    // animate in on mount
+    useEffect(() => {
+        // schedule next frame to ensure transition runs
+        requestAnimationFrame(() => setVisible(true));
+    }, []);
+
+    const closeWithAnimation = () => {
+        setVisible(false);
+        // wait for transition to finish then call parent onClose
+        setTimeout(() => onClose(), 320);
+    };
 
     return (
         <div className="fixed inset-0 z-50 overflow-hidden">
             <div
-                className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-                onClick={onClose}
+                className={clsx(
+                    "absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300",
+                    visible ? "opacity-100" : "opacity-0 pointer-events-none"
+                )}
+                onClick={closeWithAnimation}
                 aria-hidden="true"
             />
 
-            <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
-                <div className="w-screen max-w-md bg-white dark:bg-tint-black/60 border-l border-black/10 dark:border-white/10 shadow-2xl flex flex-col">
+            <div className="fixed inset-y-0 right-0 flex max-w-full pl-10 pointer-events-none">
+                <div
+                    className={clsx(
+                        "w-screen max-w-md bg-white dark:bg-tint-black/60 border-l border-black/10 dark:border-white/10 shadow-2xl flex flex-col transform transition-transform duration-300",
+                        visible ? "translate-x-0 pointer-events-auto" : "translate-x-full"
+                    )}
+                >
 
                     <div className="px-6 py-5 border-b border-black/10 dark:border-white/5 flex items-center justify-between">
                         <h2 className="text-lg font-bold text-black dark:text-white/90">
                             Appointment Details
                         </h2>
                         <button
-                            onClick={onClose}
+                            onClick={closeWithAnimation}
                             aria-label="Close details"
                             className="p-1 rounded-lg text-black/40 dark:text-white/90 hover:text-black dark:hover:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                         >
@@ -105,8 +125,8 @@ function DetailDrawer({
                                 <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90 mb-0.5">
                                     Member
                                 </div>
-                                <div className="font-bold text-black dark:text-white/90">{appt.memberName}</div>
-                                <div className="text-xs text-black/50 dark:text-white/90">{appt.memberRole}</div>
+                                <h6 className="font-bold text-black dark:text-white/90">{appt.memberName}</h6>
+                                <TitleComponent size="extra-small" className="text-black/50 dark:text-white/90">{appt.memberRole}</TitleComponent>
                             </div>
                         </div>
 
@@ -164,15 +184,15 @@ function DetailDrawer({
 
                         {(canCancel || canReschedule) && (
                             <div className="border-t border-black/5 dark:border-white/5 pt-4 space-y-3">
-                                <div className="text-[10px] font-bold uppercase tracking-wider text-black/40 dark:text-white/90">
-                                    Actions
-                                </div>
                                 <div className="flex flex-wrap gap-2">
                                     {canReschedule && (
                                         <button
                                             type="button"
-                                            onClick={() => onReschedule(appt)}
-                                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border border-primary/20 text-primary bg-primary/5 hover:bg-primary/10 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
+                                            onClick={() => {
+                                                onReschedule(appt);
+                                                closeWithAnimation();
+                                            }}
+                                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold border border-primary/20 text-primary bg-primary/5 hover:bg-primary/10 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                                         >
                                             <ArrowRightIcon size={12} weight="bold" />
                                             Reschedule
@@ -183,12 +203,11 @@ function DetailDrawer({
                                             type="button"
                                             onClick={() => {
                                                 onCancel(appt.id);
-                                                onClose();
+                                                closeWithAnimation();
                                             }}
-                                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border border-red-500/20 text-red-500 hover:bg-red-500/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-red-500/30"
+                                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold border border-red-500/20 text-red-500 hover:bg-red-500/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-red-500/30"
                                         >
-                                            <CalendarXIcon size={12} weight="bold" />
-                                            Cancel appointment
+                                            Cancel Appointment
                                         </button>
                                     )}
                                 </div>

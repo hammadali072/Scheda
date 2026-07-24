@@ -19,6 +19,8 @@ import {
     type AppointmentPurpose,
 } from "@/mock/clientMockData";
 import { useClientAppointments } from "@/context/client-appointments-context";
+import { useAuth } from "@/context/auth-context";
+import { createAppointment, getAppointmentsForMember } from "@/services/appointmentService";
 import { type DaySchedule, type TimeRange } from "@/mock/memberMockData";
 import { getMemberByUid, type MemberDirectoryEntry } from "@/services/memberDirectoryService";
 import TitleComponent from "@/components/shared/TitleComponent";
@@ -94,7 +96,7 @@ function StepBar({ current }: { current: Step }) {
                                     done
                                         ? "bg-primary text-white"
                                         : active
-                                            ? "bg-primary text-white ring-4 ring-primary/20"
+                                            ? "gradient-primary text-white ring-4 ring-primary/20"
                                             : "bg-black/10 dark:bg-white/10 text-black/40 dark:text-white/90"
                                 )}
                                 aria-current={active ? "step" : undefined}
@@ -148,10 +150,9 @@ function DateChip({
             type="button"
             onClick={onSelect}
             className={clsx(
-                "flex-shrink-0 flex flex-col items-center px-4 py-3 rounded-2xl border text-xs font-semibold transition-all duration-150 min-w-[64px]",
-                "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
+                "flex-shrink-0 flex flex-col items-center px-4 py-3 rounded-lg border text-xs font-semibold transition-all duration-150 min-w-[64px]",
                 selected
-                    ? "bg-primary border-primary text-white shadow-md shadow-primary/20"
+                    ? "gradient-primary border-primary/10 text-white"
                     : "bg-white dark:bg-tint-black/60 border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:border-primary/40 hover:bg-primary/5"
             )}
             aria-pressed={selected}
@@ -161,9 +162,7 @@ function DateChip({
                 {day}
             </span>
             <span className="text-lg font-black leading-tight">{num}</span>
-            <span className={clsx("text-[10px]", selected ? "text-white/70" : "text-black/40 dark:text-white/90")}>
-                {mon}
-            </span>
+            <span className={clsx("text-[10px]", selected ? "text-white/70" : "text-black/40 dark:text-white/90")}>{mon}</span>
         </button>
     );
 }
@@ -173,6 +172,7 @@ export default function ClientBookAppointment() {
     const navigate = useNavigate();
     const location = useLocation();
     const { addAppointment, cancelAppointment } = useClientAppointments();
+    const { profile } = useAuth();
 
     const reschedule: ClientAppointment | undefined = (location.state as { reschedule?: ClientAppointment })?.reschedule;
     const [directoryMember, setDirectoryMember] = useState<MemberDirectoryEntry | null>(null);
@@ -229,6 +229,7 @@ export default function ClientBookAppointment() {
     const [step, setStep] = useState<Step>(0);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
+    const [bookingError, setBookingError] = useState<string | null>(null);
     const [purpose, setPurpose] = useState<AppointmentPurpose | "">(
         reschedule ? (reschedule.purpose as AppointmentPurpose) : ""
     );
@@ -257,24 +258,78 @@ export default function ClientBookAppointment() {
     const handleSubmit = () => {
         if (!resolvedMember || !selectedDate || !selectedSlot || !effectivePurpose) return;
 
-        const newAppt: ClientAppointment = {
-            id: `ca-${Date.now()}`,
-            memberId: resolvedMember.id,
-            memberName: resolvedMember.name,
-            memberRole: resolvedMember.role,
-            date: selectedDate,
-            time: selectedSlot,
-            purpose: effectivePurpose,
-            notes: notes.trim(),
-            status: "pending",
-        };
+        setBookingError(null);
 
-        if (reschedule) {
-            cancelAppointment(reschedule.id);
+        // ensure slot still valid for that date
+        if (!slotsForDate.includes(selectedSlot)) {
+            setBookingError("Selected time is no longer available. Please choose another slot.");
+            return;
         }
 
-        addAppointment(newAppt);
-        setStep(3);
+        const submit = async () => {
+            try {
+                // check existing appointments for the member to avoid double-booking
+                const existing = await getAppointmentsForMember(resolvedMember.id);
+                const conflict = existing.some((a) => a.date === selectedDate && a.time === selectedSlot && a.status !== "cancelled");
+                if (conflict) {
+                    setBookingError("This slot has just been booked by another client. Please choose a different time.");
+                    return;
+                }
+
+                // build server-side appointment payload
+                const parseStartMinutes = (timeStr: string) => {
+                    // expecting format like "2:00 PM" or "11:00 AM"
+                    const [t, period] = timeStr.split(" ");
+                    const [hStr, mStr] = t.split(":");
+                    let h = Number(hStr);
+                    const m = Number(mStr);
+                    if (period === "PM" && h !== 12) h += 12;
+                    if (period === "AM" && h === 12) h = 0;
+                    return h * 60 + m;
+                };
+
+                const serverAppt = {
+                    clientId: profile?.uid ?? "",
+                    clientName: profile?.name ?? "",
+                    memberId: resolvedMember.id,
+                    memberName: resolvedMember.name,
+                    memberDesignation: resolvedMember.designation ?? resolvedMember.role ?? "",
+                    date: selectedDate,
+                    time: selectedSlot,
+                    startMinutes: parseStartMinutes(selectedSlot),
+                    durationMinutes: 60,
+                    purpose: effectivePurpose,
+                    notes: notes.trim(),
+                    status: "pending" as const,
+                };
+
+                const id = await createAppointment(serverAppt);
+
+                // update client-side context
+                const clientAppt: ClientAppointment = {
+                    id,
+                    memberId: resolvedMember.id,
+                    memberName: resolvedMember.name,
+                    memberRole: resolvedMember.role,
+                    date: selectedDate,
+                    time: selectedSlot,
+                    purpose: effectivePurpose,
+                    notes: notes.trim(),
+                    status: "pending",
+                };
+
+                if (reschedule) {
+                    cancelAppointment(reschedule.id);
+                }
+
+                addAppointment(clientAppt);
+                setStep(3);
+            } catch (error) {
+                setBookingError(error instanceof Error ? error.message : "Unable to save booking. Please try again.");
+            }
+        };
+
+        void submit();
     };
 
     if (loadingMember) {
@@ -282,7 +337,7 @@ export default function ClientBookAppointment() {
             <div className="py-24 text-center space-y-4">
                 <div className="h-16 w-16 rounded-full bg-black/5 dark:bg-white/5 mx-auto animate-pulse" />
                 <h1 className="text-xl font-bold text-black dark:text-white/90">Loading member...</h1>
-                <p className="text-sm text-black/50 dark:text-white/90">Please wait while we load the booking details.</p>
+                <TitleComponent size='small' className="text-black/50 dark:text-white/90">Please wait while we load the booking details.</TitleComponent>
             </div>
         );
     }
@@ -292,9 +347,7 @@ export default function ClientBookAppointment() {
             <div className="py-24 text-center space-y-4">
                 <div className="text-4xl">•</div>
                 <h1 className="text-xl font-bold text-black dark:text-white/90">Member not found</h1>
-                <p className="text-sm text-black/50 dark:text-white/90">
-                    The member you're looking for doesn't exist or is no longer available.
-                </p>
+                <TitleComponent size='small' className="text-black/50 dark:text-white/90">The member you're looking for doesn't exist or is no longer available.</TitleComponent>
                 <Link
                     to="/client/find"
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
@@ -366,14 +419,14 @@ export default function ClientBookAppointment() {
                     <button
                         type="button"
                         onClick={() => navigate("/client/appointments")}
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-primary hover:bg-primary/90 text-sm font-bold text-white shadow-sm shadow-primary/20 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg gradient-primary hover:bg-primary/90 text-sm font-bold text-white shadow-sm shadow-primary/20 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                     >
                         View My Appointments
                         <ArrowRightIcon size={15} weight="bold" />
                     </button>
                     <Link
                         to="/client/find"
-                        className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-tint-black/60 text-sm font-semibold text-black dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
+                        className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-white dark:bg-tint-black/60 text-sm font-semibold text-black dark:text-white/90 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus: focus-visible:ring-2 focus-visible:ring-primary/40"
                     >
                         Book Another
                     </Link>
@@ -473,10 +526,10 @@ export default function ClientBookAppointment() {
                                                 onClick={() => setSelectedSlot(slot)}
                                                 aria-pressed={selectedSlot === slot}
                                                 className={clsx(
-                                                    "px-3 py-2.5 rounded-xl border text-xs font-semibold text-center transition-all duration-150",
+                                                    "px-3 py-2.5 rounded-lg border text-xs font-semibold text-center transition-all duration-150",
                                                     "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                                     selectedSlot === slot
-                                                        ? "bg-primary border-primary text-white shadow-sm shadow-primary/20"
+                                                        ? "gradient-primary border-primary text-white shadow-sm shadow-primary/20"
                                                         : "bg-black/[0.02] dark:bg-white/[0.03] border-black/10 dark:border-white/10 text-black dark:text-white/90 hover:border-primary/40 hover:bg-primary/5"
                                                 )}
                                             >
@@ -494,10 +547,10 @@ export default function ClientBookAppointment() {
                                 onClick={() => setStep(1)}
                                 disabled={!step0Valid}
                                 className={clsx(
-                                    "inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold transition-all",
+                                    "inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-all",
                                     "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                     step0Valid
-                                        ? "bg-primary text-white hover:bg-primary/90 shadow-sm shadow-primary/20"
+                                        ? "gradient-primary text-white shadow-sm shadow-primary/20"
                                         : "bg-black/10 dark:bg-white/10 text-black/30 dark:text-white/90 cursor-not-allowed"
                                 )}
                             >
@@ -512,8 +565,8 @@ export default function ClientBookAppointment() {
                     <div className="p-6 space-y-6">
                         <div>
                             <div className="flex items-center gap-2 mb-4">
-                                <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
-                                    <SparkleIcon size={16} weight="bold" />
+                                <span className="p-2 rounded-lg bg-primary/10 text-primary">
+                                    <SparkleIcon size={18} weight="bold" />
                                 </span>
                                 <h2 className="text-base font-bold text-black dark:text-white/90">What's the purpose of this appointment?</h2>
                                 <span className="text-[10px] font-bold text-red-500 ml-auto">Required</span>
@@ -528,7 +581,7 @@ export default function ClientBookAppointment() {
                                             onClick={() => setPurpose(p)}
                                             aria-pressed={purpose === p}
                                             className={clsx(
-                                                "px-4 py-3 rounded-xl border text-sm font-semibold text-left transition-all duration-150",
+                                                "px-4 py-3 rounded-lg border text-sm font-semibold text-left transition-all duration-150",
                                                 "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                                 purpose === p
                                                     ? "bg-primary/10 border-primary text-primary"
@@ -555,7 +608,7 @@ export default function ClientBookAppointment() {
                                             onChange={(e) => setPurposeOther(e.target.value)}
                                             placeholder="e.g. Estate planning for a family trust"
                                             maxLength={120}
-                                            className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-2.5 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 focus-visible:ring-2 focus-visible:ring-primary/40 transition"
+                                            className="w-full rounded-lg border border-black/10 dark:border-white/10 bg-black/[0.02] dark:bg-white/[0.03] px-4 py-2.5 text-sm text-black dark:text-white/90 placeholder:text-black/30 dark:placeholder:text-white/90/30 focus-visible:ring-2 focus-visible:ring-primary/40 transition"
                                         />
                                     </div>
                                 )}
@@ -564,10 +617,10 @@ export default function ClientBookAppointment() {
 
                         <div>
                             <div className="flex items-center gap-2 mb-4">
-                                <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
-                                    <ChatCenteredTextIcon size={16} weight="bold" />
+                                <span className="p-2 rounded-lg bg-primary/10 text-primary">
+                                    <ChatCenteredTextIcon size={18} weight="bold" />
                                 </span>
-                                <h2 className="text-base font-bold text-black dark:text-white/90">Additional notes</h2>
+                                <h2 className="text-base font-bold text-black dark:text-white/90">Additional Notes</h2>
                                 <span className="text-[10px] font-semibold text-black/30 dark:text-white/90 ml-auto">Optional</span>
                             </div>
                             <textarea
@@ -594,10 +647,10 @@ export default function ClientBookAppointment() {
                                 onClick={() => setStep(2)}
                                 disabled={!step1Valid}
                                 className={clsx(
-                                    "inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-bold transition-all",
+                                    "inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-all",
                                     "focus: focus-visible:ring-2 focus-visible:ring-primary/40",
                                     step1Valid
-                                        ? "bg-primary text-white hover:bg-primary/90 shadow-sm shadow-primary/20"
+                                        ? "gradient-primary text-white hover:bg-primary/90 shadow-sm shadow-primary/20"
                                         : "bg-black/10 dark:bg-white/10 text-black/30 dark:text-white/90 cursor-not-allowed"
                                 )}
                             >
@@ -619,11 +672,11 @@ export default function ClientBookAppointment() {
 
                             <div className="px-6 py-5 border-b border-primary/10 flex items-center gap-4">
                                 <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-black text-base flex-shrink-0">
-                                    {member.avatar}
+                                    {resolvedMember.avatar}
                                 </div>
                                 <div>
-                                    <div className="font-extrabold text-black dark:text-white/90 text-base leading-tight">{member.name}</div>
-                                    <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">{member.role}</div>
+                                    <div className="font-extrabold text-black dark:text-white/90 text-base leading-tight">{resolvedMember.name}</div>
+                                    <div className="text-xs text-black/50 dark:text-white/90 mt-0.5">{resolvedMember.role}</div>
                                 </div>
                             </div>
 
@@ -668,9 +721,11 @@ export default function ClientBookAppointment() {
                             </div>
                         </div>
 
-                        <TitleComponent size='extra-small' className="text-black/40 dark:text-white/90 text-center leading-relaxed">
-                            Your request will be sent to {resolvedMember.name}. The appointment is confirmed once they accept.
-                        </TitleComponent>
+                        <TitleComponent size='extra-small' className="text-black/40 dark:text-white/90 text-center leading-relaxed">Your request will be sent to {resolvedMember.name}. The appointment is confirmed once they accept.</TitleComponent>
+
+                        {bookingError ? (
+                            <p className="text-sm text-red-500 text-center">{bookingError}</p>
+                        ) : null}
 
                         <div className="flex flex-col sm:flex-row items-center gap-3 pt-2 border-t border-black/5 dark:border-white/5">
                             <button
@@ -684,7 +739,7 @@ export default function ClientBookAppointment() {
                             <button
                                 type="button"
                                 onClick={handleSubmit}
-                                className="order-1 sm:order-2 flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-2xl bg-primary hover:bg-primary/90 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:shadow-primary/35 hover:-translate-y-0.5 focus: focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+                                className="order-1 sm:order-2 flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-lg gradient-primary hover:bg-primary/90 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-all hover:shadow-primary/35 hover:-translate-y-0.5 focus: focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
                             >
                                 <CheckCircleIcon size={17} weight="bold" />
                                 Confirm Booking
@@ -696,6 +751,3 @@ export default function ClientBookAppointment() {
         </div>
     );
 }
-
-
-

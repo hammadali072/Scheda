@@ -1,8 +1,11 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import {
     INITIAL_CLIENT_APPOINTMENTS,
     type ClientAppointment,
 } from "@/mock/clientMockData";
+import { useAuth } from "@/context/auth-context";
+import { subscribeAppointmentsForClient, updateAppointmentStatus } from "@/services/appointmentService";
+import type { Appointment } from "@/types/appointment";
 
 // ─── Context shape ────────────────────────────────────────────────────────────
 
@@ -19,18 +22,48 @@ const ClientAppointmentsContext = createContext<ClientAppointmentsContextValue |
 // Replace state initialisation with a Firestore fetch when ready.
 
 export function ClientAppointmentsProvider({ children }: { children: ReactNode }) {
-    const [appointments, setAppointments] = useState<ClientAppointment[]>(
-        INITIAL_CLIENT_APPOINTMENTS
-    );
+    const { profile } = useAuth();
+    const [appointments, setAppointments] = useState<ClientAppointment[]>(INITIAL_CLIENT_APPOINTMENTS);
+
+    useEffect(() => {
+        if (!profile?.uid) return;
+
+        const unsub = subscribeAppointmentsForClient(profile.uid, (list: Appointment[]) => {
+            // map Appointment -> ClientAppointment shape
+            const mapped: ClientAppointment[] = list.map((a) => ({
+                id: a.id,
+                memberId: a.memberId,
+                memberName: a.memberName,
+                memberRole: a.memberDesignation || "",
+                date: a.date,
+                time: a.time,
+                purpose: a.purpose,
+                notes: a.notes,
+                status: a.status as ClientAppointment["status"],
+            }));
+
+            // sort by date
+            mapped.sort((x, y) => x.date.localeCompare(y.date));
+            setAppointments(mapped);
+        });
+
+        return () => unsub();
+    }, [profile?.uid]);
 
     const addAppointment = (appt: ClientAppointment) => {
         setAppointments((prev) => [appt, ...prev]);
     };
 
     const cancelAppointment = (id: string) => {
-        setAppointments((prev) =>
-            prev.map((a) => (a.id === id ? { ...a, status: "cancelled" as const } : a))
-        );
+        // persist change to DB and update local state
+        void (async () => {
+            try {
+                await updateAppointmentStatus(id, "cancelled");
+                setAppointments((prev) => prev.map((a) => (a.id === id ? { ...a, status: "cancelled" as const } : a)));
+            } catch (e) {
+                console.warn("Failed to cancel appointment:", e);
+            }
+        })();
     };
 
     return (

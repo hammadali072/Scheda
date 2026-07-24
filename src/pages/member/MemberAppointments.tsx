@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import {
     XIcon,
     UserIcon,
@@ -7,7 +7,13 @@ import {
     ClockIcon,
 } from "@phosphor-icons/react";
 import clsx from "clsx";
-import { MEMBER_APPOINTMENTS, type MemberAppointment } from "@/mock/memberMockData";
+import type { Appointment } from "@/types/appointment";
+import { useAuth } from "@/context/auth-context";
+import {
+    subscribeAppointmentsForMember,
+    updateAppointmentStatus,
+    cancelAppointmentWithReason,
+} from "@/services/appointmentService";
 import TitleComponent from "@/components/shared/TitleComponent";
 
 type Tab = "upcoming" | "past" | "cancelled" | "all";
@@ -27,9 +33,10 @@ const TABS: { key: Tab; label: string }[] = [
 ];
 
 export default function MemberAppointments() {
-    const [appointments, setAppointments] = useState<MemberAppointment[]>(MEMBER_APPOINTMENTS);
+    const { profile } = useAuth();
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [activeTab, setActiveTab] = useState<Tab>("upcoming");
-    const [selectedAppt, setSelectedAppt] = useState<MemberAppointment | null>(null);
+    const [selectedAppt, setSelectedAppt] = useState<Appointment | null>(null);
 
     const filtered = (() => {
         switch (activeTab) {
@@ -46,7 +53,7 @@ export default function MemberAppointments() {
         }
     })();
 
-    const updateAppt = (id: string, updates: Partial<MemberAppointment>) => {
+    const updateAppt = (id: string, updates: Partial<Appointment>) => {
         setAppointments((prev) =>
             prev.map((a) => {
                 if (a.id === id) {
@@ -59,24 +66,46 @@ export default function MemberAppointments() {
         );
     };
 
-    const availableActions = (appt: MemberAppointment) => {
+    const availableActions = (appt: Appointment) => {
         const actions: { label: string; action: () => void; danger?: boolean }[] = [];
         if (appt.status === "pending") {
             actions.push({
                 label: "Confirm",
-                action: () => updateAppt(appt.id, { status: "confirmed" }),
+                action: async () => {
+                    try {
+                        await updateAppointmentStatus(appt.id, "confirmed");
+                        updateAppt(appt.id, { status: "confirmed" });
+                    } catch (e) {
+                        console.warn("Failed to confirm appointment:", e);
+                    }
+                },
             });
         }
         if (appt.status === "confirmed") {
             actions.push({
                 label: "Mark Completed",
-                action: () => updateAppt(appt.id, { status: "completed" }),
+                action: async () => {
+                    try {
+                        await updateAppointmentStatus(appt.id, "completed");
+                        updateAppt(appt.id, { status: "completed" });
+                    } catch (e) {
+                        console.warn("Failed to mark completed:", e);
+                    }
+                },
             });
         }
         if (appt.status !== "cancelled" && appt.status !== "completed") {
             actions.push({
                 label: "Cancel Session",
-                action: () => updateAppt(appt.id, { status: "cancelled" }),
+                action: async () => {
+                    const reason = window.prompt("Enter cancellation reason (optional):");
+                    try {
+                        await cancelAppointmentWithReason(appt.id, reason ?? "");
+                        updateAppt(appt.id, { status: "cancelled" });
+                    } catch (e) {
+                        console.warn("Failed to cancel appointment:", e);
+                    }
+                },
                 danger: true,
             });
         }
@@ -89,6 +118,14 @@ export default function MemberAppointments() {
         cancelled: appointments.filter((a) => a.status === "cancelled").length,
         all: appointments.length,
     };
+
+    useEffect(() => {
+        if (!profile?.uid) return;
+        const unsub = subscribeAppointmentsForMember(profile.uid, (list) => {
+            setAppointments(list);
+        });
+        return () => unsub();
+    }, [profile?.uid]);
 
     return (
         <div className="relative pb-6 space-y-8">
@@ -163,7 +200,7 @@ export default function MemberAppointments() {
                                                 {appt.clientName}
                                             </div>
                                             <div className="text-xs text-black/40 dark:text-white/90 truncate max-w-[180px]">
-                                                {appt.clientEmail}
+                                                {appt.clientId}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
@@ -228,7 +265,7 @@ export default function MemberAppointments() {
                                                 {selectedAppt.clientName}
                                             </div>
                                             <TitleComponent size="extra-small" className="text-black/50 dark:text-white/90">
-                                                {selectedAppt.clientEmail}
+                                                {selectedAppt.clientId}
                                             </TitleComponent>
                                         </div>
                                     </div>
